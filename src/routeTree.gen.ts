@@ -16,8 +16,10 @@ import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as WorkspaceVentureBriefRouteImport } from './routes/workspace/venture-brief'
 import { Route as WorkspaceValidationSummaryRouteImport } from './routes/workspace/validation-summary'
 import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
+import { Route as WorkspaceTractionRouteImport } from './routes/workspace/traction'
 import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
 import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
+import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
 import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
@@ -57,6 +59,11 @@ const WorkspaceValidateRoute = WorkspaceValidateRouteImport.update({
   path: '/validate',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceTractionRoute = WorkspaceTractionRouteImport.update({
+  id: '/traction',
+  path: '/traction',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
   id: '/mvp-scope',
   path: '/mvp-scope',
@@ -65,6 +72,11 @@ const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
 const WorkspaceMarketingPlanRoute = WorkspaceMarketingPlanRouteImport.update({
   id: '/marketing-plan',
   path: '/marketing-plan',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceLaunchSprintRoute = WorkspaceLaunchSprintRouteImport.update({
+  id: '/launch-sprint',
+  path: '/launch-sprint',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
@@ -84,8 +96,10 @@ export interface FileRoutesByFullPath {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
@@ -96,8 +110,10 @@ export interface FileRoutesByTo {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
@@ -110,8 +126,10 @@ export interface FileRoutesById {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
@@ -125,8 +143,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
     | '/workspace/venture-brief'
@@ -137,8 +157,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
     | '/workspace/venture-brief'
@@ -150,8 +172,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
     | '/workspace/venture-brief'
@@ -216,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceValidateRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/traction': {
+      id: '/workspace/traction'
+      path: '/traction'
+      fullPath: '/workspace/traction'
+      preLoaderRoute: typeof WorkspaceTractionRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/workspace/mvp-scope': {
       id: '/workspace/mvp-scope'
       path: '/mvp-scope'
@@ -228,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/marketing-plan'
       fullPath: '/workspace/marketing-plan'
       preLoaderRoute: typeof WorkspaceMarketingPlanRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/launch-sprint': {
+      id: '/workspace/launch-sprint'
+      path: '/launch-sprint'
+      fullPath: '/workspace/launch-sprint'
+      preLoaderRoute: typeof WorkspaceLaunchSprintRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/build-roadmap': {
@@ -249,8 +287,10 @@ declare module '@tanstack/react-router' {
 
 interface WorkspaceRouteRouteChildren {
   WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
+  WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
   WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
   WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
+  WorkspaceTractionRoute: typeof WorkspaceTractionRoute
   WorkspaceValidateRoute: typeof WorkspaceValidateRoute
   WorkspaceValidationSummaryRoute: typeof WorkspaceValidationSummaryRoute
   WorkspaceVentureBriefRoute: typeof WorkspaceVentureBriefRoute
@@ -259,8 +299,10 @@ interface WorkspaceRouteRouteChildren {
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
   WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
+  WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
   WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
   WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
+  WorkspaceTractionRoute: WorkspaceTractionRoute,
   WorkspaceValidateRoute: WorkspaceValidateRoute,
   WorkspaceValidationSummaryRoute: WorkspaceValidationSummaryRoute,
   WorkspaceVentureBriefRoute: WorkspaceVentureBriefRoute,
