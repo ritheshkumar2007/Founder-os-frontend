@@ -13,6 +13,8 @@ import { Route as SigninRouteImport } from './routes/signin'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
+import { Route as WorkspaceVentureBriefRouteImport } from './routes/workspace/venture-brief'
+import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const SigninRoute = SigninRouteImport.update({
@@ -35,6 +37,16 @@ const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
   path: '/',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceVentureBriefRoute = WorkspaceVentureBriefRouteImport.update({
+  id: '/venture-brief',
+  path: '/venture-brief',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceValidateRoute = WorkspaceValidateRouteImport.update({
+  id: '/validate',
+  path: '/validate',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -46,12 +58,16 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace/': typeof WorkspaceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace': typeof WorkspaceIndexRoute
 }
 export interface FileRoutesById {
@@ -60,14 +76,37 @@ export interface FileRoutesById {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace/': typeof WorkspaceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/workspace' | '/signin' | '/api/chat' | '/workspace/'
+  fullPaths:
+    | '/'
+    | '/workspace'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/validate'
+    | '/workspace/venture-brief'
+    | '/workspace/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/signin' | '/api/chat' | '/workspace'
-  id: '__root__' | '/' | '/workspace' | '/signin' | '/api/chat' | '/workspace/'
+  to:
+    | '/'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/validate'
+    | '/workspace/venture-brief'
+    | '/workspace'
+  id:
+    | '__root__'
+    | '/'
+    | '/workspace'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/validate'
+    | '/workspace/venture-brief'
+    | '/workspace/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -107,6 +146,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceIndexRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/venture-brief': {
+      id: '/workspace/venture-brief'
+      path: '/venture-brief'
+      fullPath: '/workspace/venture-brief'
+      preLoaderRoute: typeof WorkspaceVentureBriefRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/validate': {
+      id: '/workspace/validate'
+      path: '/validate'
+      fullPath: '/workspace/validate'
+      preLoaderRoute: typeof WorkspaceValidateRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -118,10 +171,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface WorkspaceRouteRouteChildren {
+  WorkspaceValidateRoute: typeof WorkspaceValidateRoute
+  WorkspaceVentureBriefRoute: typeof WorkspaceVentureBriefRoute
   WorkspaceIndexRoute: typeof WorkspaceIndexRoute
 }
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
+  WorkspaceValidateRoute: WorkspaceValidateRoute,
+  WorkspaceVentureBriefRoute: WorkspaceVentureBriefRoute,
   WorkspaceIndexRoute: WorkspaceIndexRoute,
 }
 
