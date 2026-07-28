@@ -20,6 +20,7 @@ import { Route as WorkspaceTractionRouteImport } from './routes/workspace/tracti
 import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
 import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
 import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
+import { Route as WorkspaceInvestorUpdateRouteImport } from './routes/workspace/investor-update'
 import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
@@ -79,6 +80,11 @@ const WorkspaceLaunchSprintRoute = WorkspaceLaunchSprintRouteImport.update({
   path: '/launch-sprint',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceInvestorUpdateRoute = WorkspaceInvestorUpdateRouteImport.update({
+  id: '/investor-update',
+  path: '/investor-update',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
   id: '/build-roadmap',
   path: '/build-roadmap',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
@@ -268,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceLaunchSprintRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/investor-update': {
+      id: '/workspace/investor-update'
+      path: '/investor-update'
+      fullPath: '/workspace/investor-update'
+      preLoaderRoute: typeof WorkspaceInvestorUpdateRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/workspace/build-roadmap': {
       id: '/workspace/build-roadmap'
       path: '/build-roadmap'
@@ -287,6 +306,7 @@ declare module '@tanstack/react-router' {
 
 interface WorkspaceRouteRouteChildren {
   WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
+  WorkspaceInvestorUpdateRoute: typeof WorkspaceInvestorUpdateRoute
   WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
   WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
   WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
@@ -299,6 +319,7 @@ interface WorkspaceRouteRouteChildren {
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
   WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
+  WorkspaceInvestorUpdateRoute: WorkspaceInvestorUpdateRoute,
   WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
   WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
   WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
