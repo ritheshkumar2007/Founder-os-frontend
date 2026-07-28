@@ -17,6 +17,8 @@ import { Route as WorkspaceVentureBriefRouteImport } from './routes/workspace/ve
 import { Route as WorkspaceValidationSummaryRouteImport } from './routes/workspace/validation-summary'
 import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
 import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
+import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
+import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const SigninRoute = SigninRouteImport.update({
@@ -60,6 +62,16 @@ const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
   path: '/mvp-scope',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceMarketingPlanRoute = WorkspaceMarketingPlanRouteImport.update({
+  id: '/marketing-plan',
+  path: '/marketing-plan',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
+  id: '/build-roadmap',
+  path: '/build-roadmap',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -71,6 +83,8 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -81,6 +95,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -93,6 +109,8 @@ export interface FileRoutesById {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -106,6 +124,8 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/signin'
     | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -116,6 +136,8 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -127,6 +149,8 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/signin'
     | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -199,6 +223,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceMvpScopeRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/marketing-plan': {
+      id: '/workspace/marketing-plan'
+      path: '/marketing-plan'
+      fullPath: '/workspace/marketing-plan'
+      preLoaderRoute: typeof WorkspaceMarketingPlanRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/build-roadmap': {
+      id: '/workspace/build-roadmap'
+      path: '/build-roadmap'
+      fullPath: '/workspace/build-roadmap'
+      preLoaderRoute: typeof WorkspaceBuildRoadmapRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -210,6 +248,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface WorkspaceRouteRouteChildren {
+  WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
+  WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
   WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
   WorkspaceValidateRoute: typeof WorkspaceValidateRoute
   WorkspaceValidationSummaryRoute: typeof WorkspaceValidationSummaryRoute
@@ -218,6 +258,8 @@ interface WorkspaceRouteRouteChildren {
 }
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
+  WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
+  WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
   WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
   WorkspaceValidateRoute: WorkspaceValidateRoute,
   WorkspaceValidationSummaryRoute: WorkspaceValidationSummaryRoute,

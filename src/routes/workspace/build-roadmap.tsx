@@ -12,7 +12,7 @@ import {
 } from "@/components/founderos/ui";
 import { uid, useActiveVenture } from "@/lib/founderos/store";
 import { roadmapStats } from "@/lib/founderos/derive";
-import type { TaskStatus } from "@/lib/founderos/types";
+import type { Task, TaskStatus } from "@/lib/founderos/types";
 
 const TITLE = "Build Roadmap — FounderOS";
 const DESCRIPTION = "A two-week roadmap with three milestones, owners, due dates and progress.";
@@ -39,7 +39,7 @@ function RoadmapPage() {
   if (!venture) return <Empty>Create a venture from the sidebar to begin.</Empty>;
   const stats = roadmapStats(venture);
 
-  const editMilestone = (id: string, fn: (tasks: typeof venture.milestones[number]["tasks"]) => typeof venture.milestones[number]["tasks"]) =>
+  const editMilestone = (id: string, fn: (tasks: Task[]) => Task[]) =>
     update((v) => ({
       ...v,
       milestones: v.milestones.map((m) => (m.id === id ? { ...m, tasks: fn(m.tasks) } : m)),
