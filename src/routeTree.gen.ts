@@ -14,7 +14,9 @@ import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as WorkspaceVentureBriefRouteImport } from './routes/workspace/venture-brief'
+import { Route as WorkspaceValidationSummaryRouteImport } from './routes/workspace/validation-summary'
 import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
+import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const SigninRoute = SigninRouteImport.update({
@@ -42,9 +44,20 @@ const WorkspaceVentureBriefRoute = WorkspaceVentureBriefRouteImport.update({
   path: '/venture-brief',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceValidationSummaryRoute =
+  WorkspaceValidationSummaryRouteImport.update({
+    id: '/validation-summary',
+    path: '/validation-summary',
+    getParentRoute: () => WorkspaceRouteRoute,
+  } as any)
 const WorkspaceValidateRoute = WorkspaceValidateRouteImport.update({
   id: '/validate',
   path: '/validate',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
+  id: '/mvp-scope',
+  path: '/mvp-scope',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -58,7 +71,9 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace/': typeof WorkspaceIndexRoute
 }
@@ -66,7 +81,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace': typeof WorkspaceIndexRoute
 }
@@ -76,7 +93,9 @@ export interface FileRoutesById {
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/signin': typeof SigninRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
   '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
   '/workspace/': typeof WorkspaceIndexRoute
 }
@@ -87,7 +106,9 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/signin'
     | '/api/chat'
+    | '/workspace/mvp-scope'
     | '/workspace/validate'
+    | '/workspace/validation-summary'
     | '/workspace/venture-brief'
     | '/workspace/'
   fileRoutesByTo: FileRoutesByTo
@@ -95,7 +116,9 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/api/chat'
+    | '/workspace/mvp-scope'
     | '/workspace/validate'
+    | '/workspace/validation-summary'
     | '/workspace/venture-brief'
     | '/workspace'
   id:
@@ -104,7 +127,9 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/signin'
     | '/api/chat'
+    | '/workspace/mvp-scope'
     | '/workspace/validate'
+    | '/workspace/validation-summary'
     | '/workspace/venture-brief'
     | '/workspace/'
   fileRoutesById: FileRoutesById
@@ -153,11 +178,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceVentureBriefRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/validation-summary': {
+      id: '/workspace/validation-summary'
+      path: '/validation-summary'
+      fullPath: '/workspace/validation-summary'
+      preLoaderRoute: typeof WorkspaceValidationSummaryRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/workspace/validate': {
       id: '/workspace/validate'
       path: '/validate'
       fullPath: '/workspace/validate'
       preLoaderRoute: typeof WorkspaceValidateRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/mvp-scope': {
+      id: '/workspace/mvp-scope'
+      path: '/mvp-scope'
+      fullPath: '/workspace/mvp-scope'
+      preLoaderRoute: typeof WorkspaceMvpScopeRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
     '/api/chat': {
@@ -171,13 +210,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface WorkspaceRouteRouteChildren {
+  WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
   WorkspaceValidateRoute: typeof WorkspaceValidateRoute
+  WorkspaceValidationSummaryRoute: typeof WorkspaceValidationSummaryRoute
   WorkspaceVentureBriefRoute: typeof WorkspaceVentureBriefRoute
   WorkspaceIndexRoute: typeof WorkspaceIndexRoute
 }
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
+  WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
   WorkspaceValidateRoute: WorkspaceValidateRoute,
+  WorkspaceValidationSummaryRoute: WorkspaceValidationSummaryRoute,
   WorkspaceVentureBriefRoute: WorkspaceVentureBriefRoute,
   WorkspaceIndexRoute: WorkspaceIndexRoute,
 }
