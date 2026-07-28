@@ -1,0 +1,128 @@
+export type PainLevel = "Low" | "Medium" | "High";
+export type WouldPay = "Yes" | "Maybe" | "No";
+export type TaskStatus = "Not Started" | "In Progress" | "Done";
+
+export interface Interview {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  pain: PainLevel;
+  pay: WouldPay;
+  createdAt: string;
+}
+
+export interface Brief {
+  building: string;
+  audience: string;
+  problem: string;
+  workaround: string;
+  outcome: string;
+  saved: boolean;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  owner: string;
+  status: TaskStatus;
+  due: string;
+  done: boolean;
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  tasks: Task[];
+}
+
+export interface SprintDay {
+  day: number;
+  title: string;
+  notes: string;
+  tasks: { id: string; title: string; done: boolean }[];
+}
+
+export interface MvpScope {
+  coreProblem: string;
+  job: string;
+  promise: string;
+  outcome: string;
+  buildNow: string[];
+  later: string[];
+  target: string;
+}
+
+export interface MarketingPlan {
+  idealCustomer: string;
+  positioning: string;
+  message: string;
+  headline: string;
+  cta: string;
+  channels: string[];
+  outreach: string;
+  communityPost: string;
+  referral: string;
+  contentIdeas: string[];
+  firstHundred: string;
+}
+
+export interface Traction {
+  contacted: number;
+  interviews: number;
+  waitlist: number;
+  tried: number;
+  active: number;
+  paying: number;
+  revenue: number;
+  history: { date: string; active: number; waitlist: number; revenue: number }[];
+}
+
+export interface InvestorUpdate {
+  company: string;
+  problem: string;
+  solution: string;
+  customer: string;
+  validation: string;
+  mvp: string;
+  marketing: string;
+  traction: string;
+  learnings: string;
+  nextMilestone: string;
+  ask: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string;
+}
+
+export interface Venture {
+  id: string;
+  name: string;
+  createdAt: string;
+  brief: Brief;
+  interviews: Interview[];
+  summaryNotes: string;
+  analyzed: boolean;
+  mvp: MvpScope;
+  milestones: Milestone[];
+  marketing: MarketingPlan;
+  sprint: SprintDay[];
+  traction: Traction;
+  investor: InvestorUpdate;
+  chat: ChatMessage[];
+}
+
+export interface FounderUser {
+  name: string;
+  email: string;
+}
+
+export interface AppState {
+  user: FounderUser | null;
+  ventures: Venture[];
+  activeId: string | null;
+}

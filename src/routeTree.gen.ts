@@ -9,38 +9,214 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SigninRouteImport } from './routes/signin'
+import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
+import { Route as WorkspaceVentureBriefRouteImport } from './routes/workspace/venture-brief'
+import { Route as WorkspaceValidationSummaryRouteImport } from './routes/workspace/validation-summary'
+import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
+import { Route as WorkspaceTractionRouteImport } from './routes/workspace/traction'
+import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
+import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
+import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
+import { Route as WorkspaceInvestorUpdateRouteImport } from './routes/workspace/investor-update'
+import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const SigninRoute = SigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspaceRouteRoute = WorkspaceRouteRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceVentureBriefRoute = WorkspaceVentureBriefRouteImport.update({
+  id: '/venture-brief',
+  path: '/venture-brief',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceValidationSummaryRoute =
+  WorkspaceValidationSummaryRouteImport.update({
+    id: '/validation-summary',
+    path: '/validation-summary',
+    getParentRoute: () => WorkspaceRouteRoute,
+  } as any)
+const WorkspaceValidateRoute = WorkspaceValidateRouteImport.update({
+  id: '/validate',
+  path: '/validate',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceTractionRoute = WorkspaceTractionRouteImport.update({
+  id: '/traction',
+  path: '/traction',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
+  id: '/mvp-scope',
+  path: '/mvp-scope',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceMarketingPlanRoute = WorkspaceMarketingPlanRouteImport.update({
+  id: '/marketing-plan',
+  path: '/marketing-plan',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceLaunchSprintRoute = WorkspaceLaunchSprintRouteImport.update({
+  id: '/launch-sprint',
+  path: '/launch-sprint',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceInvestorUpdateRoute = WorkspaceInvestorUpdateRouteImport.update({
+  id: '/investor-update',
+  path: '/investor-update',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
+  id: '/build-roadmap',
+  path: '/build-roadmap',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/workspace': typeof WorkspaceRouteRouteWithChildren
+  '/signin': typeof SigninRoute
+  '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
+  '/workspace/': typeof WorkspaceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/signin': typeof SigninRoute
+  '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
+  '/workspace': typeof WorkspaceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/workspace': typeof WorkspaceRouteRouteWithChildren
+  '/signin': typeof SigninRoute
+  '/api/chat': typeof ApiChatRoute
+  '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
+  '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
+  '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
+  '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/traction': typeof WorkspaceTractionRoute
+  '/workspace/validate': typeof WorkspaceValidateRoute
+  '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
+  '/workspace/venture-brief': typeof WorkspaceVentureBriefRoute
+  '/workspace/': typeof WorkspaceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/workspace'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
+    | '/workspace/launch-sprint'
+    | '/workspace/marketing-plan'
+    | '/workspace/mvp-scope'
+    | '/workspace/traction'
+    | '/workspace/validate'
+    | '/workspace/validation-summary'
+    | '/workspace/venture-brief'
+    | '/workspace/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
+    | '/workspace/launch-sprint'
+    | '/workspace/marketing-plan'
+    | '/workspace/mvp-scope'
+    | '/workspace/traction'
+    | '/workspace/validate'
+    | '/workspace/validation-summary'
+    | '/workspace/venture-brief'
+    | '/workspace'
+  id:
+    | '__root__'
+    | '/'
+    | '/workspace'
+    | '/signin'
+    | '/api/chat'
+    | '/workspace/build-roadmap'
+    | '/workspace/investor-update'
+    | '/workspace/launch-sprint'
+    | '/workspace/marketing-plan'
+    | '/workspace/mvp-scope'
+    | '/workspace/traction'
+    | '/workspace/validate'
+    | '/workspace/validation-summary'
+    | '/workspace/venture-brief'
+    | '/workspace/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
+  SigninRoute: typeof SigninRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signin': {
+      id: '/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof SigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workspace': {
+      id: '/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof WorkspaceRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +224,122 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workspace/': {
+      id: '/workspace/'
+      path: '/'
+      fullPath: '/workspace/'
+      preLoaderRoute: typeof WorkspaceIndexRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/venture-brief': {
+      id: '/workspace/venture-brief'
+      path: '/venture-brief'
+      fullPath: '/workspace/venture-brief'
+      preLoaderRoute: typeof WorkspaceVentureBriefRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/validation-summary': {
+      id: '/workspace/validation-summary'
+      path: '/validation-summary'
+      fullPath: '/workspace/validation-summary'
+      preLoaderRoute: typeof WorkspaceValidationSummaryRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/validate': {
+      id: '/workspace/validate'
+      path: '/validate'
+      fullPath: '/workspace/validate'
+      preLoaderRoute: typeof WorkspaceValidateRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/traction': {
+      id: '/workspace/traction'
+      path: '/traction'
+      fullPath: '/workspace/traction'
+      preLoaderRoute: typeof WorkspaceTractionRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/mvp-scope': {
+      id: '/workspace/mvp-scope'
+      path: '/mvp-scope'
+      fullPath: '/workspace/mvp-scope'
+      preLoaderRoute: typeof WorkspaceMvpScopeRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/marketing-plan': {
+      id: '/workspace/marketing-plan'
+      path: '/marketing-plan'
+      fullPath: '/workspace/marketing-plan'
+      preLoaderRoute: typeof WorkspaceMarketingPlanRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/launch-sprint': {
+      id: '/workspace/launch-sprint'
+      path: '/launch-sprint'
+      fullPath: '/workspace/launch-sprint'
+      preLoaderRoute: typeof WorkspaceLaunchSprintRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/investor-update': {
+      id: '/workspace/investor-update'
+      path: '/investor-update'
+      fullPath: '/workspace/investor-update'
+      preLoaderRoute: typeof WorkspaceInvestorUpdateRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/build-roadmap': {
+      id: '/workspace/build-roadmap'
+      path: '/build-roadmap'
+      fullPath: '/workspace/build-roadmap'
+      preLoaderRoute: typeof WorkspaceBuildRoadmapRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface WorkspaceRouteRouteChildren {
+  WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
+  WorkspaceInvestorUpdateRoute: typeof WorkspaceInvestorUpdateRoute
+  WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
+  WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
+  WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
+  WorkspaceTractionRoute: typeof WorkspaceTractionRoute
+  WorkspaceValidateRoute: typeof WorkspaceValidateRoute
+  WorkspaceValidationSummaryRoute: typeof WorkspaceValidationSummaryRoute
+  WorkspaceVentureBriefRoute: typeof WorkspaceVentureBriefRoute
+  WorkspaceIndexRoute: typeof WorkspaceIndexRoute
+}
+
+const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
+  WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
+  WorkspaceInvestorUpdateRoute: WorkspaceInvestorUpdateRoute,
+  WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
+  WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
+  WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
+  WorkspaceTractionRoute: WorkspaceTractionRoute,
+  WorkspaceValidateRoute: WorkspaceValidateRoute,
+  WorkspaceValidationSummaryRoute: WorkspaceValidationSummaryRoute,
+  WorkspaceVentureBriefRoute: WorkspaceVentureBriefRoute,
+  WorkspaceIndexRoute: WorkspaceIndexRoute,
+}
+
+const WorkspaceRouteRouteWithChildren = WorkspaceRouteRoute._addFileChildren(
+  WorkspaceRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
+  SigninRoute: SigninRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
