@@ -41,6 +41,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
+  const handleClearSession = () => {
+    try {
+      window.localStorage.clear();
+    } catch {}
+    window.location.href = "/signin";
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -48,8 +55,16 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong on our end. You can try refreshing, resetting your session, or heading back home.
         </p>
+
+        {error?.message ? (
+          <div className="mt-4 p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-left text-xs font-mono text-red-300 overflow-x-auto max-h-32 select-all">
+            <span className="font-bold">Error: </span>
+            {error.message}
+          </div>
+        ) : null}
+
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -59,6 +74,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Try again
+          </button>
+          <button
+            onClick={handleClearSession}
+            className="inline-flex items-center justify-center rounded-md border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/20"
+          >
+            Clear Session & Reset
           </button>
           <a
             href="/"

@@ -76,7 +76,7 @@ function MvpScopePage() {
           </Field>
         </div>
         {!m.promise ? (
-          <p className="mt-5 border-l border-lime/50 pl-4 text-sm text-muted-foreground">
+          <p className="mt-5 border-l border-[#4F8CFF]/50 pl-4 text-sm text-muted-foreground">
             Suggested promise: {mvpPromise(venture)}
           </p>
         ) : null}

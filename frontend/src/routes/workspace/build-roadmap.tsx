@@ -69,7 +69,7 @@ function RoadmapPage() {
           const done = m.tasks.filter((t) => t.done).length;
           return (
             <div key={m.id} className="relative">
-              <span className="absolute -left-[31px] top-6 size-2.5 rounded-full bg-lime shadow-[var(--shadow-glow)]" />
+              <span className="absolute -left-[31px] top-6 size-2.5 rounded-full bg-[#4F8CFF] shadow-[0_0_12px_rgba(79,140,255,0.8)]" />
               <Panel
                 title={`Milestone ${idx + 1}`}
                 action={
@@ -106,7 +106,7 @@ function RoadmapPage() {
                             ),
                           )
                         }
-                        className="size-4 accent-lime"
+                        className="size-4 accent-[#4F8CFF]"
                       />
                       <TextInput
                         value={t.title}

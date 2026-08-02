@@ -10,11 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as SigninRouteImport } from './routes/signin'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
+import { Route as WorkspaceIdeaValidationRouteImport } from './routes/workspace/idea-validation'
 import { Route as WorkspaceInvestorUpdateRouteImport } from './routes/workspace/investor-update'
 import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
 import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
@@ -29,9 +32,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SigninRoute = SigninRouteImport.update({
   id: '/signin',
   path: '/signin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkspaceRouteRoute = WorkspaceRouteRouteImport.update({
@@ -52,6 +65,11 @@ const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
 const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
   id: '/build-roadmap',
   path: '/build-roadmap',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceIdeaValidationRoute = WorkspaceIdeaValidationRouteImport.update({
+  id: '/idea-validation',
+  path: '/idea-validation',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceInvestorUpdateRoute = WorkspaceInvestorUpdateRouteImport.update({
@@ -99,9 +117,12 @@ const WorkspaceVentureBriefRoute = WorkspaceVentureBriefRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/workspace': typeof WorkspaceRouteRouteWithChildren
+  '/login': typeof LoginRoute
   '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -114,9 +135,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -131,9 +155,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/workspace': typeof WorkspaceRouteRouteWithChildren
+  '/login': typeof LoginRoute
   '/signin': typeof SigninRoute
+  '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
+  '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -149,9 +176,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/workspace'
+    | '/login'
     | '/signin'
+    | '/signup'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/idea-validation'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -164,9 +194,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/signin'
+    | '/signup'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/idea-validation'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -180,9 +213,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/workspace'
+    | '/login'
     | '/signin'
+    | '/signup'
     | '/api/chat'
     | '/workspace/build-roadmap'
+    | '/workspace/idea-validation'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -197,7 +233,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
   SigninRoute: typeof SigninRoute
+  SignupRoute: typeof SignupRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
@@ -210,11 +248,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signin': {
       id: '/signin'
       path: '/signin'
       fullPath: '/signin'
       preLoaderRoute: typeof SigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/workspace': {
@@ -243,6 +295,13 @@ declare module '@tanstack/react-router' {
       path: '/build-roadmap'
       fullPath: '/workspace/build-roadmap'
       preLoaderRoute: typeof WorkspaceBuildRoadmapRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/idea-validation': {
+      id: '/workspace/idea-validation'
+      path: '/idea-validation'
+      fullPath: '/workspace/idea-validation'
+      preLoaderRoute: typeof WorkspaceIdeaValidationRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/investor-update': {
@@ -306,6 +365,7 @@ declare module '@tanstack/react-router' {
 
 interface WorkspaceRouteRouteChildren {
   WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
+  WorkspaceIdeaValidationRoute: typeof WorkspaceIdeaValidationRoute
   WorkspaceInvestorUpdateRoute: typeof WorkspaceInvestorUpdateRoute
   WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
   WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
@@ -319,6 +379,7 @@ interface WorkspaceRouteRouteChildren {
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
   WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
+  WorkspaceIdeaValidationRoute: WorkspaceIdeaValidationRoute,
   WorkspaceInvestorUpdateRoute: WorkspaceInvestorUpdateRoute,
   WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
   WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
@@ -337,7 +398,9 @@ const WorkspaceRouteRouteWithChildren = WorkspaceRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
   SigninRoute: SigninRoute,
+  SignupRoute: SignupRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport

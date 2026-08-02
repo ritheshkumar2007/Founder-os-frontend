@@ -125,7 +125,7 @@ function TractionPage() {
       </Panel>
 
       <Panel title="Recommended next action">
-        <p className="font-display text-2xl text-lime">{m.nextAction}</p>
+        <p className="font-display text-2xl text-[#4F8CFF] font-semibold">{m.nextAction}</p>
       </Panel>
 
       <div className="flex flex-wrap gap-3">

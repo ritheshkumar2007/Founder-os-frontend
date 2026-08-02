@@ -66,7 +66,7 @@ function SprintPage() {
       <div className="relative space-y-6 border-l border-border pl-6">
         {venture.sprint.map((d) => (
           <div key={d.day} className="relative">
-            <span className="absolute -left-[31px] top-6 size-2.5 rounded-full bg-lime shadow-[var(--shadow-glow)]" />
+            <span className="absolute -left-[31px] top-6 size-2.5 rounded-full bg-[#4F8CFF] shadow-[0_0_12px_rgba(79,140,255,0.8)]" />
             <Panel title={`Day ${d.day}`}>
               <TextInput value={d.title} onChange={(e) => editDay(d.day, { title: e.target.value })} />
               <ul className="mt-4 space-y-2">
@@ -81,7 +81,7 @@ function SprintPage() {
                           tasks: d.tasks.map((x) => (x.id === t.id ? { ...x, done: e.target.checked } : x)),
                         })
                       }
-                      className="size-4 accent-lime"
+                      className="size-4 accent-[#4F8CFF]"
                     />
                     <TextInput
                       value={t.title}

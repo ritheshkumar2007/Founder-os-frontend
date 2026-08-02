@@ -2,6 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/workspace/")({
   beforeLoad: () => {
-    throw redirect({ to: "/workspace/venture-brief" });
+    throw redirect({ to: "/workspace/idea-validation" });
   },
 });

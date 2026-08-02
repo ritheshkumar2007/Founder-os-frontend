@@ -119,10 +119,21 @@ export interface Venture {
 export interface FounderUser {
   name: string;
   email: string;
+  avatarUrl?: string;
+  createdAt?: string;
+}
+
+export interface UserRecord {
+  user: FounderUser;
+  ventures: Venture[];
+  activeId: string | null;
+  lastRoute?: string;
 }
 
 export interface AppState {
   user: FounderUser | null;
   ventures: Venture[];
   activeId: string | null;
+  saveStatus: "saved" | "saving";
+  users: Record<string, UserRecord>;
 }
