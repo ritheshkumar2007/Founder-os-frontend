@@ -40,6 +40,14 @@ app.use(cookieParser());
 // Prevent NoSQL query injection
 app.use(mongoSanitize());
 
+// Ensure Database Connection Middleware
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
+  next();
+});
+
 // HTTP request logger middleware
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
