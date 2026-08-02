@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
+const mongoose = require('mongoose');
+const connectDB = require('./config/database');
 
 const authRoutes = require('./routes/auth');
 const ventureRoutes = require('./routes/ventures');
