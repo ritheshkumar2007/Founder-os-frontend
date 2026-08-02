@@ -21,7 +21,7 @@ app.use(helmet());
 
 // Enable CORS
 const corsOptions = {
-  origin: process.env.CLIENT_URL || '*',
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
