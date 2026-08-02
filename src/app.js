@@ -42,8 +42,17 @@ app.use(mongoSanitize());
 
 // Ensure Database Connection Middleware
 app.use(async (req, res, next) => {
+  if (req.path === '/api/health') return next();
   if (mongoose.connection.readyState !== 1) {
-    await connectDB();
+    try {
+      await connectDB();
+    } catch (err) {
+      return res.status(503).json({
+        success: false,
+        message: `Database connection error: ${err.message}`,
+        help: 'Please check MONGODB_URI in Render Environment Variables and MongoDB Atlas IP Whitelist (0.0.0.0/0).',
+      });
+    }
   }
   next();
 });

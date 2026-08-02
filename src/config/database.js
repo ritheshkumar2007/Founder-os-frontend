@@ -8,22 +8,18 @@ const connectDB = async () => {
   const uri = process.env.MONGODB_URI;
 
   if (!uri || uri.includes('<db_password>') || uri.includes('<password>')) {
-    console.warn('⚠️ MONGODB_URI missing or contains placeholder.');
-    return;
+    throw new Error('MONGODB_URI is missing or contains placeholder in environment variables.');
   }
 
   if (mongoose.connection.readyState === 1) {
-    return;
+    return mongoose.connection;
   }
 
-  try {
-    const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
-    });
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Connection Warning: ${error.message}`);
-  }
+  const conn = await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 10000,
+  });
+  console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  return conn;
 };
 
 module.exports = connectDB;
