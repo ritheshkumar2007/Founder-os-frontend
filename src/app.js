@@ -66,6 +66,16 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('dev'));
 }
 
+// Root welcome endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: '🚀 FounderOS Backend REST API is live and active.',
+    healthCheck: '/api/health',
+    documentation: 'API endpoints available at /api/*',
+  });
+});
+
 // Health check endpoint (for deployment platforms & load balancers)
 app.get('/api/health', (req, res) => {
   res.status(200).json({
