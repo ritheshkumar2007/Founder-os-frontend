@@ -101,7 +101,11 @@ export function SignIn() {
         ? search.redirect
         : authResult.lastRoute || "/workspace/idea-validation";
 
-    navigate({ to: targetRoute as any });
+    if (typeof window !== "undefined") {
+      window.location.href = targetRoute;
+    } else {
+      navigate({ to: targetRoute as any });
+    }
   };
 
   return (

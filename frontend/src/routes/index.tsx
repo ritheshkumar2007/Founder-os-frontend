@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, Terminal, CheckCircle2, LayoutGrid } from "lucide-react";
+import { useAppState } from "@/lib/founderos/store";
 
 import { StarfieldBackground } from "@/components/founderos/StarfieldBackground";
 import { MouseSpotlight } from "@/components/founderos/MouseSpotlight";
@@ -33,6 +34,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const app = useAppState();
+  const targetPath = app.user ? "/workspace/idea-validation" : "/signin";
+
   return (
     <main className="relative min-h-screen bg-[#080A0F] text-[#F5F8FC] overflow-x-hidden selection:bg-[#4F8CFF]/30 selection:text-[#F5F8FC]">
       {/* Interactive Mouse Spotlight Radial Light Layer */}
@@ -72,14 +76,25 @@ function Index() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <MagneticButton>
-              <Link
-                to="/signin"
-                className="btn-system w-full sm:w-auto px-8 py-4 rounded-2xl text-base flex items-center justify-center gap-3 group shadow-[0_0_25px_rgba(79,140,255,0.3)]"
-              >
-                <Sparkles className="size-5 text-[#64D8FF]" />
-                <span>Enter Operating System</span>
-                <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-              </Link>
+              {app.user ? (
+                <Link
+                  to="/workspace/idea-validation"
+                  className="btn-system w-full sm:w-auto px-8 py-4 rounded-2xl text-base flex items-center justify-center gap-3 group shadow-[0_0_25px_rgba(79,140,255,0.3)]"
+                >
+                  <Sparkles className="size-5 text-[#64D8FF]" />
+                  <span>Open Operating System</span>
+                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              ) : (
+                <Link
+                  to="/signin"
+                  className="btn-system w-full sm:w-auto px-8 py-4 rounded-2xl text-base flex items-center justify-center gap-3 group shadow-[0_0_25px_rgba(79,140,255,0.3)]"
+                >
+                  <Sparkles className="size-5 text-[#64D8FF]" />
+                  <span>Enter Operating System</span>
+                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              )}
             </MagneticButton>
 
             <MagneticButton>

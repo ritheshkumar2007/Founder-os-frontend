@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { Rocket, ChevronRight, Menu, X, Sparkles } from "lucide-react";
+import { useAppState } from "@/lib/founderos/store";
 
 export const Navbar: React.FC = () => {
+  const app = useAppState();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const targetPath = app.user ? "/workspace/idea-validation" : "/signin";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,22 +81,43 @@ export const Navbar: React.FC = () => {
 
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center gap-3">
-            <Link
-              to="/signin"
-              search={{ mode: "signin" }}
-              className="btn-frosted text-sm font-medium px-4 py-2 rounded-xl"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/signin"
-              search={{ mode: "signup" }}
-              className="btn-system flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold group"
-            >
-              <Sparkles className="size-4 text-[#64D8FF]" />
-              <span>Enter Operating System</span>
-              <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            {app.user ? (
+              <Link
+                to="/workspace/idea-validation"
+                className="btn-frosted text-sm font-medium px-4 py-2 rounded-xl"
+              >
+                Go to Workspace
+              </Link>
+            ) : (
+              <Link
+                to="/signin"
+                search={{ mode: "signin" }}
+                className="btn-frosted text-sm font-medium px-4 py-2 rounded-xl"
+              >
+                Sign In
+              </Link>
+            )}
+
+            {app.user ? (
+              <Link
+                to="/workspace/idea-validation"
+                className="btn-system flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold group"
+              >
+                <Sparkles className="size-4 text-[#64D8FF]" />
+                <span>Open Operating System</span>
+                <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            ) : (
+              <Link
+                to="/signin"
+                search={{ mode: "signup" }}
+                className="btn-system flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold group"
+              >
+                <Sparkles className="size-4 text-[#64D8FF]" />
+                <span>Enter Operating System</span>
+                <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Toggle Button */}
