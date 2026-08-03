@@ -1,264 +1,114 @@
-const { validationResult } = require('express-validator');
+const Traction = require('../models/Traction');
+const Venture = require('../models/Venture');
+const { analyzeTractionWithGemini } = require('../services/tractionGeminiService');
 
 /**
- * Calculate automated traction metrics and stage classification
- * @param {Object} inputs - Raw founder traction inputs
- * @returns {Object} Calculated metrics object
+ * Controller to handle POST /api/traction/analyze
  */
-const calculateTractionMetrics = ({
-  peopleContacted = 0,
-  mvpUsers = 0,
-  payingUsers = 0,
-  monthlyRevenue = 0,
-}) => {
-  const contacted = Number(peopleContacted) || 0;
-  const mvp = Number(mvpUsers) || 0;
-  const paying = Number(payingUsers) || 0;
-  const revenue = Number(monthlyRevenue) || 0;
-
-  // 1. Contact to User Conversion (%)
-  const contactToUserConversion =
-    contacted > 0 ? Number(((mvp / contacted) * 100).toFixed(1)) : 0;
-
-  // 2. User to Paying Conversion (%)
-  const userToPayingConversion =
-    mvp > 0 ? Number(((paying / mvp) * 100).toFixed(1)) : 0;
-
-  // 3. Revenue Per Paying User ($)
-  const revenuePerPayingUser =
-    paying > 0 ? Number((revenue / paying).toFixed(2)) : 0;
-
-  // 4. Current Traction Stage Classification Rules:
-  // - If mvpUsers == 0 -> Pre-Launch
-  // - Else if mvpUsers > 0 && payingUsers == 0 -> Early Validation
-  // - Else if payingUsers >= 1 && monthlyRevenue < 1000 -> First Revenue
-  // - Else if monthlyRevenue >= 1000 -> Growing Startup
-  let currentTractionStage = 'Pre-Launch';
-
-  if (mvp === 0) {
-    currentTractionStage = 'Pre-Launch';
-  } else if (mvp > 0 && paying === 0) {
-    currentTractionStage = 'Early Validation';
-  } else if (paying >= 1 && revenue < 1000) {
-    currentTractionStage = 'First Revenue';
-  } else if (revenue >= 1000) {
-    currentTractionStage = 'Growing Startup';
-  }
-
-  return {
-    contactToUserConversion,
-    userToPayingConversion,
-    revenuePerPayingUser,
-    currentTractionStage,
-  };
-};
-
-/**
- * Helper to format traction response object
- */
-const formatTractionResponse = (traction) => {
-  return {
-    peopleContacted: traction.peopleContacted || 0,
-    customerInterviews: traction.customerInterviews || 0,
-    waitlistSignups: traction.waitlistSignups || 0,
-    mvpUsers: traction.mvpUsers || 0,
-    activeUsers: traction.activeUsers || 0,
-    payingUsers: traction.payingUsers || 0,
-    monthlyRevenue: traction.monthlyRevenue || 0,
-    metrics: {
-      contactToUserConversion: traction.metrics?.contactToUserConversion || 0,
-      userToPayingConversion: traction.metrics?.userToPayingConversion || 0,
-      revenuePerPayingUser: traction.metrics?.revenuePerPayingUser || 0,
-      currentTractionStage: traction.metrics?.currentTractionStage || 'Pre-Launch',
-    },
-    history: (traction.history || []).map((h) => ({
-      _id: h._id,
-      date: h.date,
-      peopleContacted: h.peopleContacted,
-      customerInterviews: h.customerInterviews,
-      waitlistSignups: h.waitlistSignups,
-      mvpUsers: h.mvpUsers,
-      activeUsers: h.activeUsers,
-      payingUsers: h.payingUsers,
-      monthlyRevenue: h.monthlyRevenue,
-      currentTractionStage: h.currentTractionStage,
-    })),
-    createdAt: traction.createdAt,
-    updatedAt: traction.updatedAt,
-  };
-};
-
-/**
- * @desc    Get Traction Dashboard data
- * @route   GET /api/ventures/:ventureId/traction
- * @access  Private (Owner only)
- */
-const getTraction = async (req, res, next) => {
+async function analyzeTraction(req, res, next) {
   try {
-    const traction = req.venture.traction;
+    const userId = req.user.id;
+    let {
+      ventureId,
+      ventureName,
+      totalUsers,
+      monthlyActiveUsers,
+      newUsers,
+      revenue,
+      conversionRate,
+      retentionRate,
+      customerAcquisitionChannels,
+      customerFeedback,
+      growthGoal,
+    } = req.body;
 
-    if (!traction || !traction.isSaved) {
-      // Return default empty traction object with default metrics
-      const defaultMetrics = calculateTractionMetrics({
-        peopleContacted: 0,
-        mvpUsers: 0,
-        payingUsers: 0,
-        monthlyRevenue: 0,
-      });
-
-      return res.status(200).json({
-        success: true,
-        traction: {
-          peopleContacted: 0,
-          customerInterviews: 0,
-          waitlistSignups: 0,
-          mvpUsers: 0,
-          activeUsers: 0,
-          payingUsers: 0,
-          monthlyRevenue: 0,
-          metrics: defaultMetrics,
-          history: [],
-        },
-      });
+    let venture = null;
+    if (ventureId) {
+      venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    }
+    if (!venture) {
+      venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
     }
 
-    res.status(200).json({
-      success: true,
-      traction: formatTractionResponse(traction),
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * @desc    Save/Update Traction Dashboard data
- * @route   POST /api/ventures/:ventureId/traction
- * @route   PUT /api/ventures/:ventureId/traction
- * @access  Private (Owner only)
- */
-const saveTraction = async (req, res, next) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: errors.array()[0].msg,
-        errors: errors.array(),
-      });
+    if (venture) {
+      ventureId = venture._id;
+      ventureName = ventureName || venture.ventureName || venture.name || 'Untitled Venture';
+    } else {
+      ventureName = ventureName || 'Untitled Venture';
     }
 
-    const existingTraction = req.venture.traction || {};
+    const metricsObj = {
+      totalUsers: Number(totalUsers) || 120,
+      monthlyActiveUsers: Number(monthlyActiveUsers) || 85,
+      newUsers: Number(newUsers) || 35,
+      revenue: String(revenue || '$1,250/mo'),
+      conversionRate: String(conversionRate || '4.2%'),
+      retentionRate: String(retentionRate || '68%'),
+      customerAcquisitionChannels: Array.isArray(customerAcquisitionChannels)
+        ? customerAcquisitionChannels
+        : (typeof customerAcquisitionChannels === 'string' ? customerAcquisitionChannels.split(',') : ['LinkedIn', 'Product Hunt', 'Organic Referral']),
+    };
 
-    const peopleContacted =
-      req.body.peopleContacted !== undefined
-        ? Number(req.body.peopleContacted)
-        : existingTraction.peopleContacted || 0;
-    const customerInterviews =
-      req.body.customerInterviews !== undefined
-        ? Number(req.body.customerInterviews)
-        : existingTraction.customerInterviews || 0;
-    const waitlistSignups =
-      req.body.waitlistSignups !== undefined
-        ? Number(req.body.waitlistSignups)
-        : existingTraction.waitlistSignups || 0;
-    const mvpUsers =
-      req.body.mvpUsers !== undefined
-        ? Number(req.body.mvpUsers)
-        : existingTraction.mvpUsers || 0;
-    const activeUsers =
-      req.body.activeUsers !== undefined
-        ? Number(req.body.activeUsers)
-        : existingTraction.activeUsers || 0;
-    const payingUsers =
-      req.body.payingUsers !== undefined
-        ? Number(req.body.payingUsers)
-        : existingTraction.payingUsers || 0;
-    const monthlyRevenue =
-      req.body.monthlyRevenue !== undefined
-        ? Number(req.body.monthlyRevenue)
-        : existingTraction.monthlyRevenue || 0;
+    const feedbackText = customerFeedback || 'Users love instant roadmap generation; asking for export options.';
 
-    // Calculate automated metrics (ignoring any manual metrics sent by frontend)
-    const computedMetrics = calculateTractionMetrics({
-      peopleContacted,
-      mvpUsers,
-      payingUsers,
-      monthlyRevenue,
+    // Call Gemini AI
+    const aiAnalysis = await analyzeTractionWithGemini({
+      ventureName,
+      metrics: metricsObj,
+      feedback: feedbackText,
+      goal: growthGoal || 'Reach 500 active users & $5k MRR in 60 days',
     });
 
-    const historyArray = Array.isArray(existingTraction.history)
-      ? [...existingTraction.history]
-      : [];
+    // Save to MongoDB
+    const newTraction = await Traction.create({
+      userId,
+      ventureId: ventureId || undefined,
+      ventureName,
+      metrics: metricsObj,
+      customerInsights: [feedbackText],
+      aiAnalysis,
+    });
 
-    // Append new historical snapshot for charts
-    const newHistoryEntry = {
-      date: new Date(),
-      peopleContacted,
-      customerInterviews,
-      waitlistSignups,
-      mvpUsers,
-      activeUsers,
-      payingUsers,
-      monthlyRevenue,
-      currentTractionStage: computedMetrics.currentTractionStage,
-    };
-    historyArray.push(newHistoryEntry);
-
-    req.venture.traction = {
-      peopleContacted,
-      customerInterviews,
-      waitlistSignups,
-      mvpUsers,
-      activeUsers,
-      payingUsers,
-      monthlyRevenue,
-      metrics: computedMetrics,
-      history: historyArray,
-      isSaved: true,
-      createdAt: existingTraction.createdAt || new Date(),
-      updatedAt: new Date(),
-    };
-
-    // Update progress tracking
-    const completedSteps = new Set(
-      req.venture.ideaValidation?.progress?.completedSteps || []
-    );
-    completedSteps.add('Traction Dashboard');
-    req.venture.ideaValidation.progress.completedSteps = Array.from(completedSteps);
-    req.venture.ideaValidation.progress.currentStep = 'Traction Dashboard';
-
-    await req.venture.save();
-
-    res.status(200).json({
+    return res.status(201).json({
       success: true,
-      traction: formatTractionResponse(req.venture.traction),
+      message: 'Traction analysis completed successfully',
+      traction: newTraction,
     });
   } catch (error) {
+    console.error('Error in tractionController analyzeTraction:', error);
     next(error);
   }
-};
+}
 
 /**
- * @desc    Get Traction History array
- * @route   GET /api/ventures/:ventureId/traction/history
- * @access  Private (Owner only)
+ * Controller to handle GET /api/traction/history
  */
-const getTractionHistory = async (req, res, next) => {
+async function getTractionHistory(req, res, next) {
   try {
-    const history = req.venture.traction?.history || [];
-    res.status(200).json({
+    const { ventureId } = req.params;
+    const userId = req.user.id;
+
+    let tractions = [];
+    if (ventureId && ventureId !== 'history' && ventureId !== 'latest') {
+      tractions = await Traction.find({ ventureId, userId }).sort({ createdAt: -1 });
+    } else {
+      tractions = await Traction.find({ userId }).sort({ createdAt: -1 });
+    }
+
+    const latest = tractions[0] || null;
+
+    return res.status(200).json({
       success: true,
-      count: history.length,
-      history,
+      traction: latest,
+      history: tractions,
     });
   } catch (error) {
+    console.error('Error in tractionController getTractionHistory:', error);
     next(error);
   }
-};
+}
 
 module.exports = {
-  getTraction,
-  saveTraction,
+  analyzeTraction,
   getTractionHistory,
 };

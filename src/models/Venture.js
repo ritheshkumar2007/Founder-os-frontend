@@ -266,6 +266,11 @@ const ventureSchema = new mongoose.Schema(
       createdAt: { type: Date, default: Date.now },
       updatedAt: { type: Date, default: Date.now },
     },
+    // Founder Memory Extended Fields
+    businessModel: { type: String, trim: true, default: '' },
+    pricing: { type: String, trim: true, default: '' },
+    competitors: [{ type: String }],
+    risks: [{ type: String }],
   },
   {
     timestamps: true,

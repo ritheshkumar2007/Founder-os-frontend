@@ -1,7 +1,7 @@
 const express = require('express');
 const { protect } = require('../middleware/authMiddleware');
 const Venture = require('../models/Venture');
-const { getMarketingPlanForVenture, generateMarketingPlan, updateMarketingPlan } = require('../services/marketingService');
+const { getLaunchSprintForVenture, generateLaunchSprint, updateLaunchSprint } = require('../services/launchService');
 
 const router = express.Router();
 router.use(protect);
@@ -14,8 +14,8 @@ router.get('/:ventureId', async (req, res, next) => {
     if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
     if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
 
-    const marketingPlan = await getMarketingPlanForVenture(venture._id, userId, venture);
-    return res.status(200).json({ success: true, marketingPlan });
+    const launchSprint = await getLaunchSprintForVenture(venture._id, userId, venture);
+    return res.status(200).json({ success: true, launchSprint });
   } catch (error) {
     next(error);
   }
@@ -29,8 +29,8 @@ router.post('/generate', async (req, res, next) => {
     if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
     if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
 
-    const marketingPlan = await generateMarketingPlan({ venture, userId });
-    return res.status(200).json({ success: true, message: 'Marketing plan generated', marketingPlan });
+    const launchSprint = await generateLaunchSprint({ venture, userId });
+    return res.status(200).json({ success: true, message: 'Launch sprint generated', launchSprint });
   } catch (error) {
     next(error);
   }
@@ -40,8 +40,8 @@ router.put('/:ventureId', async (req, res, next) => {
   try {
     const { ventureId } = req.params;
     const userId = req.user.id;
-    const marketingPlan = await updateMarketingPlan(ventureId, userId, req.body);
-    return res.status(200).json({ success: true, marketingPlan });
+    const launchSprint = await updateLaunchSprint(ventureId, userId, req.body);
+    return res.status(200).json({ success: true, launchSprint });
   } catch (error) {
     next(error);
   }

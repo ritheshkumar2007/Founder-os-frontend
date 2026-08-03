@@ -1,54 +1,50 @@
 const express = require('express');
-const { body } = require('express-validator');
 const { protect } = require('../middleware/authMiddleware');
-const { checkVentureOwnership } = require('../middleware/ventureMiddleware');
-const {
-  getTraction,
-  saveTraction,
-  getTractionHistory,
-} = require('../controllers/tractionController');
+const Venture = require('../models/Venture');
+const { getTractionDataForVenture, generateTractionData, updateTractionData } = require('../services/tractionService');
 
-const router = express.Router({ mergeParams: true });
-
-const tractionValidation = [
-  body('peopleContacted')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('peopleContacted must be a non-negative integer'),
-  body('customerInterviews')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('customerInterviews must be a non-negative integer'),
-  body('waitlistSignups')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('waitlistSignups must be a non-negative integer'),
-  body('mvpUsers')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('mvpUsers must be a non-negative integer'),
-  body('activeUsers')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('activeUsers must be a non-negative integer'),
-  body('payingUsers')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('payingUsers must be a non-negative integer'),
-  body('monthlyRevenue')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('monthlyRevenue must be a non-negative number'),
-];
-
+const router = express.Router();
 router.use(protect);
-router.use(checkVentureOwnership);
 
-router.route('/')
-  .get(getTraction)
-  .post(tractionValidation, saveTraction)
-  .put(tractionValidation, saveTraction);
+router.get('/:ventureId', async (req, res, next) => {
+  try {
+    const { ventureId } = req.params;
+    const userId = req.user.id;
+    let venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
+    if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
 
-router.get('/history', getTractionHistory);
+    const tractionData = await getTractionDataForVenture(venture._id, userId, venture);
+    return res.status(200).json({ success: true, tractionData });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/generate', async (req, res, next) => {
+  try {
+    const { ventureId } = req.body;
+    const userId = req.user.id;
+    let venture = ventureId ? await Venture.findOne({ _id: ventureId, owner: userId }) : null;
+    if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
+    if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
+
+    const tractionData = await generateTractionData({ venture, userId });
+    return res.status(200).json({ success: true, message: 'Traction dashboard generated', tractionData });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/:ventureId', async (req, res, next) => {
+  try {
+    const { ventureId } = req.params;
+    const userId = req.user.id;
+    const tractionData = await updateTractionData(ventureId, userId, req.body);
+    return res.status(200).json({ success: true, tractionData });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

@@ -1,63 +1,98 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { buildFounderContextWindow } = require('./memoryService');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+/**
+ * Core AI Service for communicating with Google Gemini API
+ * 
+ * @param {Object} options
+ * @param {string} options.message - Current user message
+ * @param {Object} [options.venture] - Venture document from DB
+ * @param {Array} [options.history] - Array of previous { role, content } messages from DB
+ * @returns {Promise<string>} Gemini response text
+ */
+async function chatWithGemini(options) {
+  const apiKey = process.env.GEMINI_API_KEY;
 
-const SYSTEM_PROMPT = `You are an experienced startup advisor and business mentor embedded inside FounderOS — an AI-powered startup operating system.
+  if (!apiKey || !apiKey.trim()) {
+    const error = new Error('GEMINI_API_KEY is not set in environment variables');
+    error.statusCode = 500;
+    throw error;
+  }
+
+  let userMessage = '';
+  let rawHistory = [];
+  let venture = null;
+
+  if (typeof options === 'string') {
+    userMessage = options;
+  } else if (typeof options === 'object' && options !== null) {
+    userMessage = options.message || '';
+    rawHistory = options.history || [];
+    venture = options.venture || null;
+  }
+
+  if (!userMessage || !userMessage.trim()) {
+    const error = new Error('User message is required');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const memoryContext = buildFounderContextWindow(venture);
+
+  const systemInstruction = `You are an experienced startup advisor and business mentor embedded inside FounderOS — an AI-powered startup operating system.
+
+You possess persistent, long-term Founder Memory. You must ALWAYS remember and reason about the founder's active startup background parameters.
+
+CURRENT FOUNDER MEMORY & VENTURE PARAMETERS:
+${memoryContext}
 
 Your personality:
-- Warm, encouraging, but direct and honest
-- You have the wisdom of a seasoned startup mentor (think Paul Graham, Y Combinator style)
+- Warm, encouraging, but direct and honest (wisdom of a seasoned YC-style mentor)
+- You remember everything the founder tells you about their startup
 - You ask ONE focused question at a time — never multiple questions at once
-- You build on what the founder says — never repeat yourself
-- You are conversational, not formal
-
-Your goal:
-- Help founders validate their startup idea through conversation
-- Understand their: product idea, target customer, core pain point, current workarounds, value proposition, and MVP scope
-- Guide the conversation naturally toward building a complete venture brief
-- Give constructive feedback, suggestions, and encouragement along the way
+- You build directly on what the founder says — never repeat yourself
+- You are conversational, practical, and highly specific
 
 Rules:
 - ALWAYS ask only ONE question per response
 - Keep responses concise (2-4 sentences max, then one question)
-- Use simple, clear language — no jargon unless the founder uses it first
-- Be encouraging but realistic
-- If the founder seems stuck, give an example to help them think
-- After 6-8 exchanges, you can offer to summarize what you've learned about their venture
+- Refer to their specific product, customer, problem, and solution when relevant`;
 
-Remember: You are inside a startup OS — founders come here to build real companies. Take their ideas seriously.`;
-
-/**
- * Send a message to Gemini and get a response
- * @param {Array} messages - Array of {role: 'user'|'assistant', content: string}
- * @param {string} userMessage - The latest user message
- */
-async function chatWithGemini(messages, userMessage) {
   try {
+    const genAI = new GoogleGenerativeAI(apiKey.trim());
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_PROMPT,
+      systemInstruction,
     });
 
     // Build conversation history for Gemini
-    const history = messages
-      .filter((m) => m.role !== 'assistant' || m.id !== 'initial-ai-greeting')
+    const history = rawHistory
+      .filter((m) => m && m.content && (m.role === 'user' || m.role === 'assistant' || m.role === 'model') && m.id !== 'initial-ai-greeting')
       .map((m) => ({
         role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
+        parts: [{ text: String(m.content) }],
       }));
 
-    // Start chat session with history
-    const chat = model.startChat({ history });
-
-    // Send the new user message
-    const result = await chat.sendMessage(userMessage);
-    const response = await result.response;
-    return response.text();
+    if (history.length > 0) {
+      const chat = model.startChat({ history });
+      const result = await chat.sendMessage(userMessage.trim());
+      const response = await result.response;
+      return response.text();
+    } else {
+      const result = await model.generateContent(userMessage.trim());
+      const response = await result.response;
+      return response.text();
+    }
   } catch (error) {
-    console.error('Gemini API error:', error);
+    console.error('Gemini API error in aiService:', error.message || error);
     throw error;
   }
 }
 
-module.exports = { chatWithGemini };
+module.exports = {
+  chatWithGemini,
+  generateGeminiReply: chatWithGemini,
+};
+
+
+

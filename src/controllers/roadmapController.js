@@ -1,139 +1,98 @@
-const { validationResult } = require('express-validator');
+const BuildRoadmap = require('../models/BuildRoadmap');
+const Venture = require('../models/Venture');
+const { generateBuildRoadmapFromGemini } = require('../services/roadmapGeminiService');
 
 /**
- * Generate default Build Roadmap milestones
+ * Controller to handle POST /api/build-roadmap/generate
  */
-const generateDefaultRoadmap = (venture) => {
-  const brief = venture.ideaValidation?.ventureBrief || {};
-  const building = brief.building || 'MVP';
-
-  const defaultMilestones = [
-    {
-      title: 'Problem & Brief Definition',
-      status: 'COMPLETED',
-      targetDate: new Date(),
-      tasks: ['Define target customer', 'Identify core pain point', 'Document current workaround'],
-    },
-    {
-      title: 'Customer Validation',
-      status: brief.building ? 'COMPLETED' : 'IN_PROGRESS',
-      targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      tasks: ['Conduct 5 customer interviews', 'Analyze pain level', 'Confirm willingness to pay'],
-    },
-    {
-      title: `Build ${building} Core Scope`,
-      status: 'IN_PROGRESS',
-      targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      tasks: ['Implement core workflow', 'Setup authentication & database', 'Deploy initial build'],
-    },
-    {
-      title: 'Beta Launch & User Feedback',
-      status: 'PLANNED',
-      targetDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
-      tasks: ['Onboard 5 early users', 'Collect feedback & log UX friction', 'Fix core bugs'],
-    },
-    {
-      title: 'Public Launch',
-      status: 'PLANNED',
-      targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      tasks: ['Post in founder communities', 'Launch outreach campaign', 'Track conversion rates'],
-    },
-  ];
-
-  return {
-    currentMilestone: `Build ${building} Core Scope`,
-    milestones: defaultMilestones,
-    isSaved: true,
-  };
-};
-
-/**
- * @desc    Get Build Roadmap
- * @route   GET /api/ventures/:ventureId/roadmap
- * @access  Private (Owner only)
- */
-const getRoadmap = async (req, res, next) => {
+async function generateRoadmap(req, res, next) {
   try {
-    let roadmap = req.venture.roadmap;
+    const userId = req.user.id;
+    let { ventureId, ventureName, startupIdea, mvpScope, users, stack } = req.body;
 
-    if (!roadmap || !roadmap.isSaved || !roadmap.milestones || roadmap.milestones.length === 0) {
-      const generated = generateDefaultRoadmap(req.venture);
-      req.venture.roadmap = {
-        ...generated,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      await req.venture.save();
-      roadmap = req.venture.roadmap;
+    let venture = null;
+    if (ventureId) {
+      venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    }
+    if (!venture) {
+      venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
     }
 
-    res.status(200).json({
-      success: true,
-      roadmap: {
-        currentMilestone: roadmap.currentMilestone || 'MVP Build',
-        milestones: roadmap.milestones || [],
-        createdAt: roadmap.createdAt,
-        updatedAt: roadmap.updatedAt,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * @desc    Save/Update Build Roadmap
- * @route   POST /api/ventures/:ventureId/roadmap
- * @route   PUT /api/ventures/:ventureId/roadmap
- * @access  Private (Owner only)
- */
-const saveRoadmap = async (req, res, next) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: errors.array()[0].msg,
-        errors: errors.array(),
-      });
+    // Auto-fill from Venture memory if fields missing
+    if (venture) {
+      ventureId = venture._id;
+      ventureName = ventureName || venture.ventureName || venture.name || 'Untitled Venture';
+      startupIdea = startupIdea || venture.brief?.building || 'New Startup Idea';
+      mvpScope = mvpScope || '2-week core MVP scope';
+      users = users || venture.brief?.audience || 'Target Customers';
+      stack = stack || 'React, Node.js, Express, MongoDB Atlas, Gemini AI';
+    } else {
+      ventureName = ventureName || 'Untitled Venture';
+      startupIdea = startupIdea || 'New Startup Idea';
+      mvpScope = mvpScope || '2-week core MVP scope';
+      users = users || 'Target Customers';
+      stack = stack || 'React, Node.js, Express, MongoDB Atlas, Gemini AI';
     }
 
-    const { currentMilestone, milestones } = req.body;
-    const existing = req.venture.roadmap || {};
+    // Call Gemini CTO Service
+    const generatedRoadmap = await generateBuildRoadmapFromGemini({
+      ventureName,
+      idea: startupIdea,
+      mvpScope,
+      users,
+      stack,
+    });
 
-    req.venture.roadmap = {
-      currentMilestone: currentMilestone !== undefined ? currentMilestone : existing.currentMilestone || 'MVP Build',
-      milestones: Array.isArray(milestones) ? milestones : existing.milestones || [],
-      isSaved: true,
-      createdAt: existing.createdAt || new Date(),
-      updatedAt: new Date(),
-    };
+    // Save to MongoDB
+    const newRoadmap = await BuildRoadmap.create({
+      userId,
+      ventureId: ventureId || undefined,
+      ventureName,
+      startupIdea,
+      mvpScope,
+      roadmap: generatedRoadmap,
+    });
 
-    // Update progress tracking
-    const completedSteps = new Set(
-      req.venture.ideaValidation?.progress?.completedSteps || []
-    );
-    completedSteps.add('Build Roadmap');
-    req.venture.ideaValidation.progress.completedSteps = Array.from(completedSteps);
-    req.venture.ideaValidation.progress.currentStep = 'Build Roadmap';
-
-    await req.venture.save();
-
-    res.status(200).json({
+    return res.status(201).json({
       success: true,
-      roadmap: {
-        currentMilestone: req.venture.roadmap.currentMilestone,
-        milestones: req.venture.roadmap.milestones,
-        createdAt: req.venture.roadmap.createdAt,
-        updatedAt: req.venture.roadmap.updatedAt,
-      },
+      message: 'Build Roadmap generated successfully',
+      buildRoadmap: newRoadmap,
     });
   } catch (error) {
+    console.error('Error in roadmapController generateRoadmap:', error);
     next(error);
   }
-};
+}
+
+/**
+ * Controller to handle GET /api/build-roadmap/:ventureId
+ */
+async function getRoadmapHistory(req, res, next) {
+  try {
+    const { ventureId } = req.params;
+    const userId = req.user.id;
+
+    let roadmaps = [];
+    if (ventureId && ventureId !== 'latest') {
+      roadmaps = await BuildRoadmap.find({ ventureId, userId }).sort({ createdAt: -1 });
+    } else {
+      roadmaps = await BuildRoadmap.find({ userId }).sort({ createdAt: -1 });
+    }
+
+    const latest = roadmaps[0] || null;
+
+    return res.status(200).json({
+      success: true,
+      buildRoadmap: latest,
+      history: roadmaps,
+    });
+  } catch (error) {
+    console.error('Error in roadmapController getRoadmapHistory:', error);
+    next(error);
+  }
+}
 
 module.exports = {
-  getRoadmap,
-  saveRoadmap,
+  generateRoadmap,
+  getRoadmapHistory,
 };
