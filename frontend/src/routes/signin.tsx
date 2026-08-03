@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Field, TextInput } from "@/components/founderos/ui";
 import { signIn } from "@/lib/founderos/store";
 import { api, setAuthToken } from "@/lib/api";
-import { ArrowLeft, Rocket, Shield } from "lucide-react";
+import { ArrowLeft, Rocket, Shield, RefreshCw, UserPlus, LogIn } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 const TITLE = "Sign In / Sign Up — FounderOS Workspace";
@@ -40,6 +40,7 @@ export function SignIn() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [statusNotice, setStatusNotice] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,25 +48,42 @@ export function SignIn() {
     if (!email.trim() || loading) return;
 
     setErrorMsg("");
+    setStatusNotice("");
     setLoading(true);
 
     let trimmedEmail = email.trim();
     let trimmedName = name.trim() || (trimmedEmail.split("@")[0] ? trimmedEmail.split("@")[0].toUpperCase() : "Founder");
-
     const submittedPassword = password.trim() || "Password123";
+
+    if (submittedPassword.length < 6) {
+      setErrorMsg("Password must be at least 6 characters long.");
+      setLoading(false);
+      return;
+    }
+
+    // Timer to notify if Render backend is taking time to wake up
+    const wakeTimer = setTimeout(() => {
+      setStatusNotice("Connecting to Render backend server (this may take a few seconds on cold start)...");
+    }, 2000);
 
     try {
       if (isSignUp) {
+        // Attempt Register
         const res = await api.register({
           name: trimmedName,
           email: trimmedEmail,
           password: submittedPassword,
         });
+
+        clearTimeout(wakeTimer);
+        setStatusNotice("");
+
         if (res.success && res.data?.token) {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
           if (res.error.toLowerCase().includes("already exists")) {
+            // User exists; try Login
             const loginRes = await api.login({
               email: trimmedEmail,
               password: submittedPassword,
@@ -86,24 +104,49 @@ export function SignIn() {
           }
         }
       } else {
+        // Attempt Login
         const res = await api.login({
           email: trimmedEmail,
           password: submittedPassword,
         });
+
+        clearTimeout(wakeTimer);
+        setStatusNotice("");
+
         if (res.success && res.data?.token) {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
-          setErrorMsg(res.error.includes("Invalid") ? "Invalid email or password. Please make sure you enter the same password created during Sign Up." : res.error);
-          setLoading(false);
-          return;
+          // If account doesn't exist, try auto-registering
+          if (res.error.toLowerCase().includes("invalid") || res.error.toLowerCase().includes("not found")) {
+            const regRes = await api.register({
+              name: trimmedName,
+              email: trimmedEmail,
+              password: submittedPassword,
+            });
+            if (regRes.success && regRes.data?.token) {
+              setAuthToken(regRes.data.token);
+              if (regRes.data?.user?.name) trimmedName = regRes.data.user.name;
+            } else {
+              setErrorMsg("Account not found. Please switch to Sign Up mode or check your password.");
+              setLoading(false);
+              return;
+            }
+          } else {
+            setErrorMsg(res.error);
+            setLoading(false);
+            return;
+          }
         }
       }
     } catch (err: any) {
-      setErrorMsg(err.message || "Authentication failed. Please check your internet connection.");
+      clearTimeout(wakeTimer);
+      setStatusNotice("");
+      setErrorMsg(err.message || "Authentication failed. Please check your connection.");
       setLoading(false);
       return;
     } finally {
+      clearTimeout(wakeTimer);
       setLoading(false);
     }
 
@@ -155,6 +198,7 @@ export function SignIn() {
               onClick={() => {
                 setIsSignUp(false);
                 setErrorMsg("");
+                setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
                 !isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
@@ -167,6 +211,7 @@ export function SignIn() {
               onClick={() => {
                 setIsSignUp(true);
                 setErrorMsg("");
+                setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
                 isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
@@ -186,8 +231,15 @@ export function SignIn() {
             : "Sign in to access your persistent ventures, AI conversations, and real-time validation data."}
         </p>
 
+        {statusNotice ? (
+          <div className="mt-4 p-3 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 text-xs text-[#64D8FF] flex items-center gap-2">
+            <RefreshCw className="size-4 animate-spin text-[#64D8FF] shrink-0" />
+            <div className="flex-1 font-mono text-[11px]">{statusNotice}</div>
+          </div>
+        ) : null}
+
         {errorMsg ? (
-          <div className="mt-4 p-3 rounded-xl border border-red-500/40 bg-red-500/15 text-xs text-red-300 flex items-start gap-2 animate-shake">
+          <div className="mt-4 p-3 rounded-xl border border-red-500/40 bg-red-500/15 text-xs text-red-300 flex items-start gap-2">
             <div className="size-2 rounded-full bg-red-400 mt-1 shrink-0" />
             <div className="flex-1">{errorMsg}</div>
           </div>
@@ -218,45 +270,54 @@ export function SignIn() {
           <Field label="Password">
             <TextInput
               type="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              required
+              placeholder="At least 6 characters"
             />
           </Field>
 
-          <Button className="w-full mt-2 font-semibold disabled:opacity-50" type="submit" disabled={loading}>
-            {loading
-              ? isSignUp
-                ? "Creating Account..."
-                : "Signing In..."
-              : isSignUp
-              ? "Create Account & Enter Workspace"
-              : "Sign In to Workspace"}
-          </Button>
-
-          <div className="pt-2 text-center">
-            <p className="text-[11px] text-[#A8B3C7]">
-              {isSignUp ? "Already have an account? " : "Don't have an account yet? "}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setErrorMsg("");
-                }}
-                className="text-[#4F8CFF] hover:underline font-medium"
-              >
-                {isSignUp ? "Sign In" : "Create standard account"}
-              </button>
-            </p>
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-3 text-xs font-bold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_20px_rgba(79,140,255,0.4)]"
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="size-4 animate-spin text-black" />
+                  <span>Connecting...</span>
+                </>
+              ) : isSignUp ? (
+                <>
+                  <UserPlus className="size-4 text-black" />
+                  <span>Create FounderOS Account</span>
+                </>
+              ) : (
+                <>
+                  <LogIn className="size-4 text-black" />
+                  <span>Enter FounderOS Workspace</span>
+                </>
+              )}
+            </button>
           </div>
-        </div>
 
-        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] text-[#A8B3C7]">
-          <span className="flex items-center gap-1.5">
-            <Shield className="size-3 text-[#46E3A3]" /> Persistent & Isolated Session
-          </span>
-          <span className="font-mono text-[10px]">v2.5 OS</span>
+          {/* Toggle Helper Button */}
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setErrorMsg("");
+                setStatusNotice("");
+              }}
+              className="text-xs text-[#A8B3C7] hover:text-[#64D8FF] transition"
+            >
+              {isSignUp
+                ? "Already have an account? Click to Sign In"
+                : "Need an account? Click to Sign Up"}
+            </button>
+          </div>
         </div>
       </form>
     </main>
