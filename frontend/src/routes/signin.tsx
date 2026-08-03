@@ -52,12 +52,14 @@ export function SignIn() {
     let trimmedEmail = email.trim();
     let trimmedName = name.trim() || (trimmedEmail.split("@")[0] ? trimmedEmail.split("@")[0].toUpperCase() : "Founder");
 
+    const submittedPassword = password.trim() || "Password123";
+
     try {
       if (isSignUp) {
         const res = await api.register({
           name: trimmedName,
           email: trimmedEmail,
-          password: password || "Password123",
+          password: submittedPassword,
         });
         if (res.success && res.data?.token) {
           setAuthToken(res.data.token);
@@ -70,13 +72,13 @@ export function SignIn() {
       } else {
         const res = await api.login({
           email: trimmedEmail,
-          password: password || "Password123",
+          password: submittedPassword,
         });
         if (res.success && res.data?.token) {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
-          setErrorMsg(res.error);
+          setErrorMsg(res.error.includes("Invalid") ? "Invalid email or password. Please make sure you enter the same password created during Sign Up." : res.error);
           setLoading(false);
           return;
         }
