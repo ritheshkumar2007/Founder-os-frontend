@@ -10,6 +10,7 @@ const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth');
 const ventureRoutes = require('./routes/ventures');
 const chatRoutes = require('./routes/chat');
+const aiRoutes = require('./routes/ai');
 const errorHandler = require('./middleware/errorHandler');
 const { apiLimiter, authLimiter } = require('./middleware/rateLimiter');
 
@@ -99,6 +100,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/ventures', apiLimiter, ventureRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/ai', apiLimiter, aiRoutes);
 
 // 404 Catch-All Handler for Undefined Routes
 app.use((req, res, next) => {
