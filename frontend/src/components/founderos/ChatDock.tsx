@@ -107,28 +107,17 @@ export function ChatDock() {
     setInput("");
     setBusy(true);
     try {
-      const apiRes = await api.sendChatMessage({
+      const apiRes = await api.aiChat({
         ventureId: venture.id,
-        workspace: page,
         message: trimmed,
+        history,
       });
 
       let reply = "";
-      if (apiRes.success && (apiRes.data?.reply || apiRes.data?.message?.content)) {
-        reply = apiRes.data.reply || apiRes.data.message.content;
+      if (apiRes.success && apiRes.data?.reply) {
+        reply = apiRes.data.reply;
       } else {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            page,
-            context: contextBlock(),
-            messages: history.map((m) => ({ role: m.role, content: m.content })),
-          }),
-        });
-        reply = res.ok
-          ? ((await res.json()) as { reply: string }).reply
-          : "I couldn't reach the FounderOS AI assistant just now. Try again in a moment.";
+        reply = apiRes.error || "I couldn't reach the FounderOS AI assistant just now. Try again in a moment.";
       }
       update((v) => ({
         ...v,
@@ -142,7 +131,7 @@ export function ChatDock() {
         ...v,
         chat: [
           ...v.chat,
-          { id: uid(), role: "assistant", content: "Working in local mode.", createdAt: new Date().toISOString() },
+          { id: uid(), role: "assistant", content: "I'm having trouble connecting right now. Please try again.", createdAt: new Date().toISOString() },
         ],
       }));
     } finally {

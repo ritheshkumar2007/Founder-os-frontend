@@ -16,8 +16,10 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
+import { Route as WorkspaceAiFounderRouteImport } from './routes/workspace/ai-founder'
 import { Route as WorkspaceBuildRoadmapRouteImport } from './routes/workspace/build-roadmap'
 import { Route as WorkspaceIdeaValidationRouteImport } from './routes/workspace/idea-validation'
+import { Route as WorkspaceIntelligenceRouteImport } from './routes/workspace/intelligence'
 import { Route as WorkspaceInvestorUpdateRouteImport } from './routes/workspace/investor-update'
 import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
 import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
@@ -62,6 +64,11 @@ const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
   path: '/',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceAiFounderRoute = WorkspaceAiFounderRouteImport.update({
+  id: '/ai-founder',
+  path: '/ai-founder',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
   id: '/build-roadmap',
   path: '/build-roadmap',
@@ -70,6 +77,11 @@ const WorkspaceBuildRoadmapRoute = WorkspaceBuildRoadmapRouteImport.update({
 const WorkspaceIdeaValidationRoute = WorkspaceIdeaValidationRouteImport.update({
   id: '/idea-validation',
   path: '/idea-validation',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const WorkspaceIntelligenceRoute = WorkspaceIntelligenceRouteImport.update({
+  id: '/intelligence',
+  path: '/intelligence',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceInvestorUpdateRoute = WorkspaceInvestorUpdateRouteImport.update({
@@ -121,8 +133,10 @@ export interface FileRoutesByFullPath {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/ai-founder': typeof WorkspaceAiFounderRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
   '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
+  '/workspace/intelligence': typeof WorkspaceIntelligenceRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -139,8 +153,10 @@ export interface FileRoutesByTo {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/ai-founder': typeof WorkspaceAiFounderRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
   '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
+  '/workspace/intelligence': typeof WorkspaceIntelligenceRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -159,8 +175,10 @@ export interface FileRoutesById {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/api/chat': typeof ApiChatRoute
+  '/workspace/ai-founder': typeof WorkspaceAiFounderRoute
   '/workspace/build-roadmap': typeof WorkspaceBuildRoadmapRoute
   '/workspace/idea-validation': typeof WorkspaceIdeaValidationRoute
+  '/workspace/intelligence': typeof WorkspaceIntelligenceRoute
   '/workspace/investor-update': typeof WorkspaceInvestorUpdateRoute
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
@@ -180,8 +198,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/api/chat'
+    | '/workspace/ai-founder'
     | '/workspace/build-roadmap'
     | '/workspace/idea-validation'
+    | '/workspace/intelligence'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -198,8 +218,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/api/chat'
+    | '/workspace/ai-founder'
     | '/workspace/build-roadmap'
     | '/workspace/idea-validation'
+    | '/workspace/intelligence'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -217,8 +239,10 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/api/chat'
+    | '/workspace/ai-founder'
     | '/workspace/build-roadmap'
     | '/workspace/idea-validation'
+    | '/workspace/intelligence'
     | '/workspace/investor-update'
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
@@ -290,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceIndexRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/ai-founder': {
+      id: '/workspace/ai-founder'
+      path: '/ai-founder'
+      fullPath: '/workspace/ai-founder'
+      preLoaderRoute: typeof WorkspaceAiFounderRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/workspace/build-roadmap': {
       id: '/workspace/build-roadmap'
       path: '/build-roadmap'
@@ -302,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/idea-validation'
       fullPath: '/workspace/idea-validation'
       preLoaderRoute: typeof WorkspaceIdeaValidationRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/workspace/intelligence': {
+      id: '/workspace/intelligence'
+      path: '/intelligence'
+      fullPath: '/workspace/intelligence'
+      preLoaderRoute: typeof WorkspaceIntelligenceRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/investor-update': {
@@ -364,8 +402,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface WorkspaceRouteRouteChildren {
+  WorkspaceAiFounderRoute: typeof WorkspaceAiFounderRoute
   WorkspaceBuildRoadmapRoute: typeof WorkspaceBuildRoadmapRoute
   WorkspaceIdeaValidationRoute: typeof WorkspaceIdeaValidationRoute
+  WorkspaceIntelligenceRoute: typeof WorkspaceIntelligenceRoute
   WorkspaceInvestorUpdateRoute: typeof WorkspaceInvestorUpdateRoute
   WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
   WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
@@ -378,8 +418,10 @@ interface WorkspaceRouteRouteChildren {
 }
 
 const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
+  WorkspaceAiFounderRoute: WorkspaceAiFounderRoute,
   WorkspaceBuildRoadmapRoute: WorkspaceBuildRoadmapRoute,
   WorkspaceIdeaValidationRoute: WorkspaceIdeaValidationRoute,
+  WorkspaceIntelligenceRoute: WorkspaceIntelligenceRoute,
   WorkspaceInvestorUpdateRoute: WorkspaceInvestorUpdateRoute,
   WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
   WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,

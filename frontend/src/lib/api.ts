@@ -274,11 +274,248 @@ export const api = {
     }),
 
   // Gemini AI Founder Coach
-  aiChat: (payload: { message: string; history: { role: string; content: string; id: string; createdAt: string }[] }) =>
+  aiChat: (payload: { ventureId?: string; message: string; history?: { role: string; content: string; id?: string; createdAt?: string }[] }) =>
     request("ai/chat", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+
+  // AI Reports Engine
+  getReports: (ventureId: string) =>
+    request(`reports/${ventureId}`),
+
+  getReportHistory: (ventureId: string, type: string) =>
+    request(`reports/${ventureId}/type/${type}`),
+
+  generateReports: (ventureId: string) =>
+    request(`reports/${ventureId}/generate`, {
+      method: "POST",
+    }),
+
+  // AI Execution OS
+  getKanbanTasks: (ventureId: string) =>
+    request(`execution/${ventureId}/kanban`),
+
+  updateTaskStatus: (taskId: string, status: string) =>
+    request(`execution/tasks/${taskId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+
+  getSprint: (ventureId: string) =>
+    request(`execution/${ventureId}/sprint`),
+
+  updateSprintGoal: (sprintId: string, weeklyGoal: string) =>
+    request(`execution/sprints/${sprintId}/goal`, {
+      method: "PATCH",
+      body: JSON.stringify({ weeklyGoal }),
+    }),
+
+  getMilestones: (ventureId: string) =>
+    request(`execution/${ventureId}/milestones`),
+
+  getPillarProgress: (ventureId: string) =>
+    request(`execution/${ventureId}/progress`),
+
+  getWeeklyReview: (ventureId: string) =>
+    request(`execution/${ventureId}/review`),
+
+  generateWeeklyReview: (ventureId: string) =>
+    request(`execution/${ventureId}/review/generate`, {
+      method: "POST",
+    }),
+
+  // FounderOS Growth OS
+  getGrowthData: (ventureId: string) =>
+    request(`growth/${ventureId}`),
+
+  updateGrowthMetrics: (ventureId: string, metrics: Record<string, number>) =>
+    request(`growth/${ventureId}/metrics`, {
+      method: "POST",
+      body: JSON.stringify({ metrics }),
+    }),
+
+  submitCustomerFeedback: (ventureId: string, payload: { rawText: string; customerSegment?: string }) =>
+    request(`growth/${ventureId}/feedback`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  generateGrowthContent: (ventureId: string, contentType: string) =>
+    request(`growth/${ventureId}/content`, {
+      method: "POST",
+      body: JSON.stringify({ contentType }),
+    }),
+
+  // AI MVP Scope Engine
+  getMvpScope: (ventureId: string) =>
+    request(`mvp/${ventureId}`),
+
+  generateMvpScope: (ventureId: string) =>
+    request("mvp/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateMvpScope: (ventureId: string, payload: { coreGoal?: string; features?: any[] }) =>
+    request(`mvp/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  generateMvpScopeModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; targetUsers?: string; problem?: string }) =>
+    request("mvp-scope/generate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getMvpScopeHistory: (ventureId: string) =>
+    request(`mvp-scope/${ventureId}`),
+
+  // AI Build Roadmap Engine
+  getRoadmap: (ventureId: string) =>
+    request(`roadmap/${ventureId}`),
+
+  generateRoadmap: (ventureId: string) =>
+    request("roadmap/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateRoadmap: (ventureId: string, payload: { phases?: any[] }) =>
+    request(`roadmap/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  generateBuildRoadmapModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; users?: string; stack?: string }) =>
+    request("build-roadmap/generate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getBuildRoadmapHistory: (ventureId: string) =>
+    request(`build-roadmap/${ventureId}`),
+
+  // AI Marketing Plan Engine
+  getMarketingPlan: (ventureId: string) =>
+    request(`marketing/${ventureId}`),
+
+  generateMarketingPlan: (ventureId: string) =>
+    request("marketing/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateMarketingPlan: (ventureId: string, payload: any) =>
+    request(`marketing/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  generateMarketingPlanModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; audience?: string; industry?: string; pricing?: string; goal?: string }) =>
+    request("marketing-plan/generate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getMarketingPlanHistory: (ventureId: string) =>
+    request(`marketing-plan/${ventureId}`),
+
+  // AI Launch Sprint Engine
+  getLaunchSprint: (ventureId: string) =>
+    request(`launch/${ventureId}`),
+
+  generateLaunchSprint: (ventureId: string) =>
+    request("launch/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateLaunchSprint: (ventureId: string, payload: { checklist?: any[]; copyData?: any }) =>
+    request(`launch/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  generateLaunchSprintModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; mvpScope?: string; marketingPlan?: string; launchDate?: string; launchGoal?: string; targetAudience?: string }) =>
+    request("launch-sprint/generate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getLaunchSprintHistory: (ventureId: string) =>
+    request(`launch-sprint/${ventureId}`),
+
+  // AI Traction Dashboard Engine
+  getTractionData: (ventureId: string) =>
+    request(`traction/${ventureId}`),
+
+  generateTractionData: (ventureId: string) =>
+    request("traction/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateTractionData: (ventureId: string, payload: any) =>
+    request(`traction/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  analyzeTractionModule: (payload: any) =>
+    request("traction-analyzer/analyze", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getTractionHistoryModule: (ventureId: string) =>
+    request(`traction-analyzer/history/${ventureId}`),
+
+  // AI Investor Update Engine
+  getInvestorUpdate: (ventureId: string) =>
+    request(`investor/${ventureId}`),
+
+  generateInvestorUpdate: (ventureId: string) =>
+    request("investor/generate", {
+      method: "POST",
+      body: JSON.stringify({ ventureId }),
+    }),
+
+  updateInvestorUpdate: (ventureId: string, payload: { doc?: any }) =>
+    request(`investor/${ventureId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  generateInvestorUpdateModule: (payload: any) =>
+    request("investor-update/generate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getInvestorUpdateHistoryModule: (ventureId: string) =>
+    request(`investor-update/history/${ventureId}`),
+
+  // FounderOS AI Co-Founder Assistant
+  chatWithFounderAIModule: (payload: { ventureId?: string; message: string }) =>
+    request("founder-ai/chat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getFounderAIHistoryModule: (ventureId?: string) =>
+    request(`founder-ai/history${ventureId ? `?ventureId=${ventureId}` : ""}`),
+
+  // Venture Intelligence Command Center
+  analyzeVentureIntelligenceModule: (payload: { ventureId?: string; ventureName?: string }) =>
+    request("intelligence-command/analyze", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  getIntelligenceHistoryModule: (ventureId: string) =>
+    request(`intelligence-command/${ventureId}`),
 };
 
 export default api;
