@@ -65,9 +65,25 @@ export function SignIn() {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
-          setErrorMsg(res.error);
-          setLoading(false);
-          return;
+          if (res.error.toLowerCase().includes("already exists")) {
+            const loginRes = await api.login({
+              email: trimmedEmail,
+              password: submittedPassword,
+            });
+            if (loginRes.success && loginRes.data?.token) {
+              setAuthToken(loginRes.data.token);
+              if (loginRes.data?.user?.name) trimmedName = loginRes.data.user.name;
+            } else {
+              setErrorMsg("An account with this email already exists. Switched to Sign In mode — please enter your password.");
+              setIsSignUp(false);
+              setLoading(false);
+              return;
+            }
+          } else {
+            setErrorMsg(res.error);
+            setLoading(false);
+            return;
+          }
         }
       } else {
         const res = await api.login({
