@@ -15,7 +15,6 @@ interface SearchParams {
 }
 
 export const Route = createFileRoute("/signin")({
-  ssr: false,
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
     mode: search.mode === "signup" ? "signup" : "signin",
