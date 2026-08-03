@@ -30,7 +30,6 @@ const DESCRIPTION =
   "Complete your venture brief, run customer validation, and analyze real insights in one seamless continuous workspace.";
 
 export const Route = createFileRoute("/workspace/idea-validation")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

@@ -17,7 +17,6 @@ const TITLE = "Marketing Plan — FounderOS";
 const DESCRIPTION = "Positioning, channels and outreach templates to reach your first 100 users.";
 
 export const Route = createFileRoute("/workspace/marketing-plan")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

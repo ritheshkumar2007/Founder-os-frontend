@@ -17,7 +17,6 @@ const TITLE = "MVP Scope — FounderOS";
 const DESCRIPTION = "Scope the smallest usable MVP and decide what to deliberately exclude.";
 
 export const Route = createFileRoute("/workspace/mvp-scope")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

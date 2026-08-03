@@ -6,7 +6,6 @@ import { MobileSidebar, Sidebar, STAGED_NAV } from "@/components/founderos/Sideb
 import { setLastRoute, useAppState } from "@/lib/founderos/store";
 
 export const Route = createFileRoute("/workspace")({
-  ssr: false,
   component: WorkspaceLayout,
 });
 

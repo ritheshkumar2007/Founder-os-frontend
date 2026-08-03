@@ -18,7 +18,6 @@ const TITLE = "Build Roadmap — FounderOS";
 const DESCRIPTION = "A two-week roadmap with three milestones, owners, due dates and progress.";
 
 export const Route = createFileRoute("/workspace/build-roadmap")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

@@ -7,7 +7,6 @@ const TITLE = "Investor Update — FounderOS";
 const DESCRIPTION = "Turn your saved venture data into a concise, professional founder update.";
 
 export const Route = createFileRoute("/workspace/investor-update")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

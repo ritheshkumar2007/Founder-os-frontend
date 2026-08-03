@@ -8,7 +8,6 @@ const TITLE = "Launch Sprint — FounderOS";
 const DESCRIPTION = "A seven-day launch sprint to get your first five users to try the product.";
 
 export const Route = createFileRoute("/workspace/launch-sprint")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },

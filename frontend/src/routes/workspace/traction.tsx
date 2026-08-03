@@ -8,7 +8,6 @@ const TITLE = "Traction — FounderOS";
 const DESCRIPTION = "Track contacted people, users, paying customers and revenue over time.";
 
 export const Route = createFileRoute("/workspace/traction")({
-  ssr: false,
   head: () => ({
     meta: [
       { title: TITLE },
