@@ -4,7 +4,7 @@ import type { ChatMessage } from "@/lib/founderos/types";
 import { ChatHeader } from "./ChatHeader";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
-import { generateMockAiResponse } from "./mockAiEngine";
+import api from "@/lib/api";
 
 const INITIAL_GREETING_CONTENT = `Hi! I'm your FounderOS AI Coach.
 
@@ -53,7 +53,7 @@ export const ChatPage: React.FC = () => {
     }
   }, [venture?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     if (!venture || loading) return;
 
     const userMsg: ChatMessage = {
@@ -73,9 +73,17 @@ export const ChatPage: React.FC = () => {
 
     setLoading(true);
 
-    // Simulate natural AI thinking delay (1000ms)
-    setTimeout(() => {
-      const aiReplyText = generateMockAiResponse(text, updatedMessages);
+    try {
+      // Call real Gemini AI backend
+      const res = await api.aiChat({
+        message: text,
+        history: updatedMessages,
+      });
+
+      const aiReplyText = res.success && res.data?.reply
+        ? res.data.reply
+        : (res.error || "I'm having trouble connecting right now. Please try again in a moment.");
+
       const aiMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
@@ -86,15 +94,22 @@ export const ChatPage: React.FC = () => {
       update((v) => ({
         ...v,
         chat: [...updatedMessages, aiMsg],
-        // Automatically extract startup building idea into brief for continuous state sync
         brief: {
           ...v.brief,
           building: v.brief.building || text,
         },
       }));
-
+    } catch (err) {
+      const errorMsg: ChatMessage = {
+        id: uid(),
+        role: "assistant",
+        content: "I'm having trouble connecting right now. Please check your connection and try again.",
+        createdAt: new Date().toISOString(),
+      };
+      update((v) => ({ ...v, chat: [...updatedMessages, errorMsg] }));
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

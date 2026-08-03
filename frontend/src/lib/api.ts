@@ -272,6 +272,13 @@ export const api = {
     request(`chat/${ventureId}`, {
       method: "DELETE",
     }),
+
+  // Gemini AI Founder Coach
+  aiChat: (payload: { message: string; history: { role: string; content: string; id: string; createdAt: string }[] }) =>
+    request("ai/chat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };
 
 export default api;
