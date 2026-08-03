@@ -271,17 +271,27 @@ function read(): AppState {
     let ventures: Venture[] = [];
     let activeId: string | null = null;
 
+    if (!activeUser && Object.keys(users).length > 0) {
+      const lastEmail = Object.keys(users)[Object.keys(users).length - 1];
+      if (users[lastEmail]) {
+        activeUser = users[lastEmail].user;
+      }
+    }
+
     if (activeUser && activeUser.email) {
       const email = activeUser.email.toLowerCase().trim();
       const record = users[email];
       if (record) {
         activeUser = record.user;
-        ventures = record.ventures;
-        activeId = record.activeId;
+        ventures = record.ventures || [];
+        activeId = record.activeId || (ventures[0]?.id ?? null);
+      } else {
+        ventures = (parsed.ventures ?? []).map((v) => normalizeVenture(v));
+        activeId = parsed.activeId ?? (ventures[0]?.id ?? null);
       }
     } else {
       ventures = (parsed.ventures ?? []).map((v) => normalizeVenture(v));
-      activeId = parsed.activeId ?? null;
+      activeId = parsed.activeId ?? (ventures[0]?.id ?? null);
     }
 
     return {

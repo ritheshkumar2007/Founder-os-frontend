@@ -160,11 +160,12 @@ export function SignIn() {
         ? search.redirect
         : authResult.lastRoute || "/workspace/idea-validation";
 
-    if (typeof window !== "undefined") {
-      window.location.href = targetRoute;
-    } else {
-      navigate({ to: targetRoute as any });
-    }
+    navigate({ to: targetRoute as any, replace: true });
+    setTimeout(() => {
+      if (typeof window !== "undefined" && window.location.pathname === "/signin") {
+        window.location.href = targetRoute;
+      }
+    }, 150);
   };
 
   return (
