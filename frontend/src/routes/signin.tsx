@@ -64,7 +64,9 @@ export function SignIn() {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
-          console.warn("Backend auth notice:", res.error);
+          setErrorMsg(res.error);
+          setLoading(false);
+          return;
         }
       } else {
         const res = await api.login({
@@ -75,11 +77,15 @@ export function SignIn() {
           setAuthToken(res.data.token);
           if (res.data?.user?.name) trimmedName = res.data.user.name;
         } else if (res.error) {
-          console.warn("Backend auth notice:", res.error);
+          setErrorMsg(res.error);
+          setLoading(false);
+          return;
         }
       }
     } catch (err: any) {
-      console.warn("Auth connection exception:", err.message);
+      setErrorMsg(err.message || "Authentication failed. Please check your internet connection.");
+      setLoading(false);
+      return;
     } finally {
       setLoading(false);
     }
