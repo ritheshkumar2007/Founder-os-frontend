@@ -132,7 +132,10 @@ export function SignIn() {
           <div className="flex items-center p-1 rounded-xl bg-[#0E131C] border border-white/10">
             <button
               type="button"
-              onClick={() => setIsSignUp(false)}
+              onClick={() => {
+                setIsSignUp(false);
+                setErrorMsg("");
+              }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
                 !isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
               }`}
@@ -141,7 +144,10 @@ export function SignIn() {
             </button>
             <button
               type="button"
-              onClick={() => setIsSignUp(true)}
+              onClick={() => {
+                setIsSignUp(true);
+                setErrorMsg("");
+              }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
                 isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
               }`}
@@ -159,6 +165,13 @@ export function SignIn() {
             ? "Sign up to launch a new venture workspace with built-in AI context, validation tools, and build roadmaps."
             : "Sign in to access your persistent ventures, AI conversations, and real-time validation data."}
         </p>
+
+        {errorMsg ? (
+          <div className="mt-4 p-3 rounded-xl border border-red-500/40 bg-red-500/15 text-xs text-red-300 flex items-start gap-2 animate-shake">
+            <div className="size-2 rounded-full bg-red-400 mt-1 shrink-0" />
+            <div className="flex-1">{errorMsg}</div>
+          </div>
+        ) : null}
 
         <div className="mt-6 space-y-4">
           {isSignUp ? (
@@ -192,8 +205,14 @@ export function SignIn() {
             />
           </Field>
 
-          <Button className="w-full mt-2 font-semibold" type="submit">
-            {isSignUp ? "Create Account & Enter Workspace" : "Sign In to Workspace"}
+          <Button className="w-full mt-2 font-semibold disabled:opacity-50" type="submit" disabled={loading}>
+            {loading
+              ? isSignUp
+                ? "Creating Account..."
+                : "Signing In..."
+              : isSignUp
+              ? "Create Account & Enter Workspace"
+              : "Sign In to Workspace"}
           </Button>
 
           <div className="pt-2 text-center">
@@ -201,7 +220,10 @@ export function SignIn() {
               {isSignUp ? "Already have an account? " : "Don't have an account yet? "}
               <button
                 type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setErrorMsg("");
+                }}
                 className="text-[#4F8CFF] hover:underline font-medium"
               >
                 {isSignUp ? "Sign In" : "Create standard account"}
