@@ -30,7 +30,11 @@ const getPlan = async (req, res, next) => {
 const genPlan = async (req, res, next) => {
   try {
     const ventureId = req.params.ventureId || req.body?.ventureId;
-    const userId = req.user.id;
+    const userId = req.user ? req.user.id : 'unknown';
+
+    console.log(`🤖 [AI Endpoint Request] Route: POST /api/ventures/:id/marketing-plan | User: ${userId} | VentureId: ${ventureId || 'N/A'}`);
+    console.log(`🤖 [AI Endpoint Payload] Body:`, JSON.stringify(req.body));
+
     const isDbConnected = mongoose.connection.readyState === 1;
     let venture = req.venture || null;
     if (!venture && isDbConnected) {

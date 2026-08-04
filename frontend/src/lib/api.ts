@@ -2,9 +2,11 @@
  * FounderOS API Client & Backend Connection Service
  */
 
-const API_BASE_URL =
+const API_URL =
   (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_URL) ||
-  "https://founder-os-backend-hhwl.onrender.com/api";
+  "https://founder-os-backend-hhwl.onrender.com";
+
+const API_BASE_URL = API_URL.endsWith("/api") ? API_URL : `${API_URL.replace(/\/$/, "")}/api`;
 
 const TOKEN_KEY = "founderos.token";
 
@@ -63,26 +65,8 @@ async function request<T = any>(
   options: RequestInit = {}
 ): Promise<{ success: boolean; data?: T; error?: string; status?: number }> {
   try {
-    const res = await fetchEndpoint<T>(API_BASE_URL, endpoint, options);
-    if ((res.status === 404 || res.status === 500 || !res.success) && typeof window !== "undefined" && window.location.hostname === "localhost" && API_BASE_URL !== "http://localhost:5000/api") {
-      try {
-        const localRes = await fetchEndpoint<T>("http://localhost:5000/api", endpoint, options);
-        if (localRes.success || (localRes.status !== 404 && localRes.status !== 500)) {
-          return localRes;
-        }
-      } catch (e) {
-        // Fallthrough
-      }
-    }
-    return res;
+    return await fetchEndpoint<T>(API_BASE_URL, endpoint, options);
   } catch (err: any) {
-    if (typeof window !== "undefined" && window.location.hostname === "localhost" && API_BASE_URL !== "http://localhost:5000/api") {
-      try {
-        return await fetchEndpoint<T>("http://localhost:5000/api", endpoint, options);
-      } catch (e) {
-        // Fallthrough
-      }
-    }
     return {
       success: false,
       error: err.message || "Network error. Backend server is unreachable.",

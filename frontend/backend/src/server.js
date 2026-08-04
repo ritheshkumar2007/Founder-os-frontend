@@ -12,6 +12,16 @@ let server;
  */
 const startServer = () => {
   try {
+    // Validate key environment variables
+    const requiredEnv = ['MONGODB_URI', 'JWT_SECRET', 'GEMINI_API_KEY'];
+    requiredEnv.forEach((key) => {
+      if (!process.env[key] || !process.env[key].trim()) {
+        console.warn(`⚠️ Warning: Environment variable "${key}" is missing or empty. Fallback behavior will be active.`);
+      } else {
+        console.log(`✅ Environment variable "${key}" loaded.`);
+      }
+    });
+
     // 1. Start Express listener immediately so platform health checks pass
     server = app.listen(PORT, () => {
       console.log(

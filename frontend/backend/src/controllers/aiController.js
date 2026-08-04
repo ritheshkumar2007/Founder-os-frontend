@@ -18,7 +18,10 @@ const Venture = require('../models/Venture');
 const aiChat = async (req, res, next) => {
   try {
     const { ventureId, message } = req.body;
-    const userId = req.user.id;
+    const userId = req.user ? req.user.id : 'unknown';
+
+    console.log(`🤖 [AI Endpoint Request] Route: POST /api/ai/chat | User: ${userId} | VentureId: ${ventureId || 'N/A'}`);
+    console.log(`🤖 [AI Endpoint Payload] Body:`, JSON.stringify(req.body));
 
     if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({
