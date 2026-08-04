@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: founder-os-backend
+    env: node
+    region: oregon
+    buildCommand: cd frontend/backend && npm install
+    startCommand: cd frontend/backend && node src/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
