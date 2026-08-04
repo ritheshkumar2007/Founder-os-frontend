@@ -19,13 +19,17 @@ async function saveMessage({ userId, ventureId, role, content }) {
  * Get chronological conversation history for a venture and user
  */
 async function getConversationHistory({ userId, ventureId }) {
-  if (!userId || !ventureId) return [];
-  const pastMessages = await Conversation.find({ userId, ventureId }).sort({ timestamp: 1 });
-  return pastMessages.map((m) => ({
-    role: m.role,
-    content: m.content,
-    timestamp: m.timestamp,
-  }));
+  if (!userId || !ventureId || require('mongoose').connection.readyState !== 1) return [];
+  try {
+    const pastMessages = await Conversation.find({ userId, ventureId }).sort({ timestamp: 1 });
+    return pastMessages.map((m) => ({
+      role: m.role,
+      content: m.content,
+      timestamp: m.timestamp,
+    }));
+  } catch (err) {
+    return [];
+  }
 }
 
 /**

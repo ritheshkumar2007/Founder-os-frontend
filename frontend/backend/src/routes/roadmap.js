@@ -4,48 +4,46 @@ const { protect } = require('../middleware/authMiddleware');
 const Venture = require('../models/Venture');
 const { getRoadmapForVenture, generateRoadmap, updateRoadmap } = require('../services/roadmapService');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 router.use(protect);
 
-router.get('/:ventureId', async (req, res, next) => {
+const getPlan = async (req, res, next) => {
   try {
-    const { ventureId } = req.params;
+    const ventureId = req.params.ventureId || req.query.ventureId;
     const userId = req.user.id;
     let venture = null;
     if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
-    if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
 
-    const roadmap = await getRoadmapForVenture(venture._id, userId, venture);
+    const roadmap = await getRoadmapForVenture(venture?._id || ventureId, userId, venture);
     return res.status(200).json({ success: true, roadmap });
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.post('/generate', async (req, res, next) => {
+const genPlan = async (req, res, next) => {
   try {
-    const { ventureId } = req.body;
+    const ventureId = req.params.ventureId || req.body?.ventureId;
     const userId = req.user.id;
     let venture = null;
     if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
-    if (!venture) return res.status(404).json({ success: false, message: 'Venture not found' });
 
     const roadmap = await generateRoadmap({ venture, userId });
     return res.status(200).json({ success: true, message: 'Roadmap generated', roadmap });
   } catch (error) {
     next(error);
   }
-});
+};
 
-router.put('/:ventureId', async (req, res, next) => {
+const putPlan = async (req, res, next) => {
   try {
-    const { ventureId } = req.params;
+    const ventureId = req.params.ventureId || req.body?.ventureId;
     const userId = req.user.id;
     let targetVentureId = ventureId;
     if (!ventureId || !mongoose.Types.ObjectId.isValid(ventureId)) {
@@ -58,6 +56,17 @@ router.put('/:ventureId', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
+
+router.route('/')
+  .get(getPlan)
+  .post(genPlan)
+  .put(putPlan);
+
+router.route('/:ventureId')
+  .get(getPlan)
+  .put(putPlan);
+
+router.post('/generate', genPlan);
 
 module.exports = router;
