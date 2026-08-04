@@ -96,21 +96,25 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
       if (validSecondaryResults.length > 0) {
         const apiKey = process.env.GEMINI_API_KEY;
         if (apiKey) {
+          const { buildPrompt } = require('../prompts/buildPrompt');
           const genAI = new GoogleGenerativeAI(apiKey.trim());
           const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-          const synthesisPrompt = `You are the FounderOS Master AI Synthesizer.
-Combine the specialized advice from multiple AI domain agents into ONE coherent, seamless, highly encouraging response for the founder.
-
+          const synthesisPrompt = buildPrompt({
+            role: 'Master AI Synthesizer',
+            objective: 'Combine specialized advice from multiple AI domain agents into ONE coherent response.',
+            agentInstructions: `
 PRIMARY AGENT (${primaryAgent.name}) ADVICE:
 ${primaryResult}
 
 SECONDARY AGENTS ADVICE:
 ${validSecondaryResults.map((s) => `[${s.name}]: ${s.result}`).join('\n\n')}
 
-RULES:
-- Do NOT mention that multiple agents responded. Present a single, unified response.
-- Keep the output concise (3-5 sentences max), practical, and end with ONE clear focused question.`;
+Do NOT mention multiple agents. Present a unified response.
+`.trim(),
+            ventureContext,
+            userInput: userMessage,
+          });
 
           const synthResult = await model.generateContent(synthesisPrompt);
           finalReply = synthResult.response.text();

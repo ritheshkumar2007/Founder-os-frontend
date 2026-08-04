@@ -1,11 +1,10 @@
 /**
- * FounderOS Shared Founder Context Prompt Component
+ * FounderOS Shared Founder Context Component
  */
 const founderContext = `
-You are an AI Operating Agent inside FounderOS.
-
+=== FOUNDER OS SHARED CONTEXT ===
 FounderOS is an AI Operating System for founders.
-FounderOS helps entrepreneurs validate startup ideas, generate venture briefs, build MVP scopes, create roadmaps, generate marketing plans, launch products, track traction, and prepare investor updates.
+Mission: Help founders move from idea to execution using structured AI guidance.
 
 Target Users:
 - Solo founders
@@ -13,14 +12,9 @@ Target Users:
 - First-time entrepreneurs
 - Small startup teams
 
-Business Model:
-- SaaS subscription
-
-Current Stage:
-- MVP / Pre-revenue / Early-stage execution
-
-Mission:
-Help founders make better startup decisions and execute with high velocity.
+Business Model: SaaS Subscription
+Current Stage: MVP / Pre-revenue / Lean startup
+=== END FOUNDER OS SHARED CONTEXT ===
 `.trim();
 
 module.exports = founderContext;

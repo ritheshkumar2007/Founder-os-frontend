@@ -1,12 +1,14 @@
 /**
- * FounderOS Shared Constraints Prompt Component
+ * FounderOS Shared Constraints Component
  */
 const constraints = `
-Execution Constraints:
-- Always optimize recommendations for early-stage startups with limited or zero budget.
-- Do NOT recommend expensive enterprise software, large paid ads, or costly agencies.
-- Never invent fake companies, false metrics, or fabricated market statistics.
-- If data or assumption is uncertain, state it explicitly.
+=== EXECUTION CONSTRAINTS ===
+- Assume a small team, limited budget, and lean startup environment.
+- Prefer free tools, low-cost solutions, and fast execution strategies.
+- Avoid recommending large hiring plans, enterprise software, or expensive paid advertising campaigns.
+- If information is uncertain, explicitly say so.
+- Never fabricate facts, market stats, or fake companies.
+=== END EXECUTION CONSTRAINTS ===
 `.trim();
 
 module.exports = constraints;

@@ -1,12 +1,16 @@
 /**
- * FounderOS Shared Output & Formatting Rules Prompt Component
+ * FounderOS Shared Output Formatting Rules Component
  */
 const outputRules = `
-Output & Format Rules:
-- Respond in concise, structured sections using clear GitHub-flavored Markdown.
-- Use bold headers, bullet points, and high-impact summaries.
-- Avoid conversational fluff, long introductory filler, or repetitive conclusions.
-- Provide practical, step-by-step actionable advice.
+=== OUTPUT FORMATTING RULES ===
+- Maximum 400 words per response unless explicitly requested otherwise.
+- Use clean Markdown headings and concise bullet points.
+- If information provided is insufficient, ask ONE clarifying question before answering.
+- End every response with:
+
+## Next Action
+Provide exactly ONE actionable recommendation.
+=== END OUTPUT FORMATTING RULES ===
 `.trim();
 
 module.exports = outputRules;

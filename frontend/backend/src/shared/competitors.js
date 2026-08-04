@@ -1,18 +1,26 @@
 /**
- * FounderOS Shared Competitor Knowledge Prompt Component
+ * FounderOS Competitor List Component
  */
-const competitors = `
-Known Competitors & Alternatives:
-- Notion AI
-- ChatGPT / OpenAI
-- Perplexity AI
-- Canva AI
-- Linear
-- ClickUp
-- Coda AI
-- Trello
-- Monday.com
-- Status Quo (Excel, Google Sheets, manual workarounds)
+const competitorList = [
+  'Notion AI',
+  'ChatGPT',
+  'Perplexity',
+  'Linear',
+  'ClickUp',
+  'Coda AI',
+  'Canva AI',
+  'Trello',
+  'Monday.com',
+];
+
+const competitorsPrompt = `
+=== KNOWN COMPETITORS & ALTERNATIVES ===
+${competitorList.map((c) => `- ${c}`).join('\n')}
+- Status Quo (Excel, Google Sheets, manual labor)
+=== END KNOWN COMPETITORS & ALTERNATIVES ===
 `.trim();
 
-module.exports = competitors;
+module.exports = {
+  competitorList,
+  competitorsPrompt,
+};
