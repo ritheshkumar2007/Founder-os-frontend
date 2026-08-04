@@ -133,7 +133,53 @@ async function getUpdateHistory(req, res, next) {
   }
 }
 
+/**
+ * Alias handlers for investorUpdate.js routes
+ */
+async function getInvestorUpdate(req, res, next) {
+  return getUpdateHistory(req, res, next);
+}
+
+async function createInvestorUpdate(req, res, next) {
+  return generateUpdate(req, res, next);
+}
+
+async function updateInvestorUpdate(req, res, next) {
+  return generateUpdate(req, res, next);
+}
+
+async function getInvestorUpdateText(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const latest = await InvestorUpdate.findOne({ userId }).sort({ createdAt: -1 });
+    return res.status(200).json({
+      success: true,
+      text: latest?.generatedUpdateText || 'No investor update generated yet.',
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getInvestorUpdateSummary(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const latest = await InvestorUpdate.findOne({ userId }).sort({ createdAt: -1 });
+    return res.status(200).json({
+      success: true,
+      summary: latest?.investorMessage?.summary || 'No summary available.',
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   generateUpdate,
   getUpdateHistory,
+  getInvestorUpdate,
+  createInvestorUpdate,
+  updateInvestorUpdate,
+  getInvestorUpdateText,
+  getInvestorUpdateSummary,
 };

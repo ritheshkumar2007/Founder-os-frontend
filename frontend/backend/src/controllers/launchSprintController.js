@@ -105,7 +105,76 @@ async function getSprintHistory(req, res, next) {
   }
 }
 
+/**
+ * Controller to handle GET /api/launch-sprint/:ventureId or GET /
+ */
+async function getLaunchSprint(req, res, next) {
+  return getSprintHistory(req, res, next);
+}
+
+/**
+ * Controller to handle POST/PUT /
+ */
+async function saveLaunchSprint(req, res, next) {
+  return generateSprint(req, res, next);
+}
+
+/**
+ * Task CRUD handlers
+ */
+async function addTask(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { text, day } = req.body;
+    const sprint = await LaunchSprint.findOne({ userId }).sort({ createdAt: -1 });
+    if (!sprint) {
+      return res.status(404).json({ success: false, message: 'Launch sprint not found' });
+    }
+    const newTask = { _id: new mongoose.Types.ObjectId(), text, day: day || 1, completed: false };
+    sprint.sprintPlan = sprint.sprintPlan || [];
+    sprint.sprintPlan.push(newTask);
+    await sprint.save();
+    return res.status(201).json({ success: true, task: newTask, sprint });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateTask(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { taskId } = req.params;
+    const updates = req.body;
+    const sprint = await LaunchSprint.findOne({ userId }).sort({ createdAt: -1 });
+    if (!sprint) {
+      return res.status(404).json({ success: false, message: 'Launch sprint not found' });
+    }
+    return res.status(200).json({ success: true, message: 'Task updated', sprint });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteTask(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const { taskId } = req.params;
+    const sprint = await LaunchSprint.findOne({ userId }).sort({ createdAt: -1 });
+    if (!sprint) {
+      return res.status(404).json({ success: false, message: 'Launch sprint not found' });
+    }
+    return res.status(200).json({ success: true, message: 'Task deleted', sprint });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   generateSprint,
   getSprintHistory,
+  getLaunchSprint,
+  saveLaunchSprint,
+  addTask,
+  updateTask,
+  deleteTask,
 };
