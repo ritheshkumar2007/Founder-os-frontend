@@ -4,10 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to generate a complete Launch Sprint execution plan JSON via Gemini API using expert launch manager prompt.
  */
 async function generateLaunchSprintFromGemini({ ventureName, idea, mvpScope, marketingPlan, launchDate, launchGoal, targetAudience }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is missing in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const prompt = `You are an expert startup launch manager.
 

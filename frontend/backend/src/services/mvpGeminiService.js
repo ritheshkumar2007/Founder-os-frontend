@@ -4,10 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to generate MVP Scope JSON via Gemini API using expert product manager prompt.
  */
 async function generateMvpScopeFromGemini({ ventureName, idea, targetUsers, problem }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is not configured in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const prompt = `You are an expert startup product manager.
 

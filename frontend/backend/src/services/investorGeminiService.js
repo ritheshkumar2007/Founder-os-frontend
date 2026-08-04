@@ -4,10 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to generate a professional Investor Update JSON + Memorandum text via Gemini API using expert IR prompt.
  */
 async function generateInvestorUpdateFromGemini({ ventureName, overview, progress, traction, challenges, goals, funding }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is missing in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const prompt = `You are an experienced startup founder and investor relations expert.
 

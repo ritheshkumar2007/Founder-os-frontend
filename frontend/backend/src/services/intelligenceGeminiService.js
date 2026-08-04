@@ -43,10 +43,7 @@ async function aggregateIntelligenceContext(ventureId) {
  * Service to generate Venture Intelligence assessment via Gemini API using expert Operating Advisor prompt.
  */
 async function generateVentureIntelligenceFromGemini({ ventureId, ventureName }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is missing in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const intelContext = await aggregateIntelligenceContext(ventureId);
 

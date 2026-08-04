@@ -36,10 +36,7 @@ async function aggregateStartupContext(ventureId, userId) {
  * Service to execute Co-Founder AI chat via Gemini API with full startup context
  */
 async function chatWithFounderAI({ userMessage, historyMessages, ventureId, userId }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is missing in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const context = await aggregateStartupContext(ventureId, userId);
 

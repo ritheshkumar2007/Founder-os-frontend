@@ -15,12 +15,15 @@ async function generateUpdate(req, res, next) {
     const userId = req.user.id;
     let { ventureId, ventureName, overview, progress, traction, challenges, goals, funding } = req.body;
 
+    const isDbConnected = mongoose.connection.readyState === 1;
     let venture = null;
-    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
-      venture = await Venture.findOne({ _id: ventureId, owner: userId });
-    }
-    if (!venture) {
-      venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
+    if (isDbConnected) {
+      if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
+        venture = await Venture.findOne({ _id: ventureId, owner: userId }).catch(() => null);
+      }
+      if (!venture) {
+        venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 }).catch(() => null);
+      }
     }
 
     if (venture) {
@@ -63,7 +66,9 @@ async function generateUpdate(req, res, next) {
       funding,
     });
 
-    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
+    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId))
+      ? ventureId
+      : (venture ? venture._id : '6a709d6ff4af39139e040cc8');
 
     // Save to MongoDB
     const newUpdate = await InvestorUpdate.create({

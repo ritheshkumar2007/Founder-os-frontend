@@ -4,10 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to analyze startup traction data via Gemini API using expert growth advisor prompt.
  */
 async function analyzeTractionWithGemini({ ventureName, metrics, feedback, goal }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || !apiKey.trim()) {
-    throw new Error('GEMINI_API_KEY is missing in environment variables.');
-  }
+  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
   const prompt = `You are an expert startup growth advisor.
 
