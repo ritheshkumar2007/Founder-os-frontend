@@ -22,7 +22,8 @@ export function setAuthToken(token: string | null) {
   }
 }
 
-async function request<T = any>(
+async function fetchEndpoint<T = any>(
+  baseUrl: string,
   endpoint: string,
   options: RequestInit = {}
 ): Promise<{ success: boolean; data?: T; error?: string; status?: number }> {
@@ -36,37 +37,75 @@ async function request<T = any>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const url = `${API_BASE_URL.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
+  const url = `${baseUrl.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
+  const response = await fetch(url, { ...options, headers });
+  const status = response.status;
+  const json = await response.json().catch(() => ({}));
 
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    const status = response.status;
-    const json = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      return {
-        success: false,
-        error: json.message || `Request failed with status ${status}`,
-        status,
-        data: json,
-      };
-    }
-
+  if (!response.ok) {
     return {
-      success: true,
-      data: json,
+      success: false,
+      error: json.message || `Request failed with status ${status}`,
       status,
+      data: json,
     };
+  }
+
+  return {
+    success: true,
+    data: json,
+    status,
+  };
+}
+
+async function request<T = any>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<{ success: boolean; data?: T; error?: string; status?: number }> {
+  try {
+    const res = await fetchEndpoint<T>(API_BASE_URL, endpoint, options);
+    if ((res.status === 404 || res.status === 500 || !res.success) && typeof window !== "undefined" && window.location.hostname === "localhost" && API_BASE_URL !== "http://localhost:5000/api") {
+      try {
+        const localRes = await fetchEndpoint<T>("http://localhost:5000/api", endpoint, options);
+        if (localRes.success || (localRes.status !== 404 && localRes.status !== 500)) {
+          return localRes;
+        }
+      } catch (e) {
+        // Fallthrough
+      }
+    }
+    return res;
   } catch (err: any) {
+    if (typeof window !== "undefined" && window.location.hostname === "localhost" && API_BASE_URL !== "http://localhost:5000/api") {
+      try {
+        return await fetchEndpoint<T>("http://localhost:5000/api", endpoint, options);
+      } catch (e) {
+        // Fallthrough
+      }
+    }
     return {
       success: false,
       error: err.message || "Network error. Backend server is unreachable.",
     };
   }
+}
+
+async function requestWithFallback<T = any>(
+  primaryEndpoint: string,
+  fallbackEndpoints: string[],
+  options: RequestInit = {}
+): Promise<{ success: boolean; data?: T; error?: string; status?: number }> {
+  const primaryRes = await request<T>(primaryEndpoint, options);
+  if (primaryRes.status !== 404) {
+    return primaryRes;
+  }
+  for (const fallback of fallbackEndpoints) {
+    const fbRes = await request<T>(fallback, options);
+    if (fbRes.status !== 404) {
+      return fbRes;
+    }
+  }
+  return primaryRes;
 }
 
 export const api = {
@@ -349,173 +388,185 @@ export const api = {
 
   // AI MVP Scope Engine
   getMvpScope: (ventureId: string) =>
-    request(`mvp/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/mvp-scope`, [`mvp/${ventureId}`, `mvp-scope/${ventureId}`]),
 
   generateMvpScope: (ventureId: string) =>
-    request("mvp/generate", {
+    requestWithFallback(`ventures/${ventureId}/mvp-scope`, ["mvp/generate", "mvp-scope/generate"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateMvpScope: (ventureId: string, payload: { coreGoal?: string; features?: any[] }) =>
-    request(`mvp/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/mvp-scope`, [`mvp/${ventureId}`, `mvp-scope/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  generateMvpScopeModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; targetUsers?: string; problem?: string }) =>
-    request("mvp-scope/generate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  generateMvpScopeModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; targetUsers?: string; problem?: string }) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/mvp-scope`, ["mvp-scope/generate", "mvp/generate"], opts);
+    }
+    return requestWithFallback("mvp-scope/generate", ["mvp/generate"], opts);
+  },
 
   getMvpScopeHistory: (ventureId: string) =>
-    request(`mvp-scope/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/mvp-scope`, [`mvp-scope/${ventureId}`, `mvp/${ventureId}`]),
 
   // AI Build Roadmap Engine
   getRoadmap: (ventureId: string) =>
-    request(`roadmap/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/roadmap`, [`roadmap/${ventureId}`, `build-roadmap/${ventureId}`]),
 
   generateRoadmap: (ventureId: string) =>
-    request("roadmap/generate", {
+    requestWithFallback(`ventures/${ventureId}/roadmap`, ["roadmap/generate", "build-roadmap/generate"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateRoadmap: (ventureId: string, payload: { phases?: any[] }) =>
-    request(`roadmap/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/roadmap`, [`roadmap/${ventureId}`, `build-roadmap/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  generateBuildRoadmapModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; users?: string; stack?: string }) =>
-    request("build-roadmap/generate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  generateBuildRoadmapModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; users?: string; stack?: string }) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/roadmap`, ["build-roadmap/generate", "roadmap/generate"], opts);
+    }
+    return requestWithFallback("build-roadmap/generate", ["roadmap/generate"], opts);
+  },
 
   getBuildRoadmapHistory: (ventureId: string) =>
-    request(`build-roadmap/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/roadmap`, [`build-roadmap/${ventureId}`, `roadmap/${ventureId}`]),
 
   // AI Marketing Plan Engine
   getMarketingPlan: (ventureId: string) =>
-    request(`marketing/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/marketing-plan`, [`marketing/${ventureId}`, `marketing-plan/${ventureId}`]),
 
   generateMarketingPlan: (ventureId: string) =>
-    request("marketing/generate", {
+    requestWithFallback(`ventures/${ventureId}/marketing-plan`, ["marketing/generate", "marketing-plan/generate"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateMarketingPlan: (ventureId: string, payload: any) =>
-    request(`marketing/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/marketing-plan`, [`marketing/${ventureId}`, `marketing-plan/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  generateMarketingPlanModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; audience?: string; industry?: string; pricing?: string; goal?: string }) =>
-    request("marketing-plan/generate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  generateMarketingPlanModule: (payload: { ventureId?: string; ventureName?: string; startupIdea?: string; mvpScope?: string; audience?: string; industry?: string; pricing?: string; goal?: string }) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/marketing-plan`, ["marketing-plan/generate", "marketing/generate"], opts);
+    }
+    return requestWithFallback("marketing-plan/generate", ["marketing/generate"], opts);
+  },
 
   getMarketingPlanHistory: (ventureId: string) =>
-    request(`marketing-plan/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/marketing-plan`, [`marketing-plan/${ventureId}`, `marketing/${ventureId}`]),
 
   // AI Launch Sprint Engine
   getLaunchSprint: (ventureId: string) =>
-    request(`launch/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/launch-sprint`, [`launch/${ventureId}`, `launch-sprint/${ventureId}`]),
 
   generateLaunchSprint: (ventureId: string) =>
-    request("launch/generate", {
+    requestWithFallback(`ventures/${ventureId}/launch-sprint`, ["launch/generate", "launch-sprint/generate"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateLaunchSprint: (ventureId: string, payload: { checklist?: any[]; copyData?: any }) =>
-    request(`launch/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/launch-sprint`, [`launch/${ventureId}`, `launch-sprint/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  generateLaunchSprintModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; mvpScope?: string; marketingPlan?: string; launchDate?: string; launchGoal?: string; targetAudience?: string }) =>
-    request("launch-sprint/generate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  generateLaunchSprintModule: (payload: { ventureId?: string; ventureName?: string; idea?: string; mvpScope?: string; marketingPlan?: string; launchDate?: string; launchGoal?: string; targetAudience?: string }) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/launch-sprint`, ["launch-sprint/generate", "launch/generate"], opts);
+    }
+    return requestWithFallback("launch-sprint/generate", ["launch/generate"], opts);
+  },
 
   getLaunchSprintHistory: (ventureId: string) =>
-    request(`launch-sprint/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/launch-sprint`, [`launch-sprint/${ventureId}`, `launch/${ventureId}`]),
 
   // AI Traction Dashboard Engine
   getTractionData: (ventureId: string) =>
-    request(`traction/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/traction`, [`traction/${ventureId}`, `traction-analyzer/history/${ventureId}`]),
 
   generateTractionData: (ventureId: string) =>
-    request("traction/generate", {
+    requestWithFallback(`ventures/${ventureId}/traction`, ["traction/generate", "traction-analyzer/analyze"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateTractionData: (ventureId: string, payload: any) =>
-    request(`traction/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/traction`, [`traction/${ventureId}`, `traction-analyzer/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  analyzeTractionModule: (payload: any) =>
-    request("traction-analyzer/analyze", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  analyzeTractionModule: (payload: any) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/traction`, ["traction-analyzer/analyze", "traction/generate"], opts);
+    }
+    return requestWithFallback("traction-analyzer/analyze", ["traction/generate"], opts);
+  },
 
   getTractionHistoryModule: (ventureId: string) =>
-    request(`traction-analyzer/history/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/traction`, [`traction-analyzer/history/${ventureId}`, `traction/${ventureId}`]),
 
   // AI Investor Update Engine
   getInvestorUpdate: (ventureId: string) =>
-    request(`investor/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/investor-update`, [`investor/${ventureId}`, `investor-update/history/${ventureId}`]),
 
   generateInvestorUpdate: (ventureId: string) =>
-    request("investor/generate", {
+    requestWithFallback(`ventures/${ventureId}/investor-update`, ["investor/generate", "investor-update/generate"], {
       method: "POST",
       body: JSON.stringify({ ventureId }),
     }),
 
   updateInvestorUpdate: (ventureId: string, payload: { doc?: any }) =>
-    request(`investor/${ventureId}`, {
+    requestWithFallback(`ventures/${ventureId}/investor-update`, [`investor/${ventureId}`, `investor-update/${ventureId}`], {
       method: "PUT",
       body: JSON.stringify(payload),
     }),
 
-  generateInvestorUpdateModule: (payload: any) =>
-    request("investor-update/generate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  generateInvestorUpdateModule: (payload: any) => {
+    const opts = { method: "POST", body: JSON.stringify(payload) };
+    if (payload.ventureId) {
+      return requestWithFallback(`ventures/${payload.ventureId}/investor-update`, ["investor-update/generate", "investor/generate"], opts);
+    }
+    return requestWithFallback("investor-update/generate", ["investor/generate"], opts);
+  },
 
   getInvestorUpdateHistoryModule: (ventureId: string) =>
-    request(`investor-update/history/${ventureId}`),
+    requestWithFallback(`ventures/${ventureId}/investor-update`, [`investor-update/history/${ventureId}`, `investor/${ventureId}`]),
 
   // FounderOS AI Co-Founder Assistant
   chatWithFounderAIModule: (payload: { ventureId?: string; message: string }) =>
-    request("founder-ai/chat", {
+    requestWithFallback("founder-ai/chat", [], {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   getFounderAIHistoryModule: (ventureId?: string) =>
-    request(`founder-ai/history${ventureId ? `?ventureId=${ventureId}` : ""}`),
+    requestWithFallback(`founder-ai/history${ventureId ? `?ventureId=${ventureId}` : ""}`, []),
 
   // Venture Intelligence Command Center
   analyzeVentureIntelligenceModule: (payload: { ventureId?: string; ventureName?: string }) =>
-    request("intelligence-command/analyze", {
+    requestWithFallback("intelligence-command/analyze", ["intelligence/analyze"], {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   getIntelligenceHistoryModule: (ventureId: string) =>
-    request(`intelligence-command/${ventureId}`),
+    requestWithFallback(`intelligence-command/${ventureId}`, [`intelligence/${ventureId}`]),
 };
 
 export default api;

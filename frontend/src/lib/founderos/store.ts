@@ -95,7 +95,7 @@ export function createVenture(name: string): Venture {
 
 export function normalizeVenture(v: any): Venture {
   const name = v?.name || v?.ventureName || "Untitled Venture";
-  const id = v?.id || v?._id?.toString?.() || v?._id || uid();
+  const id = v?._id?.toString?.() || v?._id || v?.id || uid();
 
   // Interviews translation
   let interviews: any[] = [];

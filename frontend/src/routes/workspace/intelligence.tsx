@@ -47,7 +47,7 @@ export interface VentureIntelligenceData {
   };
 }
 
-export function IntelligencePage() {
+function IntelligencePage() {
   const { venture } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

@@ -43,7 +43,7 @@ export interface GeneratedScope {
   futureRoadmap: string[];
 }
 
-export function MvpScopePage() {
+function MvpScopePage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

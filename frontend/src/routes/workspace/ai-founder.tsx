@@ -33,7 +33,7 @@ export interface ChatMessage {
   timestamp?: string;
 }
 
-export function AIFounderPage() {
+function AIFounderPage() {
   const { venture } = useActiveVenture();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState("");

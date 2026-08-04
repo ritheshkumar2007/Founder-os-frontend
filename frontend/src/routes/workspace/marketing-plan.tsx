@@ -44,7 +44,7 @@ export interface MarketingStrategyData {
   ninetyDayRoadmap: { month: string; goals: string; actions: string[] }[];
 }
 
-export function MarketingPage() {
+function MarketingPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

@@ -49,7 +49,7 @@ export interface RoadmapData {
   futureImprovements: string[];
 }
 
-export function RoadmapPage() {
+function RoadmapPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

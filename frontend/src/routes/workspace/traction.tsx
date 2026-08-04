@@ -54,7 +54,7 @@ export interface TractionData {
   };
 }
 
-export function TractionPage() {
+function TractionPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

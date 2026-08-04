@@ -52,7 +52,7 @@ export interface InvestorUpdateData {
   generatedUpdateText: string;
 }
 
-export function InvestorPage() {
+function InvestorPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);

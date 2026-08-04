@@ -31,7 +31,7 @@ export const Route = createFileRoute("/signin")({
   component: SignIn,
 });
 
-export function SignIn() {
+function SignIn() {
   const navigate = useNavigate();
   const search = useSearch({ from: "/signin" });
   const [isSignUp, setIsSignUp] = useState(search.mode === "signup");
