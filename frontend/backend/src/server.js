@@ -10,12 +10,9 @@ let server;
 /**
  * Connect to database and start Express server with graceful shutdown listeners
  */
-const startServer = async () => {
+const startServer = () => {
   try {
-    // Connect to MongoDB
-    await connectDB();
-
-    // Start Express listener
+    // 1. Start Express listener immediately so platform health checks pass
     server = app.listen(PORT, () => {
       console.log(
         `🚀 FounderOS Backend Server running in ${
@@ -23,9 +20,17 @@ const startServer = async () => {
         } mode on port ${PORT}`
       );
     });
+
+    // 2. Connect to MongoDB in background
+    connectDB()
+      .then(() => {
+        console.log('✅ Connected to MongoDB Atlas successfully.');
+      })
+      .catch((err) => {
+        console.warn('⚠️  MongoDB initial connection warning:', err.message);
+      });
   } catch (error) {
-    console.error(`❌ Failed to start server: ${error.message}`);
-    process.exit(1);
+    console.error(`❌ Failed to start HTTP server: ${error.message}`);
   }
 };
 
@@ -62,12 +67,9 @@ const gracefulShutdown = async (signal) => {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-// Handle unhandled promise rejections
+// Handle unhandled promise rejections without crashing container
 process.on('unhandledRejection', (err) => {
-  console.error(`Unhandled Rejection Error: ${err.message}`);
-  if (process.env.NODE_ENV === 'production') {
-    gracefulShutdown('unhandledRejection');
-  }
+  console.error(`Unhandled Rejection Warning: ${err ? err.message || err : 'Unknown error'}`);
 });
 
 startServer();

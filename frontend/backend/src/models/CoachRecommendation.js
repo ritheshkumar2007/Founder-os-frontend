@@ -118,9 +118,6 @@ const coachRecommendationSchema = new mongoose.Schema(
   }
 );
 
-// Index for venture lookup
-coachRecommendationSchema.index({ ventureId: 1 });
-
 const CoachRecommendation = mongoose.model('CoachRecommendation', coachRecommendationSchema);
 
 module.exports = CoachRecommendation;
