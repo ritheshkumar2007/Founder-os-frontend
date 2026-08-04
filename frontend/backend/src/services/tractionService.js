@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const TractionData = require('../models/TractionData');
 const ValidationReport = require('../models/ValidationReport');

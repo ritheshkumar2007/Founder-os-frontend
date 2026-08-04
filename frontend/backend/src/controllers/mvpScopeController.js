@@ -166,9 +166,10 @@ const saveMvpScope = async (req, res, next) => {
       updatedAt: new Date(),
     };
 
-    // Update progress tracking: add "MVP Scope" to completedSteps
+    if (!req.venture.ideaValidation) req.venture.ideaValidation = {};
+    if (!req.venture.ideaValidation.progress) req.venture.ideaValidation.progress = {};
     const completedSteps = new Set(
-      req.venture.ideaValidation?.progress?.completedSteps || []
+      req.venture.ideaValidation.progress.completedSteps || []
     );
     completedSteps.add('MVP Scope');
     req.venture.ideaValidation.progress.completedSteps = Array.from(completedSteps);

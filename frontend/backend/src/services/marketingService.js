@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const MarketingPlan = require('../models/MarketingPlan');
 const { getConversationHistory, buildFounderContextWindow } = require('./memoryService');

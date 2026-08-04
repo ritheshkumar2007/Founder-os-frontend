@@ -28,10 +28,9 @@ const router = express.Router();
 router.use(protect);
 
 // ====================================================
-// VENTURE MANAGEMENT ROUTES
+// VENTURE COLLECTION MANAGEMENT
 // ====================================================
 
-// Validation for venture creation
 const ventureValidation = [
   body('ventureName').trim().notEmpty().withMessage('Venture name is required'),
 ];
@@ -39,6 +38,80 @@ const ventureValidation = [
 router.route('/')
   .post(ventureValidation, createVenture)
   .get(getVentures);
+
+// ====================================================
+// IDEA VALIDATION - VENTURE BRIEF ROUTES
+// ====================================================
+
+router.route('/:ventureId/idea-validation/venture-brief')
+  .all(checkVentureOwnership)
+  .get(getVentureBrief)
+  .post(saveVentureBrief)
+  .put(saveVentureBrief);
+
+// ====================================================
+// IDEA VALIDATION - CUSTOMER VALIDATION (INTERVIEWS) ROUTES
+// ====================================================
+
+const interviewValidation = [
+  body('personName').trim().notEmpty().withMessage('Person name is required'),
+  body('painLevel')
+    .notEmpty()
+    .withMessage('Pain level is required')
+    .toUpperCase()
+    .isIn(['LOW', 'MEDIUM', 'HIGH'])
+    .withMessage('Pain level must be LOW, MEDIUM, or HIGH'),
+  body('wouldPay')
+    .notEmpty()
+    .withMessage('Would pay choice is required')
+    .toUpperCase()
+    .isIn(['YES', 'MAYBE', 'NO'])
+    .withMessage('Would pay must be YES, MAYBE, or NO'),
+];
+
+const updateInterviewValidation = [
+  body('painLevel')
+    .optional()
+    .toUpperCase()
+    .isIn(['LOW', 'MEDIUM', 'HIGH'])
+    .withMessage('Pain level must be LOW, MEDIUM, or HIGH'),
+  body('wouldPay')
+    .optional()
+    .toUpperCase()
+    .isIn(['YES', 'MAYBE', 'NO'])
+    .withMessage('Would pay must be YES, MAYBE, or NO'),
+];
+
+router.route('/:ventureId/interviews')
+  .all(checkVentureOwnership)
+  .get(getInterviews)
+  .post(interviewValidation, createInterview);
+
+router.route('/:ventureId/interviews/:interviewId')
+  .all(checkVentureOwnership)
+  .put(updateInterviewValidation, updateInterview)
+  .delete(deleteInterview);
+
+// ====================================================
+// IDEA VALIDATION - ANALYZE INSIGHTS ROUTE
+// ====================================================
+
+router.post('/:ventureId/analyze', checkVentureOwnership, analyzeInterviews);
+
+// ====================================================
+// IDEA VALIDATION - FOUNDER NOTES ROUTES
+// ====================================================
+
+router.route('/:ventureId/founder-notes')
+  .all(checkVentureOwnership)
+  .get(getFounderNotes)
+  .put(saveFounderNotes);
+
+// ====================================================
+// IDEA VALIDATION - PROGRESS ROUTE
+// ====================================================
+
+router.get('/:ventureId/progress', checkVentureOwnership, getProgress);
 
 // Import sub-routers
 const mvpScopeRouter = require('./mvpScope');
@@ -60,7 +133,7 @@ router.use('/:ventureId/traction', tractionRouter);
 router.use('/:ventureId/investor-update', investorUpdateRouter);
 
 // ====================================================
-// SINGLE VENTURE MANAGEMENT ROUTE (MUST BE AFTER SUB-ROUTERS)
+// SINGLE VENTURE MANAGEMENT ROUTE (MUST BE LAST)
 // ====================================================
 
 router.route('/:ventureId')
