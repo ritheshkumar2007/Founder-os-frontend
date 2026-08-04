@@ -4,8 +4,8 @@
   "description": "Production-ready Authentication Backend for FounderOS",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node frontend/backend/src/server.js || node src/server.js",
+    "dev": "nodemon frontend/backend/src/server.js"
   },
   "keywords": [
     "express",
