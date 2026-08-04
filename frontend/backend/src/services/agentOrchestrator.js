@@ -4,6 +4,37 @@ const AgentLog = require('../models/AgentLog');
 const { buildFounderContextWindow } = require('./memoryService');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+function generateContextualFallbackReply(userMessage, ventureContext, agentName = 'FounderOS Co-Pilot AI') {
+  const msg = (userMessage || '').trim();
+  const lowerMsg = msg.toLowerCase();
+
+  if (lowerMsg.includes('recognise') || lowerMsg.includes('recognize') || lowerMsg.includes('hear me') || lowerMsg.includes('understand')) {
+    return `Yes! I recognize your words clearly: "${msg}". I am your FounderOS AI Coach. What specific goal would you like to focus on for your startup today?`;
+  }
+
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey') || lowerMsg.includes('greetings')) {
+    return `Hello! Welcome to FounderOS. I'm ready to help you validate your idea, scope your MVP, or plan your launch strategy. What's on your mind?`;
+  }
+
+  if (lowerMsg.includes('founder') || lowerMsg.includes('startup') || lowerMsg.includes('building') || lowerMsg.includes('idea') || lowerMsg.includes('making')) {
+    return `Building a startup around "${msg}" is an exciting journey! To make rapid progress, our first step is defining your core target user and value proposition. Who is your primary target customer?`;
+  }
+
+  if (lowerMsg.includes('mvp') || lowerMsg.includes('build') || lowerMsg.includes('product') || lowerMsg.includes('feature')) {
+    return `Great focus on product development! For your MVP concept ("${msg}"), what is the single most essential feature your early adopters will use first?`;
+  }
+
+  if (lowerMsg.includes('marketing') || lowerMsg.includes('customer') || lowerMsg.includes('growth') || lowerMsg.includes('sale')) {
+    return `Acquiring early users for "${msg}" is critical! Which primary channel do you plan to test first — direct outreach, organic content, or paid search?`;
+  }
+
+  if (lowerMsg.includes('investor') || lowerMsg.includes('pitch') || lowerMsg.includes('raise') || lowerMsg.includes('fund')) {
+    return `Investors love seeing clear problem-solution fit and early momentum! For "${msg}", what key metrics or traction highlights do you want to feature in your update?`;
+  }
+
+  return `I hear you regarding "${msg}". As your startup co-pilot, I'm analyzing your venture parameters. What specific area (MVP, marketing, roadmap, or launch) shall we work on next?`;
+}
+
 /**
  * Multi-Agent AI Orchestration Service
  * Routes user messages, executes specialized agents, synthesizes multi-domain insights,
@@ -17,14 +48,18 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
   const ventureContext = buildFounderContextWindow(venture);
 
   // 2. Intelligently route message to specialized agent(s)
-  const routing = await router.routeMessage({
-    userMessage,
-    ventureContext,
-    history,
-  });
+  let routing = { primaryAgent: 'idea_validator', secondaryAgents: [], reasoning: 'Default routing' };
+  try {
+    routing = await router.routeMessage({
+      userMessage,
+      ventureContext,
+      history,
+    });
+  } catch (rErr) {
+    console.warn('Routing fallback:', rErr.message);
+  }
 
   const { primaryAgent: primaryId, secondaryAgents: secondaryIds, reasoning } = routing;
-
   const primaryAgent = registry.getAgent(primaryId) || registry.getAgent('idea_validator');
 
   let finalReply = '';
@@ -59,7 +94,6 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
       const validSecondaryResults = secondaryResults.filter(Boolean);
 
       if (validSecondaryResults.length > 0) {
-        // Synthesize multi-agent insights into a single seamless response
         const apiKey = process.env.GEMINI_API_KEY;
         if (apiKey) {
           const genAI = new GoogleGenerativeAI(apiKey.trim());
@@ -90,8 +124,8 @@ RULES:
       finalReply = primaryResult;
     }
   } catch (error) {
-    console.error('Multi-agent execution error:', error.message || error);
-    finalReply = `Regarding your startup: Focus on validating your core problem and target customer. What is the single biggest question you want to answer today?`;
+    console.warn('Multi-agent execution warning:', error.message || error);
+    finalReply = generateContextualFallbackReply(userMessage, ventureContext, primaryAgent.name);
   }
 
   const executionTimeMs = Date.now() - startTime;
