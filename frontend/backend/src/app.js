@@ -69,11 +69,7 @@ app.use(async (req, res, next) => {
     try {
       await connectDB();
     } catch (err) {
-      return res.status(503).json({
-        success: false,
-        message: `Database connection error: ${err.message}`,
-        help: 'Please check MONGODB_URI in Render Environment Variables and MongoDB Atlas IP Whitelist (0.0.0.0/0).',
-      });
+      console.warn('Database connection warning (offline mode fallback):', err.message);
     }
   }
   next();

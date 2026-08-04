@@ -27,19 +27,23 @@ const aiChat = async (req, res, next) => {
       });
     }
 
+    const isDbConnected = mongoose.connection.readyState === 1;
+
     // 1. Load Venture Information safely with ObjectId check
     let venture = null;
-    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
-      venture = await Venture.findOne({ _id: ventureId, owner: userId });
-    }
-    if (!venture) {
-      venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
+    if (isDbConnected) {
+      if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
+        venture = await Venture.findOne({ _id: ventureId, owner: userId }).catch(() => null);
+      }
+      if (!venture) {
+        venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 }).catch(() => null);
+      }
     }
 
     const activeVentureId = venture ? venture._id : (ventureId && mongoose.Types.ObjectId.isValid(ventureId) ? ventureId : undefined);
 
     // 2. Save User Message to Memory
-    if (activeVentureId) {
+    if (isDbConnected && activeVentureId) {
       try {
         await saveMessage({
           userId,
@@ -54,7 +58,7 @@ const aiChat = async (req, res, next) => {
 
     // 3. Retrieve Chronological Conversation History
     let conversationHistory = [];
-    if (activeVentureId) {
+    if (isDbConnected && activeVentureId) {
       try {
         conversationHistory = await getConversationHistory({
           userId,
