@@ -43,6 +43,111 @@ export interface GeneratedScope {
   futureRoadmap: string[];
 }
 
+function formatScopeBlueprint(raw: any, fallbackName: string): GeneratedScope {
+  const scope = raw?.generatedScope || raw || {};
+  
+  const coreFeatures = (Array.isArray(scope.coreFeatures) && scope.coreFeatures.length > 0)
+    ? scope.coreFeatures
+    : [
+        `Core Workflow Engine to resolve ${scope.coreCustomerProblem || "primary customer pain"}`,
+        `Direct User Intake & Setup for target customers`,
+        `Automated Outcome Delivery matching ${scope.desiredOutcome || "desired user goal"}`,
+      ];
+
+  const mustHaveFeatures = (Array.isArray(scope.mustHaveFeatures) && scope.mustHaveFeatures.length > 0)
+    ? scope.mustHaveFeatures
+    : [
+        "User Session Authentication & Security",
+        "Dashboard Output & Task Tracking",
+        "Real-Time AI Processing Engine",
+        "Responsive Mobile & Desktop Interface",
+      ];
+
+  const niceToHaveFeatures = (Array.isArray(scope.niceToHaveFeatures) && scope.niceToHaveFeatures.length > 0)
+    ? scope.niceToHaveFeatures
+    : [
+        "Exportable PDF Summary Reports",
+        "Custom Webhook Notifications",
+        "Team Collaboration & Shareable Links",
+      ];
+
+  const featuresToAvoid = (Array.isArray(scope.featuresToAvoid) && scope.featuresToAvoid.length > 0)
+    ? scope.featuresToAvoid
+    : (Array.isArray(scope.excludedFeatures) && scope.excludedFeatures.length > 0)
+      ? scope.excludedFeatures
+      : [
+          "Premature Microservices Architecture",
+          "Complex Custom Billing Rules",
+          "Native Mobile Application Wrappers",
+        ];
+
+  const userJourney = (Array.isArray(scope.userJourney) && scope.userJourney.length > 0)
+    ? scope.userJourney
+    : [
+        "Step 1: Input core startup parameters and target audience details.",
+        "Step 2: Generate 12-part technical MVP blueprint and development timeline.",
+        "Step 3: Export roadmap and transition directly to Execution Sprint tasks.",
+      ];
+
+  const technicalRequirements = (Array.isArray(scope.technicalRequirements) && scope.technicalRequirements.length > 0)
+    ? scope.technicalRequirements
+    : [
+        "React + Vite + TypeScript Frontend",
+        "Node.js + Express Backend Server",
+        "MongoDB Atlas Database Storage",
+        "Gemini 1.5 Flash AI Engine API",
+      ];
+
+  const developmentTimeline = (Array.isArray(scope.developmentTimeline) && scope.developmentTimeline.length > 0)
+    ? scope.developmentTimeline
+    : [
+        {
+          phase: "Phase 1: Architecture & Data Schema Setup",
+          duration: "Days 1–3",
+          tasks: ["Configure MongoDB Models", "Setup Auth Middleware", "Deploy Express Routes"],
+        },
+        {
+          phase: "Phase 2: Core Feature & AI Engine Integration",
+          duration: "Days 4–9",
+          tasks: ["Integrate Gemini AI Prompt Engine", "Build Workspace Panels", "Wire Store State"],
+        },
+        {
+          phase: "Phase 3: Testing & Production Deployment",
+          duration: "Days 10–14",
+          tasks: ["Conduct End-to-End Testing", "Deploy Backend on Render", "Deploy Frontend on Vercel"],
+        },
+      ];
+
+  const successMetrics = (Array.isArray(scope.successMetrics) && scope.successMetrics.length > 0)
+    ? scope.successMetrics
+    : [
+        "100 Active User Registrations",
+        "80% Feature Completion Rate",
+        "<2s Response Latency on AI Outputs",
+      ];
+
+  const futureRoadmap = (Array.isArray(scope.futureRoadmap) && scope.futureRoadmap.length > 0)
+    ? scope.futureRoadmap
+    : [
+        "v2.0: Enterprise SSO Integration",
+        "v2.1: Automated GitHub Repository Scaffolding",
+        "v2.2: Native Mobile Companion App",
+      ];
+
+  return {
+    mvpName: scope.mvpName || `${fallbackName || "FounderOS"} Core MVP`,
+    coreFeatures,
+    mustHaveFeatures,
+    niceToHaveFeatures,
+    featuresToAvoid,
+    userJourney,
+    technicalRequirements,
+    developmentTimeline,
+    successMetrics,
+    futureRoadmap,
+  };
+}
+
 function MvpScopePage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
@@ -77,10 +182,8 @@ function MvpScopePage() {
     try {
       const res = await api.getMvpScopeHistory(ventureId);
       if (res.success && res.data?.mvpScope) {
-        const scopeObj = res.data.mvpScope.generatedScope || res.data.mvpScope;
-        if (scopeObj && scopeObj.mustHaveFeatures) {
-          setBlueprint(scopeObj);
-        }
+        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput);
+        setBlueprint(formatted);
         setHistory(res.data.history || []);
       }
     } catch (err) {
@@ -105,81 +208,21 @@ function MvpScopePage() {
       });
 
       if (res.success && res.data?.mvpScope) {
-        const generated = res.data.mvpScope.generatedScope || res.data.mvpScope;
-        setBlueprint(generated);
+        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput);
+        setBlueprint(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
         } else {
           setHistory((prev) => [res.data.mvpScope, ...prev]);
         }
       } else {
-        // Fallback default blueprint for instant visual rendering if network is offline
-        const fallbackBlueprint: GeneratedScope = {
-          mvpName: `${ventureNameInput || "FounderOS"} Core MVP`,
-          coreFeatures: [
-            "1-Click Customer Intake & Brief Analyzer",
-            "Automated AI Strategy & Scope Generator Engine",
-            "Interactive Founder Dashboard with Progress Metrics",
-          ],
-          mustHaveFeatures: [
-            "User Authentication & JWT Session Security",
-            "Structured Venture Memory Persistence in MongoDB",
-            "Real-Time Gemini AI Chat Integration",
-            "Responsive Modern Dark-Mode Layout",
-          ],
-          niceToHaveFeatures: [
-            "Exportable PDF Summary Reports",
-            "Custom Webhook Notifications",
-            "Team Collaboration & Shareable Links",
-          ],
-          featuresToAvoid: [
-            "Premature Microservices Architecture",
-            "Complex Custom Billing Rules",
-            "Native Mobile Application Wrappers",
-          ],
-          userJourney: [
-            "Step 1: Input core startup parameters and target audience details.",
-            "Step 2: Generate 12-part technical MVP blueprint and development timeline.",
-            "Step 3: Export roadmap and transition directly to Execution Sprint tasks.",
-          ],
-          technicalRequirements: [
-            "React + Vite + TypeScript Frontend",
-            "Node.js + Express Backend Server",
-            "MongoDB Atlas Database Storage",
-            "Gemini 1.5 Flash AI Engine API",
-          ],
-          developmentTimeline: [
-            {
-              phase: "Phase 1: Architecture & Data Schema Setup",
-              duration: "Days 1–3",
-              tasks: ["Configure MongoDB Models", "Setup Auth Middleware", "Deploy Express Routes"],
-            },
-            {
-              phase: "Phase 2: Core Feature & AI Engine Integration",
-              duration: "Days 4–9",
-              tasks: ["Integrate Gemini AI Prompt Engine", "Build Workspace Panels", "Wire Store State"],
-            },
-            {
-              phase: "Phase 3: Testing & Production Deployment",
-              duration: "Days 10–14",
-              tasks: ["Conduct End-to-End Testing", "Deploy Backend on Render", "Deploy Frontend on Vercel"],
-            },
-          ],
-          successMetrics: [
-            "100 Active Founder Registrations",
-            "80% MVP Scope Completion Rate",
-            "<2s Response Latency on AI Blueprints",
-          ],
-          futureRoadmap: [
-            "v2.0: Enterprise SSO Integration",
-            "v2.1: Automated GitHub Repository Scaffolding",
-            "v2.2: Native Mobile Companion App",
-          ],
-        };
-        setBlueprint(fallbackBlueprint);
+        const formatted = formatScopeBlueprint({}, ventureNameInput);
+        setBlueprint(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate MVP blueprint:", err);
+      const formatted = formatScopeBlueprint({}, ventureNameInput);
+      setBlueprint(formatted);
     } finally {
       setGenerating(false);
     }
