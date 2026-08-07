@@ -82,8 +82,8 @@ function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
 - **Value Proposition:** "Turn your exam deadlines into an automated, stress-free daily study plan in 30 seconds."`;
   }
 
-  // 5. Strict word boundary check for Greetings (prevents matching "this", "they", "identify", etc.)
-  const isGreeting = /\b(hello|hi|hey|greetings|welcome)\b/i.test(msg);
+  // 5. Flexible regex check for Greetings (supports "hii", "hiii", "heyy", "helloo", "hi", "hello")
+  const isGreeting = /\b(hello+|h+i+|h+e+y+|greetings|welcome)\b/i.test(msg);
   if (isGreeting) {
     return `Hello! Welcome to FounderOS. I am your AI Co-Pilot for "${ventureName}". I am ready to help you validate your target audience (${targetCustomer}), scope your MVP, or plan your GTM strategy. How can I assist you today?`;
   }

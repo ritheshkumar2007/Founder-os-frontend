@@ -12,10 +12,8 @@ async function routeMessage({ userMessage, ventureContext, history = [] }) {
 
   // Fast intent classification rules before calling Gemini router LLM
   if (
+    /\b(hello+|h+i+|h+e+y+|greetings|welcome)\b/i.test(msg) ||
     lowerMsg.includes('understand') ||
-    lowerMsg.includes('hello') ||
-    lowerMsg.includes('hi') ||
-    lowerMsg.includes('hey') ||
     lowerMsg.includes('who are you') ||
     lowerMsg.includes('what can you do') ||
     lowerMsg.includes('language') ||
