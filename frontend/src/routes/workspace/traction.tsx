@@ -55,9 +55,9 @@ export interface TractionData {
 }
 
 function formatTractionData(raw: any, fallbackName: string): TractionData {
-  const data = raw?.traction || raw || {};
+  const data = raw?.traction || raw?.tractionData || raw || {};
   const metrics = data.metrics || {};
-  const analysis = data.aiAnalysis || {};
+  const analysis = data.aiAnalysis || data.analysis || {};
 
   return {
     metrics: {
@@ -170,8 +170,9 @@ function TractionPage() {
     setLoading(true);
     try {
       const res = await api.getTractionHistoryModule(ventureId);
-      if (res.success && res.data?.traction) {
-        const formatted = formatTractionData(res.data.traction, venture?.name || "Untitled Venture");
+      if (res.success && (res.data?.traction || res.data?.tractionData)) {
+        const rawObj = res.data.traction || res.data.tractionData;
+        const formatted = formatTractionData(rawObj, venture?.name || "Untitled Venture");
         setTraction(formatted);
         setHistory(res.data.history || []);
       }
@@ -202,13 +203,14 @@ function TractionPage() {
         growthGoal: goalInput || "Scale to 500 active users & $5k MRR in 60 days",
       });
 
-      if (res.success && res.data?.traction) {
-        const formatted = formatTractionData(res.data.traction, venture?.name || "Untitled Venture");
+      if (res.success && (res.data?.traction || res.data?.tractionData)) {
+        const rawObj = res.data.traction || res.data.tractionData;
+        const formatted = formatTractionData(rawObj, venture?.name || "Untitled Venture");
         setTraction(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
         } else {
-          setHistory((prev) => [res.data.traction, ...prev]);
+          setHistory((prev) => [rawObj, ...prev]);
         }
       } else {
         const formatted = formatTractionData({}, venture?.name || "Untitled Venture");
