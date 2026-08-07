@@ -72,20 +72,22 @@ const aiChat = async (req, res, next) => {
       }
     }
 
-    // 4. Process Message via Multi-Agent AI System
-    let agentResult = { reply: 'I am analyzing your startup context. What is your top priority right now?', agentInfo: { primaryAgent: 'idea_validator', primaryAgentName: 'Idea Validator AI' } };
+    // 4. Process Message via Unified 4-Layer AI Pipeline
+    const { processAIRequest } = require('../services/aiOrchestrator');
+    let agentResult = { response: 'I am analyzing your startup context. What is your top priority right now?', agentInfo: { primaryAgent: 'idea_validator', primaryAgentName: 'Idea Validator AI' } };
     try {
-      agentResult = await processMultiAgentChat({
-        venture,
+      agentResult = await processAIRequest({
         userId,
-        userMessage: message.trim(),
+        ventureId: activeVentureId,
+        agentName: 'ai_chat',
+        userInput: message.trim(),
         history: conversationHistory,
       });
     } catch (agentErr) {
       console.warn('Agent processing warning:', agentErr.message);
     }
 
-    const aiResponse = agentResult.reply || 'What specific area of your venture would you like to explore next?';
+    const aiResponse = agentResult.response || agentResult.reply || 'What specific area of your venture would you like to explore next?';
     const agentInfo = agentResult.agentInfo;
 
     // 5. Save Assistant Response to Memory
