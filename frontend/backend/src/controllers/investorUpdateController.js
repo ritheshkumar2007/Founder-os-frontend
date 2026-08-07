@@ -4,11 +4,12 @@ const Venture = require('../models/Venture');
 const Traction = require('../models/Traction');
 const BuildRoadmap = require('../models/BuildRoadmap');
 const MarketingPlan = require('../models/MarketingPlan');
-const LaunchSprint = require('../models/LaunchSprint');
 const { generateInvestorUpdateFromGemini } = require('../services/investorGeminiService');
 
 /**
  * Controller to handle POST /api/investor-update/generate
+ * Dynamically inherits from Venture Memory (Brief -> MVP -> Roadmap -> Marketing -> Traction)
+ * without fabricating fake revenue, user metrics, or funding rounds.
  */
 async function generateUpdate(req, res, next) {
   try {
@@ -26,44 +27,62 @@ async function generateUpdate(req, res, next) {
       }
     }
 
-    if (venture) {
-      ventureId = venture._id;
-      ventureName = ventureName || venture.ventureName || venture.name || 'Untitled Venture';
-      overview = overview || venture.brief?.building || 'AI Execution OS for Founders';
-    } else {
-      ventureName = ventureName || 'Untitled Venture';
-      overview = overview || 'AI Execution OS for Founders';
-    }
+    const resolvedVentureName = ventureName || venture?.ventureName || venture?.name || 'Untitled Venture';
+    const brief = venture?.ideaValidation?.ventureBrief || {};
+    const resolvedOverview = overview || brief.building || brief.problemStatement || 'Startup Concept';
 
-    // Attempt to pull real background data across modules if missing
-    if (!traction && ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
-      const latestTraction = await Traction.findOne({ ventureId, userId }).sort({ createdAt: -1 });
+    // Auto-inherit real background data across modules if missing
+    let resolvedTraction = traction;
+    if ((!resolvedTraction || resolvedTraction.includes('142 registered users')) && isDbConnected) {
+      const latestTraction = await Traction.findOne({ userId }).sort({ createdAt: -1 }).catch(() => null);
       if (latestTraction?.metrics) {
-        traction = `${latestTraction.metrics.totalUsers} Total Users, ${latestTraction.metrics.monthlyActiveUsers} MAU, Revenue: ${latestTraction.metrics.revenue}, Retention: ${latestTraction.metrics.retentionRate}`;
-      }
-    }
-    if (!progress && ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
-      const latestRoadmap = await BuildRoadmap.findOne({ ventureId, userId }).sort({ createdAt: -1 });
-      if (latestRoadmap?.roadmap?.overview) {
-        progress = latestRoadmap.roadmap.overview;
+        const m = latestTraction.metrics;
+        if (m.totalUsers > 0 || m.revenue !== '$0 / Pre-Revenue') {
+          resolvedTraction = `${m.totalUsers} Total Users, ${m.monthlyActiveUsers} MAU, Revenue: ${m.revenue}, 30-Day Retention: ${m.retentionRate}`;
+        } else {
+          resolvedTraction = 'Pre-Launch / Pre-Revenue (Zero live users recorded)';
+        }
+      } else {
+        resolvedTraction = 'Pre-Launch / Pre-Traction (Metrics not yet recorded)';
       }
     }
 
-    traction = traction || '142 registered users, 98 MAU, $2,450 MRR, 72% retention rate';
-    progress = progress || 'Deployed core AI modules and MongoDB Atlas persistence engine';
-    challenges = challenges || 'Scaling organic direct ICP user acquisition';
-    goals = goals || 'Scale to 500 active users & $5,000 MRR in next quarter';
-    funding = funding || 'Raising $500k Pre-Seed round';
+    let resolvedProgress = progress;
+    if (!resolvedProgress || resolvedProgress.includes('Deployed core AI modules')) {
+      const latestRoadmap = await BuildRoadmap.findOne({ userId }).sort({ createdAt: -1 }).catch(() => null);
+      if (latestRoadmap?.roadmap?.overview) {
+        resolvedProgress = latestRoadmap.roadmap.overview;
+      } else if (venture?.mvpScope?.mustHaveFeatures?.length) {
+        resolvedProgress = `MVP Scope finalized with core features: ${venture.mvpScope.mustHaveFeatures.slice(0, 3).join(', ')}`;
+      } else {
+        resolvedProgress = 'Product architecture designed; engineering MVP development in progress.';
+      }
+    }
+
+    const resolvedChallenges = challenges && !challenges.includes('Scaling organic direct ICP user acquisition')
+      ? challenges
+      : 'Customer discovery velocity & establishing first repeatable distribution channel.';
+
+    const resolvedGoals = goals && !goals.includes('Scale to 500 active users & $5,000 MRR')
+      ? goals
+      : 'Complete core MVP build and onboard first 10–25 active test users.';
+
+    const resolvedFunding = funding && !funding.includes('$500k Pre-Seed')
+      ? funding
+      : 'Bootstrapping / Pre-Seed discovery (No active funding round configured)';
+
+    const isPreLaunch = resolvedTraction.includes('Pre-Launch') || resolvedTraction.includes('Zero live');
 
     // Call Gemini AI IR Service
     const aiResult = await generateInvestorUpdateFromGemini({
-      ventureName,
-      overview,
-      progress,
-      traction,
-      challenges,
-      goals,
-      funding,
+      ventureName: resolvedVentureName,
+      overview: resolvedOverview,
+      progress: resolvedProgress,
+      traction: resolvedTraction,
+      challenges: resolvedChallenges,
+      goals: resolvedGoals,
+      funding: resolvedFunding,
+      isPreLaunch,
     });
 
     const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId))
@@ -76,8 +95,8 @@ async function generateUpdate(req, res, next) {
       newUpdate = await InvestorUpdate.create({
         userId,
         ventureId: targetVentureId,
-        ventureName,
-        companyOverview: overview,
+        ventureName: resolvedVentureName,
+        companyOverview: resolvedOverview,
         period: {
           month: new Date().toLocaleString('default', { month: 'long', year: 'numeric' }),
           quarter: `Q${Math.floor(new Date().getMonth() / 3) + 1} ${new Date().getFullYear()}`,
@@ -106,10 +125,15 @@ async function generateUpdate(req, res, next) {
         _id: '6a709d6ff4af39139e040cc8',
         ventureId: targetVentureId,
         userId,
+        companyOverview: resolvedOverview,
         investorMessage: {
           summary: aiResult.summary,
           keyAchievements: aiResult.keyAchievements,
           growthMetrics: aiResult.growthMetrics,
+          challenges: aiResult.challenges,
+          solutions: aiResult.solutions,
+          nextQuarterGoals: aiResult.nextQuarterGoals,
+          fundingNeeds: aiResult.fundingNeeds,
         },
         generatedUpdateText: aiResult.generatedUpdateText,
       };
@@ -155,9 +179,6 @@ async function getUpdateHistory(req, res, next) {
   }
 }
 
-/**
- * Alias handlers for investorUpdate.js routes
- */
 async function getInvestorUpdate(req, res, next) {
   return getUpdateHistory(req, res, next);
 }
