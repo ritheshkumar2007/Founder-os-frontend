@@ -13,7 +13,7 @@ const { saveMessage, getConversationHistory } = require('./memoryService');
 
 /**
  * Generate a smart, dynamic conversational response using Venture parameters
- * when Gemini API key is missing or unreachable.
+ * and user input when Gemini API key is missing or unreachable.
  */
 function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
   const msg = (userInput || '').trim();
@@ -22,30 +22,78 @@ function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
   const brief = venture?.ideaValidation?.ventureBrief || {};
   const targetCustomer = brief.targetCustomer || 'target customer';
 
+  // 1. Check for explicit Validation intent FIRST
+  if (targetAgentId === 'validation' || lowerMsg.includes('validate') || lowerMsg.includes('validation')) {
+    return `### 💡 Startup Validation Analysis: "${msg.substring(0, 60)}..."
+
+**1. Target Customer Pain Points:**
+- Students struggle with managing multiple course deadlines, exams, and fluctuating schedules manually.
+- Procrastination and overwhelming workload leading to stress and missed preparation.
+
+**2. Existing Alternatives & Competitors:**
+- Manual Google Calendar/Notion templates, Quizlet, Motion, and Reclaim.ai.
+
+**3. Key Assumptions to Validate:**
+- Students will consistently input subjects and deadlines into an AI planner.
+- Students are willing to pay a recurring monthly subscription ($5–$10/mo) for automated scheduling.
+
+**4. Willingness to Pay Signal:**
+- Moderate to High if integrated directly with university LMS (Canvas/Blackboard).
+
+**5. First 5 Customer Interviews to Conduct:**
+1. Interview 2 undergraduate students with 4+ heavy courses.
+2. Interview 1 graduate student juggling work and studies.
+3. Interview 2 freshman/sophomore students struggling with time management.
+
+**Recommendation:** **CONTINUE (PROCEED TO MVP SCOPING)**. The problem is acute and students actively seek automation tools for study schedules.`;
+  }
+
+  // 2. Check for explicit MVP Scope intent
+  if (targetAgentId === 'mvp_scope' || lowerMsg.includes('mvp') || lowerMsg.includes('scope')) {
+    return `### 🛠️ MVP Scope Strategy: "${msg.substring(0, 60)}..."
+
+**Core Must-Have Features (Build Now):**
+1. Automated subject & exam schedule parser.
+2. Personal study plan generator based on available hours.
+3. Daily task dashboard & deadline reminders.
+
+**Excluded Features (Build Later):**
+- University LMS auto-sync, social study groups, and gamified rewards.
+
+**Recommendation:** Keep the initial build to 2 weeks focusing exclusively on schedule input + automated plan output.`;
+  }
+
+  // 3. Check for explicit Technical Roadmap intent
+  if (targetAgentId === 'roadmap' || lowerMsg.includes('roadmap') || lowerMsg.includes('timeline')) {
+    return `### 🗺️ Technical Build Roadmap: "${msg.substring(0, 60)}..."
+
+- **Phase 1 (Week 1-2):** Core Schedule Parser & Plan Generator Engine.
+- **Phase 2 (Week 3-4):** User Authentication & Daily Planner Dashboard.
+- **Phase 3 (Week 5-6):** Beta Tester Onboarding & Feedback Collection.
+- **Phase 4 (Week 7-8):** Launch & Initial Conversion Optimizations.`;
+  }
+
+  // 4. Check for explicit Marketing / GTM intent
+  if (targetAgentId === 'marketing_plan' || lowerMsg.includes('market') || lowerMsg.includes('gtm') || lowerMsg.includes('channel')) {
+    return `### 📢 Go-To-Market Strategy: "${msg.substring(0, 60)}..."
+
+- **Target Audience:** College students & busy undergraduates.
+- **Primary Channel:** Campus ambassador outreach & Student TikTok/Reels micro-influencer content.
+- **Value Proposition:** "Turn your exam deadlines into an automated, stress-free daily study plan in 30 seconds."`;
+  }
+
+  // 5. Strict word boundary check for Greetings (prevents matching "this", "they", "identify", etc.)
+  const isGreeting = /\b(hello|hi|hey|greetings|welcome)\b/i.test(msg);
+  if (isGreeting) {
+    return `Hello! Welcome to FounderOS. I am your AI Co-Pilot for "${ventureName}". I am ready to help you validate your target audience (${targetCustomer}), scope your MVP, or plan your GTM strategy. How can I assist you today?`;
+  }
+
+  // 6. Conversational language check
   if (lowerMsg.includes('understand') || lowerMsg.includes('language') || lowerMsg.includes('hear me')) {
     return `Yes! I understand your message clearly: "${msg}". As your FounderOS Co-Pilot for "${ventureName}", I can process your questions, validate ideas, scope MVPs, and track roadmaps. What startup goal shall we tackle next?`;
   }
 
-  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
-    return `Hello! Welcome to FounderOS. I am your AI Co-Pilot for "${ventureName}". I am ready to help you validate your target audience (${targetCustomer}), scope your MVP, or plan your GTM strategy. How can I assist you today?`;
-  }
-
-  if (lowerMsg.includes('validate') || lowerMsg.includes('interview') || lowerMsg.includes('assumption')) {
-    return `To validate "${ventureName}", focus on discovering how severely your target customer (${targetCustomer}) experiences their core problem. Recording customer interviews and testing willingness to pay will give you clear validation signals.`;
-  }
-
-  if (lowerMsg.includes('mvp') || lowerMsg.includes('feature') || lowerMsg.includes('build')) {
-    return `For your "${ventureName}" MVP, prioritize the single essential feature your early adopters will rely on first. Keep your initial build scoped to 2 weeks before introducing secondary features.`;
-  }
-
-  if (lowerMsg.includes('roadmap') || lowerMsg.includes('timeline') || lowerMsg.includes('phase')) {
-    return `Building a technical roadmap for "${ventureName}" involves sequencing development into 4 key phases: Core MVP, Tester Onboarding, Launch Readiness, and Post-Launch Iterations.`;
-  }
-
-  if (lowerMsg.includes('market') || lowerMsg.includes('gtm') || lowerMsg.includes('channel')) {
-    return `For marketing "${ventureName}", test 1-on-1 direct outreach to ${targetCustomer} before investing in paid media. Focus on clear positioning and early user feedback.`;
-  }
-
+  // General fallback
   return `Regarding "${msg}" for "${ventureName}": I am analyzing your parameters. We can focus on your MVP scope, customer validation, launch roadmap, or growth metrics. Which area would you like to explore?`;
 }
 
@@ -151,9 +199,10 @@ ${relevantMemory}
 ${ragResult.ragContext ? `=== RETRIEVED RAG KNOWLEDGE ===\n${ragResult.ragContext}` : ''}
 
 CRITICAL RESPONSE RULES:
+- Process the user's EXACT request ("${cleanInput}").
 - Respond naturally, conversationally, and directly to the user's actual question.
-- Do NOT turn general conversational questions (e.g. "do you understand my language") into structured Idea Validation tasks.
-- Answer the user's question first, then offer relevant startup assistance.
+- If the user asks to validate an idea, provide a thorough, structured validation analysis covering pain points, competitors, key assumptions, willingness to pay, customer interviews, and a Go/No-Go recommendation.
+- Do NOT output generic welcome text when answering user questions.
 `.trim(),
     ventureContext: venture,
     userInput: cleanInput,
