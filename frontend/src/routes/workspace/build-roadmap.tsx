@@ -10,7 +10,7 @@ import {
   TextArea,
   TextInput,
 } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, CheckCircle2, History, Clock, ArrowRight, Code, Flag } from "lucide-react";
+import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, CheckCircle2, History, Clock, ArrowRight, Code, Flag, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import api from "@/lib/api";
 
@@ -47,10 +47,12 @@ export interface RoadmapData {
   futureImprovements: string[];
 }
 
-function formatBuildRoadmap(raw: any, fallbackName: string): RoadmapData {
+function formatBuildRoadmap(raw: any, fallbackName: string, startupIdeaInput: string, mvpScopeInput: string): RoadmapData {
   const data = raw?.roadmap || raw || {};
+  const idea = startupIdeaInput || "Startup Concept";
+  const mvp = mvpScopeInput || "2-week core MVP features";
 
-  const overview = data.overview || `Engineering execution plan for ${fallbackName || "FounderOS"}: A structured 4-phase technical roadmap targeting a high-performance 2-week MVP launch and scalable architecture.`;
+  const overview = data.overview || `Engineering execution plan for ${fallbackName || "FounderOS"}: A structured 4-phase technical roadmap targeting a high-performance 2-week MVP launch for ${idea}.`;
 
   const developmentPhases = (Array.isArray(data.developmentPhases) && data.developmentPhases.length > 0)
     ? data.developmentPhases
@@ -70,7 +72,7 @@ function formatBuildRoadmap(raw: any, fallbackName: string): RoadmapData {
         {
           phaseName: "Phase 2: Core Feature Engine & Integrations",
           duration: "Days 4–9",
-          objectives: "Develop primary customer intake workflows, AI prompt engine, and state managers.",
+          objectives: `Develop primary workflows matching ${mvp}, AI prompt engine, and state managers.`,
           tasks: [
             "Wire Layer 1 Prompt Engine with Gemini 1.5 Flash API",
             "Implement Layer 2 Venture Memory state persistence",
@@ -126,7 +128,7 @@ function formatBuildRoadmap(raw: any, fallbackName: string): RoadmapData {
     : [
         "Milestone 1 (Day 3): Backend API & Database Connectivity Live",
         "Milestone 2 (Day 9): AI Scope & Prompt Engine Integration Complete",
-        "Milestone 3 (Day 14): Production Deployment & Product Hunt Launch Ready",
+        "Milestone 3 (Day 14): Production Deployment & Launch Readiness Verified",
       ];
 
   const launchChecklist = (Array.isArray(data.launchChecklist) && data.launchChecklist.length > 0)
@@ -162,25 +164,27 @@ function RoadmapPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Form Inputs
+  // Form Inputs (clean inputs - auto-inherits from Venture Memory if present)
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [startupIdeaInput, setStartupIdeaInput] = useState("");
   const [mvpScopeInput, setMvpScopeInput] = useState("");
   const [targetUsersInput, setTargetUsersInput] = useState("");
-  const [stackInput, setStackInput] = useState("React, Node.js, Express, MongoDB Atlas, Gemini AI API");
+  const [stackInput, setStackInput] = useState("");
 
   // Scope Data
   const [roadmapData, setRoadmapData] = useState<RoadmapData | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
   const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.mvpScope?.mustHaveFeatures?.length || venture?.name);
 
   useEffect(() => {
     if (venture) {
-      setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
-      setStartupIdeaInput(venture.brief?.building || "AI Execution Operating System for Founders");
-      setMvpScopeInput(venture.mvp?.job || "2-week core MVP scope");
-      setTargetUsersInput(venture.brief?.audience || "Early-stage founders, SaaS builders");
+      setVentureNameInput(venture.name || venture.ventureName || "");
+      setStartupIdeaInput(venture.brief?.building || "");
+      setMvpScopeInput(venture.mvpScope?.mustHaveFeatures?.join(", ") || venture.mvp?.job || "");
+      setTargetUsersInput(venture.brief?.audience || "");
+      setStackInput("React, Node.js, Express, MongoDB Atlas, Gemini AI API");
       loadRoadmapHistory();
     } else {
       loadRoadmapHistory();
@@ -192,7 +196,7 @@ function RoadmapPage() {
     try {
       const res = await api.getBuildRoadmapHistory(ventureId);
       if (res.success && res.data?.buildRoadmap) {
-        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput);
+        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput, startupIdeaInput, mvpScopeInput);
         setRoadmapData(formatted);
         setHistory(res.data.history || []);
       }
@@ -212,14 +216,14 @@ function RoadmapPage() {
       const res = await api.generateBuildRoadmapModule({
         ventureId,
         ventureName: ventureNameInput || "Untitled Venture",
-        startupIdea: startupIdeaInput || "AI Execution Operating System for Founders",
-        mvpScope: mvpScopeInput || "2-week core MVP scope",
-        users: targetUsersInput || "Early-stage founders, SaaS builders",
+        startupIdea: startupIdeaInput || "Startup Concept",
+        mvpScope: mvpScopeInput || "2-week core MVP features",
+        users: targetUsersInput || "Target Customers",
         stack: stackInput || "React, Node.js, Express, MongoDB Atlas, Gemini AI API",
       });
 
       if (res.success && res.data?.buildRoadmap) {
-        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput);
+        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput, startupIdeaInput, mvpScopeInput);
         setRoadmapData(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
@@ -227,12 +231,12 @@ function RoadmapPage() {
           setHistory((prev) => [res.data.buildRoadmap, ...prev]);
         }
       } else {
-        const formatted = formatBuildRoadmap({}, ventureNameInput);
+        const formatted = formatBuildRoadmap({}, ventureNameInput, startupIdeaInput, mvpScopeInput);
         setRoadmapData(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate build roadmap:", err);
-      const formatted = formatBuildRoadmap({}, ventureNameInput);
+      const formatted = formatBuildRoadmap({}, ventureNameInput, startupIdeaInput, mvpScopeInput);
       setRoadmapData(formatted);
     } finally {
       setGenerating(false);
@@ -267,13 +271,23 @@ function RoadmapPage() {
       />
 
       {/* Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-        <div>
-          <span className="font-bold text-[#64D8FF]">AI Technical CTO Active: </span>
-          Specify your stack & MVP parameters below to generate a 4-phase technical execution roadmap stored in MongoDB Atlas.
+      {hasVentureMemory ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+          <div>
+            <span className="font-bold text-[#64D8FF]">Venture Memory Connected: </span>
+            Auto-inherited your MVP feature scope from Step 4. Adjust your tech stack preferences below to generate your 4-phase engineering roadmap.
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-amber-400" />
+          <div>
+            <span className="font-bold text-amber-300">No Upstream MVP Memory: </span>
+            Input your startup idea and scope in the form below or complete Step 4 (MVP Scope) to auto-populate parameters.
+          </div>
+        </div>
+      )}
 
       {/* Form Inputs */}
       <Panel title="Technical Roadmap Inputs">
@@ -283,7 +297,7 @@ function RoadmapPage() {
               <TextInput
                 value={ventureNameInput}
                 onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="Venture name"
+                placeholder="e.g. Acme SaaS or leave blank"
               />
             </Field>
             <Field label="Preferred Tech Stack">
@@ -300,15 +314,15 @@ function RoadmapPage() {
                 rows={2}
                 value={startupIdeaInput}
                 onChange={(e) => setStartupIdeaInput(e.target.value)}
-                placeholder="Core product concept"
+                placeholder="Describe your core product concept"
               />
             </Field>
-            <Field label="MVP Scope & Key Job">
+            <Field label="MVP Scope & Key Features">
               <TextArea
                 rows={2}
                 value={mvpScopeInput}
                 onChange={(e) => setMvpScopeInput(e.target.value)}
-                placeholder="Key 2-week MVP features"
+                placeholder="Inherited 2-week core MVP features"
               />
             </Field>
           </div>

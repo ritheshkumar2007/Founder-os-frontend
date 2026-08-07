@@ -11,7 +11,7 @@ import {
   TextArea,
   TextInput,
 } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, UserCheck, Megaphone, Calendar, Rocket, LineChart, Clock, History, CheckCircle2 } from "lucide-react";
+import { Sparkles, RefreshCw, UserCheck, Megaphone, Calendar, Rocket, LineChart, Clock, History, CheckCircle2, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import api from "@/lib/api";
 
@@ -44,29 +44,24 @@ export interface MarketingStrategyData {
   ninetyDayRoadmap: { month: string; goals: string; actions: string[] }[];
 }
 
-function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrategyData {
+function formatMarketingStrategy(raw: any, fallbackName: string, audienceInput: string, goalInput: string): MarketingStrategyData {
   const data = raw?.marketingStrategy || raw || {};
+  const audience = audienceInput || "target customers";
+  const goal = goalInput ? `Goal: ${goalInput}` : "Acquire initial 20–50 paying customers";
 
-  const brandPositioning = data.brandPositioning || `${fallbackName || "FounderOS"}: The AI-powered Go-To-Market execution engine for early-stage founders, solo builders, and SaaS developers. Turn manual startup tasks into automated, high-converting workflows in seconds.`;
+  const brandPositioning = data.brandPositioning || `${fallbackName || "FounderOS"}: The AI-powered execution engine tailored for ${audience}. Turn manual startup tasks into automated, high-converting workflows in seconds.`;
 
-  const valueProposition = data.valueProposition || `"Build, validate, and scale your startup 10x faster without wasting time on manual document creation or fragmented AI tools."`;
+  const valueProposition = data.valueProposition || `"Build, validate, and launch your startup 10x faster without wasting time on manual document creation or fragmented AI tools."`;
 
   const customerPersona = (Array.isArray(data.customerPersona) && data.customerPersona.length > 0)
     ? data.customerPersona
     : [
         {
-          name: "Alex the Indie Hacker",
-          age: "24–34",
-          painPoints: "Overwhelmed by writing marketing copy, pitch decks, and technical specs manually.",
+          name: "Alex the Early-Stage Builder",
+          age: "24–36",
+          painPoints: `Struggling to structure execution roadmaps and acquire early test users for ${audience}.`,
           needs: "Fast, automated execution tools that turn ideas into launchable MVP scopes & GTM plans.",
-          behavior: "Active on X/Twitter, Product Hunt, Reddit (r/SideProject), and GitHub.",
-        },
-        {
-          name: "Sarah the SaaS Founder",
-          age: "28–42",
-          painPoints: "Difficulty structuring 90-day marketing roadmaps and tracking customer acquisition metrics.",
-          needs: "Data-backed acquisition channels, customer persona templates, and automated investor update memos.",
-          behavior: "Reads TechCrunch, listens to startup podcasts, uses Notion & LinkedIn for networking.",
+          behavior: "Active on community hubs, niche forums, Reddit, and LinkedIn.",
         },
       ];
 
@@ -74,24 +69,14 @@ function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrat
     ? data.marketingChannels
     : [
         {
-          channel: "Product Hunt & Hacker News",
-          purpose: "Primary Launch & Initial User Spike",
-          strategy: "Prepare 1-day Product Hunt launch campaign with maker comment, teaser video, and community upvote push.",
+          channel: "Direct 1-on-1 Founder Outreach",
+          purpose: "Target Customer Intake & Feedback",
+          strategy: `Send personalized 3-sentence value propositions to 20 ${audience}/day offering free strategy teardowns.`,
         },
         {
-          channel: "Organic X/Twitter & Build in Public",
-          purpose: "Continuous Founder Brand Building",
-          strategy: "Post daily thread breakdowns of startup milestones, user metrics, and raw build updates using #buildinpublic.",
-        },
-        {
-          channel: "Cold Email & Direct LinkedIn Outreach",
-          purpose: "Target B2B Customer Intake",
-          strategy: "Send personalized 3-sentence value propositions to 20 target founders/day offering 1-on-1 strategy teardowns.",
-        },
-        {
-          channel: "Short-Form Video (TikTok / Reels / Shorts)",
-          purpose: "Top-of-Funnel Viral Reach",
-          strategy: "Create 30-second screen recordings showing 'How I built a startup MVP in 2 weeks using AI Execution OS'.",
+          channel: "Niche Community & Build in Public",
+          purpose: "Organic Trust & Early Adoption",
+          strategy: "Post weekly breakdowns of milestones, user metrics, and raw build updates in relevant founder communities.",
         },
       ];
 
@@ -99,43 +84,36 @@ function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrat
     ? data.contentStrategy
     : [
         {
-          platform: "X / Twitter",
-          contentType: "Build in Public Threads & Product Updates",
-          frequency: "1 Thread / Day",
-        },
-        {
-          platform: "LinkedIn",
-          contentType: "Case Studies & Strategic Founder Lessons",
+          platform: "Primary Community Hub",
+          contentType: "Build in Public Updates & Product Demos",
           frequency: "3 Posts / Week",
         },
         {
-          platform: "YouTube Shorts / TikTok",
-          contentType: "30s UI Demos & Workflow Tutorials",
-          frequency: "5 Videos / Week",
+          platform: "Direct Outreach / Email",
+          contentType: "1-on-1 Personal Strategy Invites",
+          frequency: "Daily Cohort",
         },
       ];
 
   const launchCampaign = data.launchCampaign || {
-    preLaunch: "Collect 100 early waitlist emails via 1-page landing page teaser and X/Twitter teaser threads.",
-    launchDay: "Post on Product Hunt, Hacker News, X/Twitter, and email waitlist subscribers within 1 hour of launch.",
-    postLaunch: "Onboard initial cohort, collect customer feedback testimonials, and publish week 1 post-mortem metrics.",
+    preLaunch: `Collect initial 50 waitlist leads from ${audience} via 1-page landing page teaser.`,
+    launchDay: "Direct launch message to waitlist subscribers and post in pre-engaged community channels.",
+    postLaunch: "Onboard initial cohort with 1-on-1 feedback calls and publish week 1 milestone metrics.",
   };
 
   const growthStrategies = (Array.isArray(data.growthStrategies) && data.growthStrategies.length > 0)
     ? data.growthStrategies
     : [
-        "Incentivized Founder Referral Program: Give 1 month free for referring 2 fellow founders.",
-        "SEO Programmatic Landing Pages: Create pages targeting 'AI MVP Scoping Tool' and 'Startup GTM Generator'.",
-        "Community Teardowns: Offer free live startup idea teardowns on indie founder Discord communities.",
+        "Incentivized Referral Loop: Offer 1 month free for referring 2 fellow target founders.",
+        "Programmatic Landing Pages: Target high-intent search queries relevant to the core problem.",
       ];
 
   const budgetAllocation = (data.budgetAllocation && Object.keys(data.budgetAllocation).length > 0)
     ? data.budgetAllocation
     : {
-        "Product Hunt Feature Hunt & Assets": "$50",
-        "Micro-Influencer & Creator Content": "$200",
+        "Direct Outreach Tools & CRM": "$50",
         "Domain & Hosting Infrastructure": "$30",
-        "Domain Cold Outreach Tools": "$70",
+        "Micro-Creator Content & Assets": "$100",
       };
 
   const metricsToTrack = (Array.isArray(data.metricsToTrack) && data.metricsToTrack.length > 0)
@@ -144,7 +122,6 @@ function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrat
         "Website Visitors to Signup Conversion Rate (Target: >15%)",
         "First-Week Active User Retention (Target: >40%)",
         "Customer Acquisition Cost (CAC) vs Lifetime Value (LTV Target: >3:1)",
-        "Monthly Recurring Revenue (MRR) Growth Rate (Target: 20% MoM)",
       ];
 
   const ninetyDayRoadmap = (Array.isArray(data.ninetyDayRoadmap) && data.ninetyDayRoadmap.length > 0)
@@ -152,25 +129,25 @@ function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrat
     : [
         {
           month: "Month 1: Foundation & Initial 25 Users",
-          goals: "Validate messaging, launch Product Hunt campaign, and secure 25 active founders.",
+          goals: goal,
           actions: [
             "Finalize landing page copy & value proposition",
-            "Execute Product Hunt launch sprint campaign",
+            "Execute direct 1-on-1 outreach campaign",
             "Conduct 10 direct onboarding calls with early users",
           ],
         },
         {
           month: "Month 2: Channel Scaling & 50 Paying Customers",
-          goals: "Scale cold email outreach and build-in-public content pipeline.",
+          goals: "Scale outreach and build-in-public content pipeline.",
           actions: [
-            "Ramp cold outreach to 50 targeted prospects per day",
-            "Publish weekly case studies of successful founder launches",
+            "Ramp cold outreach to targeted prospects per day",
+            "Publish weekly case studies of successful user workflows",
             "Launch referral loop within workspace UI",
           ],
         },
         {
           month: "Month 3: Revenue Acceleration & 100 Customers",
-          goals: "Achieve $3,000 MRR and automate organic acquisition engine.",
+          goals: "Automate organic acquisition engine.",
           actions: [
             "Optimize pricing tiers and upsell premium features",
             "Expand programmatic SEO pages for high-intent keywords",
@@ -198,27 +175,31 @@ function MarketingPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Form Inputs
+  // Form Inputs (clean inputs - auto-inherits from Venture Memory if present)
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [startupIdeaInput, setStartupIdeaInput] = useState("");
   const [mvpScopeInput, setMvpScopeInput] = useState("");
   const [audienceInput, setAudienceInput] = useState("");
-  const [industryInput, setIndustryInput] = useState("B2B SaaS / Productivity");
-  const [pricingInput, setPricingInput] = useState("Freemium ($29/mo Pro Tier)");
-  const [goalInput, setGoalInput] = useState("Acquire first 100 paying customers in 60 days");
+  const [industryInput, setIndustryInput] = useState("");
+  const [pricingInput, setPricingInput] = useState("");
+  const [goalInput, setGoalInput] = useState("");
 
   // Marketing Strategy Data
   const [strategy, setStrategy] = useState<MarketingStrategyData | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
   const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.brief?.audience || venture?.name);
 
   useEffect(() => {
     if (venture) {
-      setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
-      setStartupIdeaInput(venture.brief?.building || "AI Execution Operating System for Startup Founders");
-      setMvpScopeInput(venture.mvp?.job || "2-week MVP scope");
-      setAudienceInput(venture.brief?.audience || "Early-stage founders, SaaS builders, Indie hackers");
+      setVentureNameInput(venture.name || venture.ventureName || "");
+      setStartupIdeaInput(venture.brief?.building || "");
+      setMvpScopeInput(venture.mvpScope?.mustHaveFeatures?.join(", ") || venture.mvp?.job || "");
+      setAudienceInput(venture.brief?.audience || "");
+      setIndustryInput("B2B SaaS / Productivity");
+      setPricingInput("Freemium ($29/mo Pro Tier)");
+      setGoalInput("Acquire first 100 paying customers in 60 days");
       loadMarketingPlanHistory();
     } else {
       loadMarketingPlanHistory();
@@ -230,7 +211,7 @@ function MarketingPage() {
     try {
       const res = await api.getMarketingPlanHistory(ventureId);
       if (res.success && res.data?.marketingPlan) {
-        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput);
+        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput, audienceInput, goalInput);
         setStrategy(formatted);
         setHistory(res.data.history || []);
       }
@@ -250,16 +231,16 @@ function MarketingPage() {
       const res = await api.generateMarketingPlanModule({
         ventureId,
         ventureName: ventureNameInput || "Untitled Venture",
-        startupIdea: startupIdeaInput || "AI Execution Operating System for Startup Founders",
+        startupIdea: startupIdeaInput || "Startup Concept",
         mvpScope: mvpScopeInput || "2-week MVP scope",
-        audience: audienceInput || "Early-stage founders, SaaS builders, Indie hackers",
-        industry: industryInput || "B2B SaaS / Productivity",
-        pricing: pricingInput || "Freemium ($29/mo Pro Tier)",
-        goal: goalInput || "Acquire first 100 paying customers in 60 days",
+        audience: audienceInput || "Target Customers",
+        industry: industryInput || "B2B SaaS",
+        pricing: pricingInput || "Freemium ($29/mo)",
+        goal: goalInput || "Acquire first 50 test users",
       });
 
       if (res.success && res.data?.marketingPlan) {
-        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput);
+        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput, audienceInput, goalInput);
         setStrategy(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
@@ -267,12 +248,12 @@ function MarketingPage() {
           setHistory((prev) => [res.data.marketingPlan, ...prev]);
         }
       } else {
-        const formatted = formatMarketingStrategy({}, ventureNameInput);
+        const formatted = formatMarketingStrategy({}, ventureNameInput, audienceInput, goalInput);
         setStrategy(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate marketing plan:", err);
-      const formatted = formatMarketingStrategy({}, ventureNameInput);
+      const formatted = formatMarketingStrategy({}, ventureNameInput, audienceInput, goalInput);
       setStrategy(formatted);
     } finally {
       setGenerating(false);
@@ -307,13 +288,23 @@ function MarketingPage() {
       />
 
       {/* Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-        <div>
-          <span className="font-bold text-[#64D8FF]">AI Chief Marketing Officer Active: </span>
-          Input your GTM parameters below to generate customer personas, brand positioning, and a 90-day launch roadmap saved in MongoDB.
+      {hasVentureMemory ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+          <div>
+            <span className="font-bold text-[#64D8FF]">Venture Memory Connected: </span>
+            Auto-inherited your target audience & MVP scope from Steps 1 & 4. Review parameters below to generate your 90-day GTM roadmap.
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-amber-400" />
+          <div>
+            <span className="font-bold text-amber-300">No Target Customer Memory: </span>
+            Input your target audience in the form below or complete Step 1 (Idea Validation) to auto-populate parameters.
+          </div>
+        </div>
+      )}
 
       {/* Inputs Form */}
       <Panel title="Go-To-Market Inputs">
@@ -323,7 +314,7 @@ function MarketingPage() {
               <TextInput
                 value={ventureNameInput}
                 onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="Venture name"
+                placeholder="e.g. Acme SaaS or leave blank"
               />
             </Field>
             <Field label="Industry / Niche">

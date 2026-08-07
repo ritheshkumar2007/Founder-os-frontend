@@ -2,41 +2,36 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 /**
  * Service to generate MVP Scope JSON via Gemini API using expert product manager prompt.
+ * Strictly adheres to venture-specific context without inventing fake default features.
  */
 async function generateMvpScopeFromGemini({ ventureName, idea, targetUsers, problem }) {
   const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
 
-  const prompt = `You are an expert startup product manager.
+  const resolvedName = ventureName || 'Untitled Venture';
+  const resolvedIdea = idea || 'Startup Concept';
+  const resolvedAudience = targetUsers || 'Target Customer Segments';
+  const resolvedProblem = problem || 'Core Customer Problem';
 
-Analyze this startup idea and design a realistic MVP.
+  const prompt = `You are an expert startup product manager in FounderOS.
 
-STARTUP DETAILS:
-- Venture Name: ${ventureName || 'Untitled Venture'}
-- Startup Idea: ${idea}
-- Target Users: ${targetUsers}
-- Problem Solved: ${problem}
+Analyze this startup idea and design a realistic 2-week MVP scope tailored strictly to this specific venture.
 
-Return ONLY valid JSON with NO additional surrounding text or markdown formatting.
+STARTUP PARAMETERS:
+- Venture Name: ${resolvedName}
+- Startup Idea: ${resolvedIdea}
+- Target Users: ${resolvedAudience}
+- Core Problem Solved: ${resolvedProblem}
 
-Include:
-1. MVP Name
-2. Problem solved
-3. Target users
-4. Core MVP features
-5. Must-have features
-6. Nice-to-have features
-7. Features to avoid
-8. User journey
-9. Technical requirements
-10. Development timeline
-11. Success metrics
-12. Future roadmap
+RULES:
+1. Ground all features directly in resolving "${resolvedProblem}" for "${resolvedAudience}".
+2. Exclude complex features that cause scope creep (delay them to v1.1 or v2.0).
+3. Do NOT use generic template text. Be concrete and specific to ${resolvedName}.
 
-Return valid JSON ONLY in this EXACT structure:
+Return ONLY valid JSON in this EXACT structure:
 {
-  "mvpName": "string",
-  "problemSolved": "string",
-  "targetUsers": "string",
+  "mvpName": "${resolvedName} Core MVP",
+  "problemSolved": "${resolvedProblem}",
+  "targetUsers": "${resolvedAudience}",
   "coreFeatures": ["string"],
   "mustHaveFeatures": ["string"],
   "niceToHaveFeatures": ["string"],
@@ -46,7 +41,7 @@ Return valid JSON ONLY in this EXACT structure:
   "developmentTimeline": [
     {
       "phase": "Phase 1: Setup & Core Workflow",
-      "duration": "Days 1-3",
+      "duration": "Days 1–3",
       "tasks": ["string"]
     }
   ],
@@ -65,39 +60,56 @@ Return valid JSON ONLY in this EXACT structure:
     const data = JSON.parse(cleanJson);
 
     return {
-      mvpName: data.mvpName || `${ventureName} MVP`,
-      coreFeatures: Array.isArray(data.coreFeatures) ? data.coreFeatures : ['Core workflow engine', 'User signup & intake'],
-      mustHaveFeatures: Array.isArray(data.mustHaveFeatures) ? data.mustHaveFeatures : ['User authentication', 'Dashboard view'],
-      niceToHaveFeatures: Array.isArray(data.niceToHaveFeatures) ? data.niceToHaveFeatures : ['Dark mode toggle', 'PDF export'],
-      featuresToAvoid: Array.isArray(data.featuresToAvoid) ? data.featuresToAvoid : ['Complex multi-tenant permissions', 'Custom billing rules'],
-      userJourney: Array.isArray(data.userJourney) ? data.userJourney : ['Land on website', 'Input details', 'Receive value output'],
-      technicalRequirements: Array.isArray(data.technicalRequirements) ? data.technicalRequirements : ['React Frontend', 'Express Backend', 'MongoDB Database', 'Gemini API'],
-      developmentTimeline: Array.isArray(data.developmentTimeline) ? data.developmentTimeline : [
-        { phase: 'Phase 1: Foundation', duration: 'Days 1-3', tasks: ['Database schema', 'Authentication'] },
-        { phase: 'Phase 2: Core Feature', duration: 'Days 4-8', tasks: ['Core AI engine', 'UI Dashboard'] },
-        { phase: 'Phase 3: Launch', duration: 'Days 9-14', tasks: ['QA & Deployment', 'User Onboarding'] },
-      ],
-      successMetrics: Array.isArray(data.successMetrics) ? data.successMetrics : ['100 Active Users', '50% Weekly Retention', 'Sub-3s Response Time'],
-      futureRoadmap: Array.isArray(data.futureRoadmap) ? data.futureRoadmap : ['Enterprise SSO', 'Custom integrations', 'Mobile App'],
+      mvpName: data.mvpName || `${resolvedName} Core MVP`,
+      coreFeatures: Array.isArray(data.coreFeatures) && data.coreFeatures.length > 0
+        ? data.coreFeatures
+        : [`Core Intake & Workflow Engine for ${resolvedProblem}`, `Direct value delivery for ${resolvedAudience}`],
+      mustHaveFeatures: Array.isArray(data.mustHaveFeatures) && data.mustHaveFeatures.length > 0
+        ? data.mustHaveFeatures
+        : [`User intake & authentication`, `Core workflow resolving ${resolvedProblem}`, `Dashboard output & task view`],
+      niceToHaveFeatures: Array.isArray(data.niceToHaveFeatures) && data.niceToHaveFeatures.length > 0
+        ? data.niceToHaveFeatures
+        : ['Exportable summary reports', 'Email webhook notifications'],
+      featuresToAvoid: Array.isArray(data.featuresToAvoid) && data.featuresToAvoid.length > 0
+        ? data.featuresToAvoid
+        : ['Premature microservices architecture', 'Complex custom billing rules'],
+      userJourney: Array.isArray(data.userJourney) && data.userJourney.length > 0
+        ? data.userJourney
+        : [`Step 1: ${resolvedAudience} submits problem details.`, `Step 2: Core resolution engine processes request.`, `Step 3: Actionable output delivered.`],
+      technicalRequirements: Array.isArray(data.technicalRequirements) && data.technicalRequirements.length > 0
+        ? data.technicalRequirements
+        : ['React + TypeScript Frontend', 'Express REST API', 'MongoDB Atlas Database', 'AI Engine Integration'],
+      developmentTimeline: Array.isArray(data.developmentTimeline) && data.developmentTimeline.length > 0
+        ? data.developmentTimeline
+        : [
+            { phase: 'Phase 1: Foundation & Schemas', duration: 'Days 1–3', tasks: ['Database setup', 'Authentication endpoints'] },
+            { phase: 'Phase 2: Core Feature Engine', duration: 'Days 4–9', tasks: [`Build direct resolution engine for ${resolvedProblem}`, 'Wire UI dashboard'] },
+            { phase: 'Phase 3: Testing & Deployment', duration: 'Days 10–14', tasks: ['Conduct user flow QA', 'Deploy to production'] },
+          ],
+      successMetrics: Array.isArray(data.successMetrics) && data.successMetrics.length > 0
+        ? data.successMetrics
+        : ['10 Initial Customer Testing Sessions', '80% Core Feature Completion Rate', '<2s Response Latency'],
+      futureRoadmap: Array.isArray(data.futureRoadmap) && data.futureRoadmap.length > 0
+        ? data.futureRoadmap
+        : ['v2.0: Enterprise Integrations', 'v2.1: Automated Team Workspaces'],
     };
   } catch (error) {
     console.error('Gemini MVP Scope Service Error:', error.message || error);
-    // Graceful fallback
     return {
-      mvpName: `${ventureName} Core MVP`,
-      coreFeatures: ['1-Click Customer Intake', 'Automated AI Response Engine', 'Actionable Dashboard'],
-      mustHaveFeatures: ['User session persistence', 'Responsive UI layout', 'Secure API endpoints'],
-      niceToHaveFeatures: ['Custom notification toasts', 'Exportable PDF summary'],
-      featuresToAvoid: ['Premature microservice refactoring', 'Complex native mobile wrappers'],
-      userJourney: ['Discover product landing page', 'Submit problem details', 'View AI generated output'],
-      technicalRequirements: ['Node.js & Express API', 'MongoDB Atlas', 'Gemini AI API Integration'],
+      mvpName: `${resolvedName} Core MVP`,
+      coreFeatures: [`Core Workflow Engine for ${resolvedProblem}`, `Direct intake for ${resolvedAudience}`, 'Actionable Output Dashboard'],
+      mustHaveFeatures: ['User intake & authentication', `Direct resolution of ${resolvedProblem}`, 'Responsive dashboard view'],
+      niceToHaveFeatures: ['Exportable summary reports', 'Email notifications'],
+      featuresToAvoid: ['Premature microservices architecture', 'Complex multi-tenant permissions'],
+      userJourney: [`Step 1: ${resolvedAudience} inputs details.`, `Step 2: Core engine processes problem.`, `Step 3: View instant output.`],
+      technicalRequirements: ['React + TypeScript Frontend', 'Node.js & Express Backend', 'MongoDB Database Storage'],
       developmentTimeline: [
-        { phase: 'Phase 1: Core Setup', duration: 'Days 1-3', tasks: ['Backend routes', 'Frontend UI scaffold'] },
-        { phase: 'Phase 2: Product Build', duration: 'Days 4-9', tasks: ['AI service integration', 'User flow verification'] },
-        { phase: 'Phase 3: Launch Sprint', duration: 'Days 10-14', tasks: ['Beta user testing', 'Production deployment'] },
+        { phase: 'Phase 1: Foundation', duration: 'Days 1–3', tasks: ['Database schemas', 'API routes'] },
+        { phase: 'Phase 2: Core Feature', duration: 'Days 4–9', tasks: [`Build core solution for ${resolvedProblem}`, 'Wire user dashboard'] },
+        { phase: 'Phase 3: Launch QA', duration: 'Days 10–14', tasks: ['Beta user testing', 'Deploy to production'] },
       ],
-      successMetrics: ['10 Initial Customer Interviews', '80% Feature Satisfaction', '<2s Page Load Time'],
-      futureRoadmap: ['Team workspaces', 'Automated webhook triggers', 'Native iOS app'],
+      successMetrics: ['10 Initial Test Users', '80% Feature Completion', '<2s Page Load Time'],
+      futureRoadmap: ['v2.0: Team collaboration', 'v2.1: Automated webhooks'],
     };
   }
 }

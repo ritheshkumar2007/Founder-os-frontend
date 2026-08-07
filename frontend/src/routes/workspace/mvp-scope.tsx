@@ -10,7 +10,7 @@ import {
   TextArea,
   TextInput,
 } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, Clock, CheckCircle2, History, ArrowRight } from "lucide-react";
+import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, Clock, CheckCircle2, History, ArrowRight, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import api from "@/lib/api";
 
@@ -43,15 +43,17 @@ export interface GeneratedScope {
   futureRoadmap: string[];
 }
 
-function formatScopeBlueprint(raw: any, fallbackName: string): GeneratedScope {
+function formatScopeBlueprint(raw: any, fallbackName: string, ideaText: string, audienceText: string, problemText: string): GeneratedScope {
   const scope = raw?.generatedScope || raw || {};
-  
+  const problem = problemText || scope.problemSolved || scope.coreCustomerProblem || "primary customer pain";
+  const audience = audienceText || scope.targetUsers || "target customers";
+
   const coreFeatures = (Array.isArray(scope.coreFeatures) && scope.coreFeatures.length > 0)
     ? scope.coreFeatures
     : [
-        `Core Workflow Engine to resolve ${scope.coreCustomerProblem || "primary customer pain"}`,
-        `Direct User Intake & Setup for target customers`,
-        `Automated Outcome Delivery matching ${scope.desiredOutcome || "desired user goal"}`,
+        `Core Workflow Engine resolving ${problem}`,
+        `Direct User Intake & Setup for ${audience}`,
+        `Automated Outcome Delivery & Results Dashboard`,
       ];
 
   const mustHaveFeatures = (Array.isArray(scope.mustHaveFeatures) && scope.mustHaveFeatures.length > 0)
@@ -84,9 +86,9 @@ function formatScopeBlueprint(raw: any, fallbackName: string): GeneratedScope {
   const userJourney = (Array.isArray(scope.userJourney) && scope.userJourney.length > 0)
     ? scope.userJourney
     : [
-        "Step 1: Input core startup parameters and target audience details.",
-        "Step 2: Generate 12-part technical MVP blueprint and development timeline.",
-        "Step 3: Export roadmap and transition directly to Execution Sprint tasks.",
+        `Step 1: ${audience} inputs problem details.`,
+        `Step 2: Core resolution engine analyzes parameters.`,
+        `Step 3: Actionable output delivered to user dashboard.`,
       ];
 
   const technicalRequirements = (Array.isArray(scope.technicalRequirements) && scope.technicalRequirements.length > 0)
@@ -109,7 +111,7 @@ function formatScopeBlueprint(raw: any, fallbackName: string): GeneratedScope {
         {
           phase: "Phase 2: Core Feature & AI Engine Integration",
           duration: "Days 4–9",
-          tasks: ["Integrate Gemini AI Prompt Engine", "Build Workspace Panels", "Wire Store State"],
+          tasks: [`Build direct resolution engine for ${problem}`, "Build Workspace Panels", "Wire Store State"],
         },
         {
           phase: "Phase 3: Testing & Production Deployment",
@@ -121,8 +123,8 @@ function formatScopeBlueprint(raw: any, fallbackName: string): GeneratedScope {
   const successMetrics = (Array.isArray(scope.successMetrics) && scope.successMetrics.length > 0)
     ? scope.successMetrics
     : [
-        "100 Active User Registrations",
-        "80% Feature Completion Rate",
+        "10 Initial Customer Testing Sessions",
+        "80% Core Feature Completion Rate",
         "<2s Response Latency on AI Outputs",
       ];
 
@@ -153,7 +155,7 @@ function MvpScopePage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Form Inputs
+  // Form Inputs (clean state - auto-inherits from Venture Memory if present)
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [ideaInput, setIdeaInput] = useState("");
   const [targetUsersInput, setTargetUsersInput] = useState("");
@@ -164,13 +166,14 @@ function MvpScopePage() {
   const [history, setHistory] = useState<any[]>([]);
 
   const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.brief?.problem || venture?.name);
 
   useEffect(() => {
     if (venture) {
-      setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
-      setIdeaInput(venture.brief?.building || "AI Execution Operating System for Startup Founders");
-      setTargetUsersInput(venture.brief?.audience || "Early-Stage Founders, Solo Builders, SaaS Developers");
-      setProblemInput(venture.brief?.problem || "Founders spend 80% of their time writing manual docs instead of building.");
+      setVentureNameInput(venture.name || venture.ventureName || "");
+      setIdeaInput(venture.brief?.building || "");
+      setTargetUsersInput(venture.brief?.audience || "");
+      setProblemInput(venture.brief?.problem || "");
       loadMvpScopeHistory();
     } else {
       loadMvpScopeHistory();
@@ -182,7 +185,7 @@ function MvpScopePage() {
     try {
       const res = await api.getMvpScopeHistory(ventureId);
       if (res.success && res.data?.mvpScope) {
-        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput);
+        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput, ideaInput, targetUsersInput, problemInput);
         setBlueprint(formatted);
         setHistory(res.data.history || []);
       }
@@ -202,13 +205,13 @@ function MvpScopePage() {
       const res = await api.generateMvpScopeModule({
         ventureId,
         ventureName: ventureNameInput || "Untitled Venture",
-        idea: ideaInput || "AI Execution Operating System for Startup Founders",
-        targetUsers: targetUsersInput || "Early-Stage Founders, Solo Builders, SaaS Developers",
-        problem: problemInput || "Founders spend 80% of their time writing manual docs instead of building.",
+        idea: ideaInput || "Startup Concept",
+        targetUsers: targetUsersInput || "Target Customers",
+        problem: problemInput || "Core Customer Problem",
       });
 
       if (res.success && res.data?.mvpScope) {
-        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput);
+        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput, ideaInput, targetUsersInput, problemInput);
         setBlueprint(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
@@ -216,12 +219,12 @@ function MvpScopePage() {
           setHistory((prev) => [res.data.mvpScope, ...prev]);
         }
       } else {
-        const formatted = formatScopeBlueprint({}, ventureNameInput);
+        const formatted = formatScopeBlueprint({}, ventureNameInput, ideaInput, targetUsersInput, problemInput);
         setBlueprint(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate MVP blueprint:", err);
-      const formatted = formatScopeBlueprint({}, ventureNameInput);
+      const formatted = formatScopeBlueprint({}, ventureNameInput, ideaInput, targetUsersInput, problemInput);
       setBlueprint(formatted);
     } finally {
       setGenerating(false);
@@ -255,14 +258,24 @@ function MvpScopePage() {
         }
       />
 
-      {/* Generated from Founder Conversation Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-        <div>
-          <span className="font-bold text-[#64D8FF]">AI Product Manager Active: </span>
-          Input your startup details below or use auto-filled parameters to generate a 12-part technical MVP blueprint saved into MongoDB.
+      {/* Venture Memory Context Banner */}
+      {hasVentureMemory ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+          <div>
+            <span className="font-bold text-[#64D8FF]">Venture Memory Connected: </span>
+            Auto-inherited your validated idea and target audience from Step 1. You can edit parameters below or generate your 12-part technical MVP blueprint.
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-amber-400" />
+          <div>
+            <span className="font-bold text-amber-300">No Venture Memory Recorded: </span>
+            Input your startup details in the form below or complete Step 1 (Idea Validation) to auto-populate your parameters.
+          </div>
+        </div>
+      )}
 
       {/* Input Parameters Form */}
       <Panel title="Startup Scope Inputs">
@@ -272,14 +285,14 @@ function MvpScopePage() {
               <TextInput
                 value={ventureNameInput}
                 onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="Venture name"
+                placeholder="e.g. Acme AI or leave blank"
               />
             </Field>
             <Field label="Target Users">
               <TextInput
                 value={targetUsersInput}
                 onChange={(e) => setTargetUsersInput(e.target.value)}
-                placeholder="Target customer segments"
+                placeholder="e.g. Early-Stage Founders, Solo Builders"
               />
             </Field>
           </div>
@@ -297,7 +310,7 @@ function MvpScopePage() {
                 rows={2}
                 value={problemInput}
                 onChange={(e) => setProblemInput(e.target.value)}
-                placeholder="Describe the primary customer pain"
+                placeholder="Describe the primary customer pain point"
               />
             </Field>
           </div>
@@ -419,7 +432,7 @@ function MvpScopePage() {
                 {blueprint.successMetrics?.map((m, i) => (
                   <li key={i} className="flex items-center gap-2 text-xs font-semibold text-emerald-300 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
                     <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
-                    {m}
+                    <span>{m}</span>
                   </li>
                 ))}
               </ul>
