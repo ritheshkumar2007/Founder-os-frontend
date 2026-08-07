@@ -11,7 +11,7 @@ import {
   TextArea,
   TextInput,
 } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, TrendingUp, Users, DollarSign, Activity, ShieldAlert, CheckCircle2, History, Gauge, Rocket, ArrowUpRight } from "lucide-react";
+import { Sparkles, RefreshCw, TrendingUp, Users, DollarSign, Activity, ShieldAlert, CheckCircle2, History, Gauge, Rocket, ArrowUpRight, AlertCircle, Info } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import api from "@/lib/api";
 
@@ -59,79 +59,71 @@ function formatTractionData(raw: any, fallbackName: string): TractionData {
   const metrics = data.metrics || {};
   const analysis = data.aiAnalysis || data.analysis || {};
 
+  const total = Number(metrics.totalUsers) || 0;
+  const mau = Number(metrics.monthlyActiveUsers) || 0;
+  const rev = metrics.revenue || (total === 0 ? "$0 / Pre-Revenue" : "$0 / mo");
+  const ret = metrics.retentionRate || (total === 0 ? "Not yet recorded" : "0%");
+
   return {
     metrics: {
-      totalUsers: Number(metrics.totalUsers) || 142,
-      monthlyActiveUsers: Number(metrics.monthlyActiveUsers) || 98,
-      newUsers: Number(metrics.newUsers) || 45,
-      revenue: metrics.revenue || "$2,450 / mo",
-      conversionRate: metrics.conversionRate || "4.8%",
-      retentionRate: metrics.retentionRate || "72%",
+      totalUsers: total,
+      monthlyActiveUsers: mau,
+      newUsers: Number(metrics.newUsers) || 0,
+      revenue: rev,
+      conversionRate: metrics.conversionRate || (total === 0 ? "Not yet recorded" : "0%"),
+      retentionRate: ret,
       customerAcquisitionChannels: (Array.isArray(metrics.customerAcquisitionChannels) && metrics.customerAcquisitionChannels.length > 0)
         ? metrics.customerAcquisitionChannels
-        : ["Direct 1-on-1 Outreach", "Organic Product Hunt Launch", "Build in Public Content"],
+        : ["No channels recorded yet"],
     },
     customerInsights: (Array.isArray(data.customerInsights) && data.customerInsights.length > 0)
       ? data.customerInsights
       : [
-          "Founders report high satisfaction with automated MVP scope generation.",
-          "Target users request exportable PDF reports & Zapier integration.",
+          total === 0 ? "Zero customer feedback recorded yet. Conduct early discovery interviews." : "Customer feedback collection in progress.",
         ],
     aiAnalysis: {
-      growthHealth: analysis.growthHealth || "Strong Retention Signal & Healthy Channel Acquisition",
+      growthHealth: analysis.growthHealth || (total === 0 ? "Pre-Launch / Early Discovery Stage" : "Early Growth Tracking"),
       strengths: (Array.isArray(analysis.strengths) && analysis.strengths.length > 0)
         ? analysis.strengths
         : [
-            "High 7-day user retention rate (72%) indicates strong product-market fit.",
-            "Sub-2s latency on AI outputs driving positive organic word-of-mouth.",
+            total === 0 ? "Clear problem space definition with no technical debt." : "Early user feedback loop active.",
           ],
       weaknesses: (Array.isArray(analysis.weaknesses) && analysis.weaknesses.length > 0)
         ? analysis.weaknesses
         : [
-            "Top-of-funnel customer traffic relies heavily on manual founder outreach.",
-            "Lack of self-serve onboarding tour causes minor drop-off during initial login.",
+            total === 0 ? "No active telemetry or repeatable user acquisition channels established." : "Acquisition channels require scaling.",
           ],
       opportunities: (Array.isArray(analysis.opportunities) && analysis.opportunities.length > 0)
         ? analysis.opportunities
         : [
-            "Launch an automated founder referral program to turn active users into advocates.",
-            "Expand programmatic SEO pages targeting high-intent founder searches.",
+            total === 0 ? "Direct 1-on-1 founder outreach to initial 20 target users." : "Implement referral viral loops.",
           ],
       recommendations: (Array.isArray(analysis.recommendations) && analysis.recommendations.length > 0)
         ? analysis.recommendations
         : [
-            "Focus 60% of growth efforts on converting current active users into annual subscriptions.",
-            "Automate weekly email updates to keep waitlist leads engaged.",
+            total === 0 ? "Conduct 10 discovery calls before spending on ads." : "Focus on active user retention.",
           ],
       nextActions: (Array.isArray(analysis.nextActions) && analysis.nextActions.length > 0)
         ? analysis.nextActions
         : [
             {
-              action: "Implement 1-click referral link on user dashboard",
+              action: total === 0 ? "Reach out to 20 target users for MVP feedback" : "Implement 1-click referral link",
               priority: "High",
-              expectedImpact: "+25% MoM Signup Growth",
-            },
-            {
-              action: "Set up automated 3-day email re-engagement sequence",
-              priority: "Medium",
-              expectedImpact: "+15% Activation Rate",
+              expectedImpact: total === 0 ? "Initial 5–10 Test Users" : "+25% MoM Growth",
             },
           ],
       growthExperiments: (Array.isArray(analysis.growthExperiments) && analysis.growthExperiments.length > 0)
         ? analysis.growthExperiments
         : [
             {
-              experiment: "Test A/B pricing: $29/mo vs $49/mo Pro Tier",
-              goal: "Increase ARPU by 30%",
-              timeline: "14 Days",
-            },
-            {
-              experiment: "Launch 30-second video demo hero banner on landing page",
-              goal: "Increase visitor-to-signup conversion from 4.8% to 8%",
+              experiment: total === 0 ? "1-on-1 founder demo calls" : "Landing page CTA A/B test",
+              goal: total === 0 ? "Acquire first 10 active testers" : "Double conversion rate",
               timeline: "7 Days",
             },
           ],
-      investorReadinessScore: Number(analysis.investorReadinessScore) || 82,
+      investorReadinessScore: typeof analysis.investorReadinessScore === "number"
+        ? analysis.investorReadinessScore
+        : (total === 0 ? 35 : 72),
     },
   };
 }
@@ -141,7 +133,7 @@ function TractionPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Form Inputs (clean inputs / placeholders)
+  // Form Inputs (clean empty state - no dummy numbers)
   const [totalUsersInput, setTotalUsersInput] = useState("");
   const [mauInput, setMauInput] = useState("");
   const [newUsersInput, setNewUsersInput] = useState("");
@@ -175,6 +167,8 @@ function TractionPage() {
         const formatted = formatTractionData(rawObj, venture?.name || "Untitled Venture");
         setTraction(formatted);
         setHistory(res.data.history || []);
+      } else {
+        setTraction(null);
       }
     } catch (err) {
       console.warn("Failed to load traction history:", err);
@@ -192,15 +186,15 @@ function TractionPage() {
       const res = await api.analyzeTractionModule({
         ventureId,
         ventureName: venture?.name || venture?.ventureName || "Untitled Venture",
-        totalUsers: Number(totalUsersInput) || 142,
-        monthlyActiveUsers: Number(mauInput) || 98,
-        newUsers: Number(newUsersInput) || 45,
-        revenue: revenueInput || "$2,450 / mo",
-        conversionRate: conversionInput || "4.8%",
-        retentionRate: retentionInput || "72%",
-        customerAcquisitionChannels: channelsInput || "Direct Outreach, Product Hunt, Build in Public",
-        customerFeedback: feedbackInput || "Founders praise automatic scope generation and 4-phase technical roadmaps.",
-        growthGoal: goalInput || "Scale to 500 active users & $5k MRR in 60 days",
+        totalUsers: Number(totalUsersInput) || 0,
+        monthlyActiveUsers: Number(mauInput) || 0,
+        newUsers: Number(newUsersInput) || 0,
+        revenue: revenueInput || "$0 / Pre-Revenue",
+        conversionRate: conversionInput || "Not recorded",
+        retentionRate: retentionInput || "Not recorded",
+        customerAcquisitionChannels: channelsInput || "Direct Outreach",
+        customerFeedback: feedbackInput || "",
+        growthGoal: goalInput || "Acquire first 10–25 active users",
       });
 
       if (res.success && (res.data?.traction || res.data?.tractionData)) {
@@ -230,7 +224,7 @@ function TractionPage() {
       <PageHeader
         eyebrow="Step 08"
         title="Traction Analytics & Growth Auditor"
-        description="AI Growth Advisor analyzes startup metrics, user retention, acquisition channels, and investor readiness score."
+        description="AI Growth Advisor analyzes actual startup metrics, user retention, acquisition channels, and calculated investor readiness score."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
@@ -256,34 +250,34 @@ function TractionPage() {
       <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
         <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
         <div>
-          <span className="font-bold text-[#64D8FF]">AI Growth Auditor Active: </span>
-          Input your current user & growth metrics below to run an AI audit and calculate your investor readiness score saved in MongoDB.
+          <span className="font-bold text-[#64D8FF]">Evidence-Based Growth Auditor: </span>
+          Input your real metrics below (or leave blank if Pre-Launch) to generate an honest growth audit, first-user acquisition roadmap, and investor readiness diagnostic.
         </div>
       </div>
 
       {/* Form Inputs */}
-      <Panel title="Startup Metric Inputs">
+      <Panel title="Startup Metric Inputs (Leave Blank if Pre-Launch)">
         <form onSubmit={handleAnalyzeTraction} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Field label="Total Registered Users">
               <TextInput
                 value={totalUsersInput}
                 onChange={(e) => setTotalUsersInput(e.target.value)}
-                placeholder="e.g. 142"
+                placeholder="e.g. 0 (or leave blank for pre-launch)"
               />
             </Field>
             <Field label="Monthly Active Users (MAU)">
               <TextInput
                 value={mauInput}
                 onChange={(e) => setMauInput(e.target.value)}
-                placeholder="e.g. 98"
+                placeholder="e.g. 0"
               />
             </Field>
             <Field label="New Users (Last 30 Days)">
               <TextInput
                 value={newUsersInput}
                 onChange={(e) => setNewUsersInput(e.target.value)}
-                placeholder="e.g. 45"
+                placeholder="e.g. 0"
               />
             </Field>
           </div>
@@ -292,21 +286,21 @@ function TractionPage() {
               <TextInput
                 value={revenueInput}
                 onChange={(e) => setRevenueInput(e.target.value)}
-                placeholder="e.g. $2,450 / mo"
+                placeholder="e.g. $0 or $1,500/mo"
               />
             </Field>
             <Field label="Conversion Rate">
               <TextInput
                 value={conversionInput}
                 onChange={(e) => setConversionInput(e.target.value)}
-                placeholder="e.g. 4.8%"
+                placeholder="e.g. 4.5% or Not recorded"
               />
             </Field>
             <Field label="Retention Rate (30-Day)">
               <TextInput
                 value={retentionInput}
                 onChange={(e) => setRetentionInput(e.target.value)}
-                placeholder="e.g. 72%"
+                placeholder="e.g. 60% or Not recorded"
               />
             </Field>
           </div>
@@ -316,7 +310,7 @@ function TractionPage() {
                 rows={2}
                 value={channelsInput}
                 onChange={(e) => setChannelsInput(e.target.value)}
-                placeholder="e.g. LinkedIn DMs, Product Hunt, Twitter/X"
+                placeholder="e.g. Direct 1-on-1 outreach, Community hubs"
               />
             </Field>
             <Field label="Customer Feedback Summary">
@@ -324,7 +318,7 @@ function TractionPage() {
                 rows={2}
                 value={feedbackInput}
                 onChange={(e) => setFeedbackInput(e.target.value)}
-                placeholder="What are users saying about your product?"
+                placeholder="Notes from customer interviews or feedback calls"
               />
             </Field>
           </div>
@@ -345,7 +339,7 @@ function TractionPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
           <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Analyzing Growth Metrics & Retention Health...</h3>
+            <h3 className="text-sm font-bold text-[#F5F8FC]">Analyzing Growth Metrics & Retention Signals...</h3>
             <p className="text-xs font-mono text-[#A8B3C7]">Benchmarking conversion rates, acquisition channels, growth experiments, and investor readiness</p>
           </div>
         </div>
@@ -356,25 +350,25 @@ function TractionPage() {
         <div className="space-y-6">
           {/* Key Metrics Stats Row */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Stat label="Total Registered Users" value={traction.metrics?.totalUsers?.toLocaleString() || "142"} />
-            <Stat label="Monthly Active Users" value={traction.metrics?.monthlyActiveUsers?.toLocaleString() || "98"} />
-            <Stat label="Monthly Revenue (MRR)" value={traction.metrics?.revenue || "$2,450 / mo"} />
-            <Stat label="30-Day Retention Rate" value={traction.metrics?.retentionRate || "72%"} />
+            <Stat label="Total Registered Users" value={traction.metrics?.totalUsers > 0 ? traction.metrics.totalUsers.toLocaleString() : "0 (Pre-Launch)"} />
+            <Stat label="Monthly Active Users" value={traction.metrics?.monthlyActiveUsers > 0 ? traction.metrics.monthlyActiveUsers.toLocaleString() : "0"} />
+            <Stat label="Monthly Revenue (MRR)" value={traction.metrics?.revenue || "$0 / Pre-Revenue"} />
+            <Stat label="30-Day Retention Rate" value={traction.metrics?.retentionRate || "Not recorded"} />
           </div>
 
           {/* Investor Readiness Score Header */}
           <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl">
             <div>
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
-                Growth Health Diagnostic
+                Growth Diagnostic Status
               </span>
               <h2 className="text-xl font-extrabold text-[#F5F8FC] mt-2">{traction.aiAnalysis?.growthHealth}</h2>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-end">
                 <span className="text-[10px] font-mono uppercase text-[#A8B3C7]">Investor Readiness Score</span>
-                <span className="text-2xl font-extrabold text-[#46E3A3] font-mono">
-                  {traction.aiAnalysis?.investorReadinessScore || 82} / 100
+                <span className={`text-2xl font-extrabold font-mono ${traction.aiAnalysis?.investorReadinessScore >= 70 ? 'text-[#46E3A3]' : 'text-amber-300'}`}>
+                  {traction.aiAnalysis?.investorReadinessScore} / 100
                 </span>
               </div>
             </div>
@@ -452,6 +446,17 @@ function TractionPage() {
               </div>
             </Panel>
           </div>
+        </div>
+      )}
+
+      {/* Empty State Banner when no audit has been run yet */}
+      {!traction && !generating && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
+          <Activity className="size-10 text-[#64D8FF]/60" />
+          <h3 className="text-base font-bold text-[#F5F8FC]">No Traction Audit Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+            Enter your active numbers in the form above, or click <strong>Run AI Traction Audit</strong> with blank fields to generate a Pre-Traction baseline strategy for acquiring your first 10–50 users.
+          </p>
         </div>
       )}
 
