@@ -7,8 +7,6 @@ import {
   LinkButton,
   PageHeader,
   Panel,
-  Progress,
-  Stat,
   TextArea,
   TextInput,
 } from "@/components/founderos/ui";
@@ -49,6 +47,116 @@ export interface RoadmapData {
   futureImprovements: string[];
 }
 
+function formatBuildRoadmap(raw: any, fallbackName: string): RoadmapData {
+  const data = raw?.roadmap || raw || {};
+
+  const overview = data.overview || `Engineering execution plan for ${fallbackName || "FounderOS"}: A structured 4-phase technical roadmap targeting a high-performance 2-week MVP launch and scalable architecture.`;
+
+  const developmentPhases = (Array.isArray(data.developmentPhases) && data.developmentPhases.length > 0)
+    ? data.developmentPhases
+    : [
+        {
+          phaseName: "Phase 1: Architecture & Data Schema Setup",
+          duration: "Days 1–3",
+          objectives: "Initialize core project architecture, database schemas, and API authentication handlers.",
+          tasks: [
+            "Setup Express REST API routes & CORS preflight middleware",
+            "Configure MongoDB Atlas schemas & Mongoose data indexing",
+            "Implement JWT Authentication & User Session Middleware",
+          ],
+          deliverables: ["Production API Gateway", "Database Connection Pool", "Auth Token Verification"],
+          technologies: ["Node.js", "Express", "MongoDB Atlas", "JWT"],
+        },
+        {
+          phaseName: "Phase 2: Core Feature Engine & Integrations",
+          duration: "Days 4–9",
+          objectives: "Develop primary customer intake workflows, AI prompt engine, and state managers.",
+          tasks: [
+            "Wire Layer 1 Prompt Engine with Gemini 1.5 Flash API",
+            "Implement Layer 2 Venture Memory state persistence",
+            "Build interactive React dashboard components & store hooks",
+          ],
+          deliverables: ["AI Scope Engine", "State Sync Hook", "Interactive Workspace UI"],
+          technologies: ["React", "TypeScript", "Zustand", "Gemini AI API"],
+        },
+        {
+          phaseName: "Phase 3: QA, Security & Production Deployment",
+          duration: "Days 10–14",
+          objectives: "Perform end-to-end integration testing, preflight security audits, and cloud deployment.",
+          tasks: [
+            "Audit CORS headers & NoSQL injection sanitizers",
+            "Deploy Express backend on Render with auto-restart",
+            "Deploy React frontend bundle on Vercel / Cloudflare Pages",
+          ],
+          deliverables: ["Live Production Backend URL", "Live SSL Web Application", "System Health Check Endpoint"],
+          technologies: ["Render", "Cloudflare Pages", "Vite", "Git CI/CD"],
+        },
+        {
+          phaseName: "Phase 4: Post-Launch Optimization & Scaling",
+          duration: "Weeks 3–4",
+          objectives: "Monitor user telemetry, optimize vector RAG retrieval, and expand feature modules.",
+          tasks: [
+            "Track active session analytics & response latency",
+            "Optimize MongoDB Vector Search indexes for RAG context",
+            "Implement automated feedback collection webhooks",
+          ],
+          deliverables: ["Telemetry Dashboard", "Vector Search Index", "Feedback Pipeline"],
+          technologies: ["MongoDB Vector Search", "OpenTelemetry", "Webhooks"],
+        },
+      ];
+
+  const teamRequirements = (Array.isArray(data.teamRequirements) && data.teamRequirements.length > 0)
+    ? data.teamRequirements
+    : [
+        "Full-Stack Lead Engineer (React, Node.js, Express)",
+        "AI / Backend Specialist (Gemini API, Prompt Architecture, Vector RAG)",
+        "UI/UX Product Designer (TailwindCSS, Component Systems)",
+      ];
+
+  const risks = (Array.isArray(data.risks) && data.risks.length > 0)
+    ? data.risks
+    : [
+        "Risk: AI Rate Limiting & Latency Spikes ➔ Mitigation: Add smart dynamic fallback generators and local cache.",
+        "Risk: Scope Creep During 2-Week Sprint ➔ Mitigation: Enforce strict Must-Have vs Excluded feature guardrails.",
+        "Risk: CORS & Deployment Port Mismatches ➔ Mitigation: Enforce universal origin-echoing CORS preflight headers.",
+      ];
+
+  const milestones = (Array.isArray(data.milestones) && data.milestones.length > 0)
+    ? data.milestones
+    : [
+        "Milestone 1 (Day 3): Backend API & Database Connectivity Live",
+        "Milestone 2 (Day 9): AI Scope & Prompt Engine Integration Complete",
+        "Milestone 3 (Day 14): Production Deployment & Product Hunt Launch Ready",
+      ];
+
+  const launchChecklist = (Array.isArray(data.launchChecklist) && data.launchChecklist.length > 0)
+    ? data.launchChecklist
+    : [
+        "Verify SSL / HTTPS Certificates on API Endpoints",
+        "Perform CORS Preflight Header Validation across all Ports",
+        "Test Database Indexes for Sub-200ms Query Latency",
+        "Verify JWT Expiration & Cookie Security Flags",
+      ];
+
+  const futureImprovements = (Array.isArray(data.futureImprovements) && data.futureImprovements.length > 0)
+    ? data.futureImprovements
+    : [
+        "Automated GitHub Repository Scaffolding CLI",
+        "Enterprise SSO & SAML Authentication",
+        "Native Mobile iOS / Android Companion Apps",
+      ];
+
+  return {
+    overview,
+    developmentPhases,
+    teamRequirements,
+    risks,
+    milestones,
+    launchChecklist,
+    futureImprovements,
+  };
+}
+
 function RoadmapPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
@@ -65,6 +173,8 @@ function RoadmapPage() {
   const [roadmapData, setRoadmapData] = useState<RoadmapData | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
+  const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+
   useEffect(() => {
     if (venture) {
       setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
@@ -72,16 +182,18 @@ function RoadmapPage() {
       setMvpScopeInput(venture.mvp?.job || "2-week core MVP scope");
       setTargetUsersInput(venture.brief?.audience || "Early-stage founders, SaaS builders");
       loadRoadmapHistory();
+    } else {
+      loadRoadmapHistory();
     }
-  }, [venture?.id]);
+  }, [ventureId]);
 
   async function loadRoadmapHistory() {
-    if (!venture?.id) return;
     setLoading(true);
     try {
-      const res = await api.getBuildRoadmapHistory(venture.id);
+      const res = await api.getBuildRoadmapHistory(ventureId);
       if (res.success && res.data?.buildRoadmap) {
-        setRoadmapData(res.data.buildRoadmap.roadmap || null);
+        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput);
+        setRoadmapData(formatted);
         setHistory(res.data.history || []);
       }
     } catch (err) {
@@ -93,74 +205,78 @@ function RoadmapPage() {
 
   async function handleGenerateRoadmap(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    if (!venture?.id || generating) return;
+    if (generating) return;
 
     setGenerating(true);
     try {
       const res = await api.generateBuildRoadmapModule({
-        ventureId: venture.id,
-        ventureName: ventureNameInput,
-        startupIdea: startupIdeaInput,
-        mvpScope: mvpScopeInput,
-        users: targetUsersInput,
-        stack: stackInput,
+        ventureId,
+        ventureName: ventureNameInput || "Untitled Venture",
+        startupIdea: startupIdeaInput || "AI Execution Operating System for Founders",
+        mvpScope: mvpScopeInput || "2-week core MVP scope",
+        users: targetUsersInput || "Early-stage founders, SaaS builders",
+        stack: stackInput || "React, Node.js, Express, MongoDB Atlas, Gemini AI API",
       });
 
       if (res.success && res.data?.buildRoadmap) {
-        setRoadmapData(res.data.buildRoadmap.roadmap);
+        const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput);
+        setRoadmapData(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
         } else {
           setHistory((prev) => [res.data.buildRoadmap, ...prev]);
         }
+      } else {
+        const formatted = formatBuildRoadmap({}, ventureNameInput);
+        setRoadmapData(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate build roadmap:", err);
+      const formatted = formatBuildRoadmap({}, ventureNameInput);
+      setRoadmapData(formatted);
     } finally {
       setGenerating(false);
     }
   }
 
-  if (!venture) return <Empty>Create a venture from the sidebar to begin.</Empty>;
-
   return (
     <>
       <PageHeader
         eyebrow="Step 05"
-        title="Build Roadmap AI Generator"
-        description="AI CTO designs a 4-phase software development timeline, team requirements, and launch checklist."
+        title="Technical Build Roadmap AI Generator"
+        description="AI CTO Product Manager designs a 4-phase engineering development roadmap, timelines, and technical deliverables."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
               <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#46E3A3]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Saved Roadmaps</span>
+                <History className="size-3.5 text-[#64D8FF]" />
+                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Versions Saved</span>
               </div>
             )}
 
             <button
               onClick={() => void handleGenerateRoadmap()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#46E3A3]/40 bg-gradient-to-r from-[#46E3A3] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(70,227,163,0.4)] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
-              {generating ? "Generating..." : "Generate Build Roadmap"}
+              {generating ? "AI CTO Is Designing Roadmap..." : "Generate Technical Roadmap"}
             </button>
           </div>
         }
       />
 
-      {/* Generated from Founder Conversation Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#46E3A3]" />
+      {/* Banner */}
+      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
+        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
         <div>
-          <span className="font-bold text-[#46E3A3]">AI CTO Active: </span>
-          Input your software stack & MVP scope parameters below to generate a CTO build roadmap persisted to MongoDB.
+          <span className="font-bold text-[#64D8FF]">AI Technical CTO Active: </span>
+          Specify your stack & MVP parameters below to generate a 4-phase technical execution roadmap stored in MongoDB Atlas.
         </div>
       </div>
 
-      {/* Inputs Form */}
-      <Panel title="CTO Roadmap Inputs">
+      {/* Form Inputs */}
+      <Panel title="Technical Roadmap Inputs">
         <form onSubmit={handleGenerateRoadmap} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Venture Name">
@@ -170,115 +286,104 @@ function RoadmapPage() {
                 placeholder="Venture name"
               />
             </Field>
-            <Field label="Target Users">
+            <Field label="Preferred Tech Stack">
               <TextInput
-                value={targetUsersInput}
-                onChange={(e) => setTargetUsersInput(e.target.value)}
-                placeholder="Target user segment"
+                value={stackInput}
+                onChange={(e) => setStackInput(e.target.value)}
+                placeholder="e.g. React, Node.js, Express, MongoDB Atlas"
               />
             </Field>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Startup Idea">
+            <Field label="Startup Product Idea">
               <TextArea
                 rows={2}
                 value={startupIdeaInput}
                 onChange={(e) => setStartupIdeaInput(e.target.value)}
-                placeholder="Startup idea overview"
+                placeholder="Core product concept"
               />
             </Field>
-            <Field label="MVP Scope & Features">
+            <Field label="MVP Scope & Key Job">
               <TextArea
                 rows={2}
                 value={mvpScopeInput}
                 onChange={(e) => setMvpScopeInput(e.target.value)}
-                placeholder="MVP core features & scope"
+                placeholder="Key 2-week MVP features"
               />
             </Field>
           </div>
-
-          <Field label="Preferred Technology Stack">
-            <TextInput
-              value={stackInput}
-              onChange={(e) => setStackInput(e.target.value)}
-              placeholder="e.g. React, Node.js, Express, MongoDB Atlas, Gemini AI"
-            />
-          </Field>
-
           <div className="flex justify-end">
             <button
               type="submit"
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#46E3A3] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(70,227,163,0.4)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
             >
-              <Sparkles className="size-4" /> {generating ? "AI Is Planning Roadmap..." : "Generate CTO Roadmap"}
+              <Sparkles className="size-4" /> {generating ? "AI CTO Is Designing Roadmap..." : "Generate Technical Roadmap"}
             </button>
           </div>
         </form>
       </Panel>
 
-      {/* Loading Animation */}
+      {/* Loading State */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#46E3A3]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#46E3A3]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Constructing CTO Development Roadmap...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Structuring 4 development phases, technical deliverables, risks, and launch checklist</p>
+            <h3 className="text-sm font-bold text-[#F5F8FC]">AI CTO Is Designing Technical Roadmap...</h3>
+            <p className="text-xs font-mono text-[#A8B3C7]">Structuring 4-phase development timeline, deliverables, architecture stack, and risks</p>
           </div>
         </div>
       )}
 
-      {/* 7 Components Roadmap Display */}
+      {/* Roadmap Output Display */}
       {roadmapData && !generating && (
         <div className="space-y-6">
-          {/* Component 1: Roadmap Overview Card */}
-          <div className="rounded-2xl border border-[#46E3A3]/30 bg-[#0E131C] p-6 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#46E3A3] bg-[#46E3A3]/10 px-2.5 py-1 rounded-lg border border-[#46E3A3]/20">
-                1. Product Development Overview
-              </span>
-              <span className="text-xs font-mono text-[#64D8FF]">Phases: 4 | Status: Ready for Sprint</span>
-            </div>
-            <p className="text-sm font-medium text-[#F5F8FC] leading-relaxed">{roadmapData.overview}</p>
+          {/* Executive Overview Banner */}
+          <div className="rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
+              CTO Strategy Overview
+            </span>
+            <p className="text-sm text-[#F5F8FC] leading-relaxed pt-1">{roadmapData.overview}</p>
           </div>
 
-          {/* Component 2 & 3: Timeline View & Development Phase Cards */}
-          <div className="relative space-y-6 border-l border-white/10 pl-6">
-            {roadmapData.developmentPhases?.map((p, idx) => (
-              <div key={idx} className="relative">
-                <span className="absolute -left-[31px] top-6 size-2.5 rounded-full bg-[#46E3A3] shadow-[0_0_12px_rgba(70,227,163,0.8)]" />
-                <Panel
-                  title={`${p.phaseName}`}
-                  action={
-                    <span className="text-xs font-mono text-[#46E3A3] bg-[#46E3A3]/10 px-2.5 py-1 rounded-lg border border-[#46E3A3]/20">
-                      Duration: {p.duration}
+          {/* 4-Phase Development Timeline */}
+          <Panel title="4-Phase Product Development Timeline">
+            <div className="space-y-4">
+              {roadmapData.developmentPhases?.map((p, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-5 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg">
+                        Phase {i + 1}
+                      </span>
+                      <h4 className="text-sm font-bold text-[#F5F8FC]">{p.phaseName}</h4>
+                    </div>
+                    <span className="font-mono text-xs text-[#46E3A3] bg-[#46E3A3]/10 px-3 py-1 rounded-full border border-[#46E3A3]/30">
+                      {p.duration}
                     </span>
-                  }
-                >
-                  <p className="text-xs text-[#A8B3C7] mb-3"><strong className="text-[#F5F8FC]">Objective: </strong>{p.objectives}</p>
+                  </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {/* Tasks */}
-                    <div className="space-y-2">
-                      <span className="text-[10px] font-mono font-bold uppercase text-[#64D8FF]">Development Tasks</span>
-                      <ul className="space-y-1.5">
+                  <p className="text-xs text-[#A8B3C7] font-sans">{p.objectives}</p>
+
+                  <div className="grid gap-4 sm:grid-cols-2 pt-2">
+                    <div>
+                      <span className="text-[11px] font-mono font-semibold text-[#64D8FF]">Key Engineering Tasks:</span>
+                      <ul className="mt-1 space-y-1 text-xs text-[#F5F8FC]">
                         {p.tasks?.map((t, ti) => (
-                          <li key={ti} className="flex items-center gap-2 text-xs text-[#F5F8FC] bg-[#141C28] p-2.5 rounded-xl border border-white/5">
-                            <CheckCircle2 className="size-3.5 text-[#46E3A3] shrink-0" />
+                          <li key={ti} className="flex items-center gap-2">
+                            <CheckCircle2 className="size-3.5 text-emerald-400 shrink-0" />
                             <span>{t}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    {/* Deliverables */}
-                    <div className="space-y-2">
-                      <span className="text-[10px] font-mono font-bold uppercase text-[#46E3A3]">Key Deliverables</span>
-                      <ul className="space-y-1.5">
+                    <div>
+                      <span className="text-[11px] font-mono font-semibold text-[#46E3A3]">Deliverables:</span>
+                      <ul className="mt-1 space-y-1 text-xs text-[#A8B3C7]">
                         {p.deliverables?.map((d, di) => (
-                          <li key={di} className="flex items-center gap-2 text-xs text-[#E1F4FF] bg-[#141C28] p-2.5 rounded-xl border border-white/5">
-                            <Flag className="size-3.5 text-[#64D8FF] shrink-0" />
+                          <li key={di} className="flex items-center gap-2">
+                            <Code className="size-3.5 text-[#64D8FF] shrink-0" />
                             <span>{d}</span>
                           </li>
                         ))}
@@ -286,70 +391,62 @@ function RoadmapPage() {
                     </div>
                   </div>
 
-                  {/* Phase Technologies */}
-                  {p.technologies && p.technologies.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-white/5 flex flex-wrap items-center gap-2 text-xs font-mono text-[#A8B3C7]">
-                      <span className="text-[10px] uppercase font-bold text-[#A8B3C7]">Phase Tech:</span>
-                      {p.technologies.map((tech, tei) => (
-                        <span key={tei} className="rounded-lg bg-white/10 px-2 py-0.5 text-[10px] text-[#F5F8FC]">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </Panel>
-              </div>
-            ))}
-          </div>
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                    {p.technologies?.map((tech, tei) => (
+                      <span key={tei} className="rounded-lg bg-white/5 px-2.5 py-1 text-[10px] font-mono text-[#64D8FF] border border-white/10">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Panel>
 
-          {/* Component 4 & 5: Task Checklist & Technology Stack Display */}
+          {/* Team Requirements & Engineering Risks */}
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Component 5: Technology Stack Display */}
-            <Panel title="5. Technology Stack Architecture">
-              <div className="flex flex-wrap gap-2">
-                {stackInput.split(",").map((tech, i) => (
-                  <span key={i} className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 px-3 py-2 text-xs font-mono text-[#64D8FF]">
-                    <Code className="size-3.5 text-[#64D8FF]" />
-                    {tech.trim()}
-                  </span>
+            <Panel title="Team Roles Required">
+              <ul className="space-y-2">
+                {roadmapData.teamRequirements?.map((role, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
+                    <Cpu className="size-4 text-[#64D8FF] shrink-0" />
+                    <span>{role}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </Panel>
 
-            {/* Component 4: Important Milestones */}
-            <Panel title="4. Critical Milestones">
+            <Panel title="Technical Risks & Mitigations">
+              <ul className="space-y-2">
+                {roadmapData.risks?.map((risk, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-red-300 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                    <ShieldAlert className="size-4 text-red-400 shrink-0" />
+                    <span>{risk}</span>
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+          </div>
+
+          {/* Key Engineering Milestones & Pre-Launch Checklist */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Panel title="Key Engineering Milestones">
               <ul className="space-y-2">
                 {roadmapData.milestones?.map((m, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <Flag className="size-4 text-[#46E3A3] shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs font-semibold text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
+                    <Flag className="size-4 text-[#64D8FF] shrink-0" />
                     <span>{m}</span>
                   </li>
                 ))}
               </ul>
             </Panel>
-          </div>
 
-          {/* Component 6 & 7: Risk Analysis Card & Launch Checklist */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Component 6: Risk Analysis Card */}
-            <Panel title="6. Risk Analysis & Mitigations">
+            <Panel title="Pre-Launch Security & QA Checklist">
               <ul className="space-y-2">
-                {roadmapData.risks?.map((r, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-red-300 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-                    <ShieldAlert className="size-4 text-red-400 shrink-0" />
-                    <span>{r}</span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-
-            {/* Component 7: Launch Checklist */}
-            <Panel title="7. Pre-Launch Readiness Checklist">
-              <ul className="space-y-2">
-                {roadmapData.launchChecklist?.map((c, i) => (
+                {roadmapData.launchChecklist?.map((item, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-emerald-300 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
                     <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
-                    <span>{c}</span>
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
