@@ -44,8 +44,21 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
   const startTime = Date.now();
   const ventureId = venture ? venture._id : null;
 
-  // 1. Build shared Founder Memory context
-  const ventureContext = buildFounderContextWindow(venture);
+  // 1. Build Layer 3 RAG Context (Venture Memory + Vector Knowledge Chunks)
+  const { executeRAGPipeline } = require('../knowledge/services/ragPipeline');
+  let ventureContext = buildFounderContextWindow(venture);
+  try {
+    const rag = await executeRAGPipeline({
+      ventureId,
+      ownerId: userId,
+      agentName: 'ai_chat',
+      userQuestion: userMessage,
+      history,
+    });
+    if (rag && rag.ragContext) ventureContext = rag.ragContext;
+  } catch (ragErr) {
+    console.warn('RAG Pipeline context assembly warning:', ragErr.message);
+  }
 
   // 2. Intelligently route message to specialized agent(s)
   let routing = { primaryAgent: 'idea_validator', secondaryAgents: [], reasoning: 'Default routing' };
