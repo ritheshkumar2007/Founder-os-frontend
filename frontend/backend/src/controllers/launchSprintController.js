@@ -5,6 +5,8 @@ const { generateLaunchSprintFromGemini } = require('../services/launchSprintGemi
 
 /**
  * Controller to handle POST /api/launch-sprint/generate
+ * Retrieves full workflow module history (Brief -> Validation -> MVP Scope -> Roadmap -> Marketing Plan -> Memory)
+ * and generates a venture-aware, evidence-based Launch Sprint without inventing fake dates or metrics.
  */
 async function generateSprint(req, res, next) {
   try {
@@ -22,35 +24,69 @@ async function generateSprint(req, res, next) {
       }
     }
 
-    // Auto-fill from Venture memory if fields missing
-    if (venture) {
-      ventureId = venture._id;
-      ventureName = ventureName || venture.ventureName || venture.name || 'Untitled Venture';
-      idea = idea || venture.brief?.building || 'New Startup Idea';
-      mvpScope = mvpScope || venture.mvp?.job || '2-week core MVP scope';
-      marketingPlan = marketingPlan || 'LinkedIn outreach & Product Hunt launch';
-      launchDate = launchDate || '7 days from today';
-      launchGoal = launchGoal || 'Acquire first 100 active users';
-      targetAudience = targetAudience || venture.brief?.audience || 'Early adopters';
-    } else {
-      ventureName = ventureName || 'Untitled Venture';
-      idea = idea || 'New Startup Idea';
-      mvpScope = mvpScope || '2-week core MVP scope';
-      marketingPlan = marketingPlan || 'LinkedIn outreach & Product Hunt launch';
-      launchDate = launchDate || '7 days from today';
-      launchGoal = launchGoal || 'Acquire first 100 active users';
-      targetAudience = targetAudience || 'Early adopters';
+    // Extract workflow module outputs from venture memory
+    const brief = venture?.ideaValidation?.ventureBrief || {};
+    const validationInsights = venture?.ideaValidation?.validationInsights || {};
+    const existingMvp = venture?.mvpScope || {};
+    const existingMarketing = venture?.marketingPlan?.marketingStrategy || {};
+    const completedSteps = venture?.ideaValidation?.progress?.completedSteps || [];
+
+    // Resolve parameters with strict priority given to actual Venture Memory & User Input
+    const resolvedVentureName = ventureName || venture?.ventureName || venture?.name || 'Untitled Venture';
+    const resolvedIdea = idea || brief.building || brief.problemStatement || 'Startup Idea';
+    const resolvedMvpScope = mvpScope || (existingMvp.mustHaveFeatures ? existingMvp.mustHaveFeatures.join(', ') : '2-week core MVP scope');
+    
+    // Marketing plan channels strictly inherited from Marketing Plan module
+    let resolvedMarketingPlan = marketingPlan;
+    if (!resolvedMarketingPlan || resolvedMarketingPlan.includes('LinkedIn outreach & Product Hunt launch')) {
+      if (existingMarketing.marketingChannels && Array.isArray(existingMarketing.marketingChannels)) {
+        resolvedMarketingPlan = existingMarketing.marketingChannels.map((c) => `${c.channel}: ${c.strategy}`).join(' | ');
+      } else if (existingMarketing.brandPositioning) {
+        resolvedMarketingPlan = existingMarketing.brandPositioning;
+      } else {
+        resolvedMarketingPlan = 'Marketing Plan has not been defined yet.';
+      }
     }
+
+    // Launch Date Rule: Use provided date if real, otherwise 'Not set'
+    const cleanLaunchDate = (launchDate || '').trim();
+    const isGenericDate = !cleanLaunchDate || cleanLaunchDate.toLowerCase().includes('7 days') || cleanLaunchDate.toLowerCase().includes('next friday');
+    const resolvedLaunchDate = isGenericDate
+      ? (venture?.launchDetails?.launchDate && !venture.launchDetails.launchDate.toLowerCase().includes('7 days') ? venture.launchDetails.launchDate : 'Not set')
+      : cleanLaunchDate;
+
+    // Metric Rule: Distinguish Founder-defined target vs Suggested target vs Not defined
+    const cleanGoal = (launchGoal || '').trim();
+    const isGenericGoal = !cleanGoal || cleanGoal.includes('Acquire first 100 active users & 250 Product Hunt upvotes');
+    const resolvedLaunchGoal = isGenericGoal
+      ? (venture?.launchDetails?.launchGoal && !venture.launchDetails.launchGoal.includes('100 active users') ? venture.launchDetails.launchGoal : 'Launch target: Not defined')
+      : cleanGoal;
+
+    const resolvedTargetAudience = targetAudience || brief.targetCustomer || brief.audience || 'Target Customers';
+
+    // Customer Evidence Extraction
+    const interviewCount = validationInsights.interviewCount || (validationInsights.quotes ? validationInsights.quotes.length : 0);
+    const customerEvidence = interviewCount > 0
+      ? `Based on ${interviewCount} recorded customer interviews.`
+      : 'Customer interview evidence: Not yet recorded.';
+
+    // MVP Readiness Check
+    const isMvpReady = Boolean(existingMvp.isSaved || completedSteps.includes('MVP Scope') || completedSteps.includes('Build Roadmap'));
+    const mvpReadiness = isMvpReady
+      ? 'Ready for launch testing'
+      : 'Not ready (MVP validation incomplete)';
 
     // Call Gemini Launch Service
     const sprintPlan = await generateLaunchSprintFromGemini({
-      ventureName,
-      idea,
-      mvpScope,
-      marketingPlan,
-      launchDate,
-      launchGoal,
-      targetAudience,
+      ventureName: resolvedVentureName,
+      idea: resolvedIdea,
+      mvpScope: resolvedMvpScope,
+      marketingPlan: resolvedMarketingPlan,
+      launchDate: resolvedLaunchDate,
+      launchGoal: resolvedLaunchGoal,
+      targetAudience: resolvedTargetAudience,
+      customerEvidence,
+      mvpReadiness,
     });
 
     const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId))
@@ -64,9 +100,9 @@ async function generateSprint(req, res, next) {
         ventureId: targetVentureId,
         userId,
         launchDetails: {
-          launchDate,
-          launchGoal,
-          targetAudience,
+          launchDate: resolvedLaunchDate,
+          launchGoal: resolvedLaunchGoal,
+          targetAudience: resolvedTargetAudience,
         },
         sprintPlan,
       }).catch(() => null);
@@ -77,7 +113,7 @@ async function generateSprint(req, res, next) {
         _id: '6a709d6ff4af39139e040cc8',
         ventureId: targetVentureId,
         userId,
-        launchDetails: { launchDate, launchGoal, targetAudience },
+        launchDetails: { launchDate: resolvedLaunchDate, launchGoal: resolvedLaunchGoal, targetAudience: resolvedTargetAudience },
         sprintPlan,
       };
     }
