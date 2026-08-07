@@ -44,7 +44,7 @@ export interface GeneratedScope {
 }
 
 function formatScopeBlueprint(raw: any, fallbackName: string, ideaText: string, audienceText: string, problemText: string): GeneratedScope {
-  const scope = raw?.generatedScope || raw || {};
+  const scope = raw?.generatedScope || raw?.mvpScope || raw || {};
   const problem = problemText || scope.problemSolved || scope.coreCustomerProblem || "primary customer pain";
   const audience = audienceText || scope.targetUsers || "target customers";
 
@@ -188,6 +188,8 @@ function MvpScopePage() {
         const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput, ideaInput, targetUsersInput, problemInput);
         setBlueprint(formatted);
         setHistory(res.data.history || []);
+      } else {
+        setBlueprint(null);
       }
     } catch (err) {
       console.warn("Failed to load MVP scope history:", err);
@@ -218,14 +220,9 @@ function MvpScopePage() {
         } else {
           setHistory((prev) => [res.data.mvpScope, ...prev]);
         }
-      } else {
-        const formatted = formatScopeBlueprint({}, ventureNameInput, ideaInput, targetUsersInput, problemInput);
-        setBlueprint(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate MVP blueprint:", err);
-      const formatted = formatScopeBlueprint({}, ventureNameInput, ideaInput, targetUsersInput, problemInput);
-      setBlueprint(formatted);
     } finally {
       setGenerating(false);
     }
@@ -472,6 +469,17 @@ function MvpScopePage() {
               ))}
             </div>
           </Panel>
+        </div>
+      )}
+
+      {/* Empty State Banner when no blueprint has been generated yet */}
+      {!blueprint && !generating && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
+          <Layers className="size-10 text-[#64D8FF]/60" />
+          <h3 className="text-base font-bold text-[#F5F8FC]">No MVP Scope Blueprint Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+            Review your startup parameters in the form above, then click <strong>Generate MVP Blueprint</strong> to construct your 12-part technical scope, feature priorities, and 2-week timeline.
+          </p>
         </div>
       )}
 

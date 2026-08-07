@@ -48,7 +48,7 @@ export interface RoadmapData {
 }
 
 function formatBuildRoadmap(raw: any, fallbackName: string, startupIdeaInput: string, mvpScopeInput: string): RoadmapData {
-  const data = raw?.roadmap || raw || {};
+  const data = raw?.roadmap || raw?.buildRoadmap || raw || {};
   const idea = startupIdeaInput || "Startup Concept";
   const mvp = mvpScopeInput || "2-week core MVP features";
 
@@ -199,6 +199,8 @@ function RoadmapPage() {
         const formatted = formatBuildRoadmap(res.data.buildRoadmap, ventureNameInput, startupIdeaInput, mvpScopeInput);
         setRoadmapData(formatted);
         setHistory(res.data.history || []);
+      } else {
+        setRoadmapData(null);
       }
     } catch (err) {
       console.warn("Failed to load build roadmap history:", err);
@@ -230,14 +232,9 @@ function RoadmapPage() {
         } else {
           setHistory((prev) => [res.data.buildRoadmap, ...prev]);
         }
-      } else {
-        const formatted = formatBuildRoadmap({}, ventureNameInput, startupIdeaInput, mvpScopeInput);
-        setRoadmapData(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate build roadmap:", err);
-      const formatted = formatBuildRoadmap({}, ventureNameInput, startupIdeaInput, mvpScopeInput);
-      setRoadmapData(formatted);
     } finally {
       setGenerating(false);
     }
@@ -423,7 +420,7 @@ function RoadmapPage() {
               <ul className="space-y-2">
                 {roadmapData.teamRequirements?.map((role, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <Cpu className="size-4 text-[#64D8FF] shrink-0" />
+                    <Cpu className="size-4 text-[#64D8FF]" />
                     <span>{role}</span>
                   </li>
                 ))}
@@ -448,7 +445,7 @@ function RoadmapPage() {
               <ul className="space-y-2">
                 {roadmapData.milestones?.map((m, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs font-semibold text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <Flag className="size-4 text-[#64D8FF] shrink-0" />
+                    <Flag className="size-4 text-[#64D8FF]" />
                     <span>{m}</span>
                   </li>
                 ))}
@@ -466,6 +463,17 @@ function RoadmapPage() {
               </ul>
             </Panel>
           </div>
+        </div>
+      )}
+
+      {/* Empty State Banner when no roadmap has been generated yet */}
+      {!roadmapData && !generating && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
+          <Cpu className="size-10 text-[#64D8FF]/60" />
+          <h3 className="text-base font-bold text-[#F5F8FC]">No Technical Roadmap Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+            Review your startup parameters and tech stack preferences above, then click <strong>Generate Technical Roadmap</strong> to construct your 4-phase development timeline and deliverables.
+          </p>
         </div>
       )}
 

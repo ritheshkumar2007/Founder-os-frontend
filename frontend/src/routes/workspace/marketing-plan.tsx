@@ -214,6 +214,8 @@ function MarketingPage() {
         const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput, audienceInput, goalInput);
         setStrategy(formatted);
         setHistory(res.data.history || []);
+      } else {
+        setStrategy(null);
       }
     } catch (err) {
       console.warn("Failed to load marketing plan history:", err);
@@ -247,14 +249,9 @@ function MarketingPage() {
         } else {
           setHistory((prev) => [res.data.marketingPlan, ...prev]);
         }
-      } else {
-        const formatted = formatMarketingStrategy({}, ventureNameInput, audienceInput, goalInput);
-        setStrategy(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate marketing plan:", err);
-      const formatted = formatMarketingStrategy({}, ventureNameInput, audienceInput, goalInput);
-      setStrategy(formatted);
     } finally {
       setGenerating(false);
     }
@@ -265,7 +262,7 @@ function MarketingPage() {
       <PageHeader
         eyebrow="Step 06"
         title="Marketing Plan & GTM Generator"
-        description="AI Chief Marketing Officer (CMO) designs a high-converting Go-To-Market strategy, channel matrix, and 90-day roadmap."
+        description="AI Chief Marketing Officer (CMO) designs a high-converting Go-To-Market strategy, customer personas, channel boards, and 90-day roadmap."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
@@ -499,6 +496,17 @@ function MarketingPage() {
               ))}
             </div>
           </Panel>
+        </div>
+      )}
+
+      {/* Empty State Banner when no marketing plan has been generated yet */}
+      {!strategy && !generating && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
+          <Megaphone className="size-10 text-[#64D8FF]/60" />
+          <h3 className="text-base font-bold text-[#F5F8FC]">No Marketing Strategy Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+            Review your target audience and growth goals in the form above, then click <strong>Generate Marketing Plan</strong> to craft your Go-To-Market positioning and 90-day execution roadmap.
+          </p>
         </div>
       )}
 
