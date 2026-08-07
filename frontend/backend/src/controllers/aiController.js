@@ -74,7 +74,7 @@ const aiChat = async (req, res, next) => {
 
     // 4. Process Message via Unified 4-Layer AI Pipeline
     const { processAIRequest } = require('../services/aiOrchestrator');
-    let agentResult = { response: 'I am analyzing your startup context. What is your top priority right now?', agentInfo: { primaryAgent: 'idea_validator', primaryAgentName: 'Idea Validator AI' } };
+    let agentResult;
     try {
       agentResult = await processAIRequest({
         userId,
@@ -84,10 +84,14 @@ const aiChat = async (req, res, next) => {
         history: conversationHistory,
       });
     } catch (agentErr) {
-      console.warn('Agent processing warning:', agentErr.message);
+      console.error('[AI Chat Controller Error] Unified AI pipeline execution error:', agentErr.message || agentErr);
+      return res.status(500).json({
+        success: false,
+        message: `AI Request Error: ${agentErr.message || 'Unable to process AI chat request'}`,
+      });
     }
 
-    const aiResponse = agentResult.response || agentResult.reply || 'What specific area of your venture would you like to explore next?';
+    const aiResponse = agentResult.response;
     const agentInfo = agentResult.agentInfo;
 
     // 5. Save Assistant Response to Memory

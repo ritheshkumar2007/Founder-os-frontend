@@ -27,11 +27,10 @@ async function processAIRequest({
   metadata = {},
 }) {
   const startTime = Date.now();
-  console.log(`[AI Orchestrator] Request received | User: ${userId} | Venture: ${ventureId} | Agent: ${agentName}`);
-
-  // 1. Validate userId & ventureId
-  if (!userId) throw new Error('Unauthorized: userId is required');
   const cleanInput = (userInput || '').trim();
+
+  // 1. Validate userId & userInput
+  if (!userId) throw new Error('Unauthorized: userId is required');
   if (!cleanInput) throw new Error('userInput is required');
 
   // 2-5. Verify & Load Venture (Multi-tenant security check)
@@ -45,29 +44,46 @@ async function processAIRequest({
   }
 
   const activeVentureId = venture ? venture._id : (ventureId && mongoose.Types.ObjectId.isValid(ventureId) ? ventureId : '6a709d6ff4af39139e040cc8');
-  console.log(`[AI Orchestrator] Venture loaded | Active VentureId: ${activeVentureId}`);
+
+  // Intelligent Agent Routing: classify intent if default ai_chat is requested
+  let targetAgentId = agentName;
+  if (!agentName || agentName === 'ai_chat' || agentName === 'auto') {
+    try {
+      const routeResult = await router.routeMessage({ userMessage: cleanInput, ventureContext: venture, history });
+      targetAgentId = routeResult.primaryAgent || 'ai_chat';
+    } catch {
+      targetAgentId = 'ai_chat';
+    }
+  }
+
+  console.log(`[AI] Request received | User: ${userId} | Venture: ${activeVentureId} | Target Agent: ${targetAgentId} | Input: "${cleanInput}"`);
 
   // 6. Ask Workflow Intelligence for current workflow state (Layer 4)
   const workflowState = workflowEngine.getWorkflowState(activeVentureId);
-  console.log(`[AI Orchestrator] Workflow loaded`);
+  console.log(`[AI] Workflow loaded`);
 
   // 7-8. Retrieve Relevant Venture Memory (Layer 2)
-  const relevantMemory = await memoryManager.getRelevantMemoryForAgent(activeVentureId, agentName);
-  console.log(`[AI Orchestrator] Memory retrieved`);
+  const relevantMemory = await memoryManager.getRelevantMemoryForAgent(activeVentureId, targetAgentId);
+  console.log(`[AI] Memory retrieved`);
 
-  // 9. Run Knowledge / RAG Retrieval (Layer 3)
+  // 9. Run Knowledge / RAG Retrieval (Layer 3) - Only if relevant to user question
   let ragResult = { ragContext: '', sources: [] };
-  try {
-    ragResult = await executeRAGPipeline({
-      ventureId: activeVentureId,
-      ownerId: userId,
-      agentName,
-      userQuestion: cleanInput,
-      history,
-    });
-    console.log(`[AI Orchestrator] RAG retrieved`);
-  } catch (ragErr) {
-    console.warn('[AI Orchestrator] RAG retrieval fallback:', ragErr.message);
+  const lowerInput = cleanInput.toLowerCase();
+  const requiresRAG = lowerInput.includes('document') || lowerInput.includes('pdf') || lowerInput.includes('interview') || lowerInput.includes('research') || lowerInput.includes('metric') || lowerInput.includes('pricing') || lowerInput.includes('competitor');
+  
+  if (requiresRAG) {
+    try {
+      ragResult = await executeRAGPipeline({
+        ventureId: activeVentureId,
+        ownerId: userId,
+        agentName: targetAgentId,
+        userQuestion: cleanInput,
+        history,
+      });
+      console.log(`[AI] RAG retrieved (${ragResult.sources?.length || 0} sources)`);
+    } catch (ragErr) {
+      console.warn('[AI] RAG retrieval warning (non-fatal):', ragErr.message);
+    }
   }
 
   // 10. Retrieve Conversation History if not passed
@@ -80,29 +96,38 @@ async function processAIRequest({
     }
   }
 
-  // 11-14. Resolve Agent & Build System Prompt (Layer 1)
-  const targetAgent = registry.getAgent(agentName) || registry.getAgent('idea_validator');
-  const agentRole = targetAgent ? targetAgent.name : 'FounderOS AI Agent';
+  // 11-14. Resolve Target Agent & Build System Prompt (Layer 1)
+  const targetAgentObj = registry.getAgent(targetAgentId) || registry.getAgent('ai_chat') || { name: 'AI Co-Founder Chat Agent', description: 'General startup advisor' };
+  const agentRole = targetAgentObj.name || 'AI Co-Founder Chat Agent';
 
   const systemPrompt = buildPrompt({
     role: agentRole,
-    objective: targetAgent ? targetAgent.description : 'Provide founder-grade guidance using venture memory and RAG context.',
+    objective: targetAgentObj.description || 'Provide direct, natural, conversational startup advice.',
     agentInstructions: `
 === WORKFLOW STATE ===
 Active Stage Progress: ${JSON.stringify(workflowEngine.calculateProgress(activeVentureId))}
-=== RELEVANT VENTURE MEMORY & RAG CONTEXT ===
+
+=== RELEVANT VENTURE MEMORY ===
 ${relevantMemory}
-${ragResult.ragContext || ''}
+
+${ragResult.ragContext ? `=== RETRIEVED RAG KNOWLEDGE ===\n${ragResult.ragContext}` : ''}
+
+CRITICAL RESPONSE RULES:
+- Respond naturally, conversationally, and directly to the user's actual question.
+- Do NOT turn general conversational questions (e.g. "do you understand my language") into structured Idea Validation tasks.
+- Answer the user's question first, then offer relevant startup assistance.
 `.trim(),
     ventureContext: venture,
     userInput: cleanInput,
-    includeCompetitors: agentName.includes('competitor'),
+    includeCompetitors: targetAgentId.includes('competitor'),
   });
-  console.log(`[AI Orchestrator] Prompt built`);
+  console.log(`[AI] Prompt built | Length: ${systemPrompt.length} chars`);
 
-  // 15. Call LLM Engine
+  // 15. Call LLM Engine (NO FAKE TEMPLATE FALLBACK MASKING)
   let aiResponse = '';
   const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  
+  console.log(`[AI] Starting LLM request | Agent: ${targetAgentId} | Calling Gemini`);
   try {
     const genAI = new GoogleGenerativeAI(apiKey.trim());
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash', systemInstruction: systemPrompt });
@@ -122,64 +147,69 @@ ${ragResult.ragContext || ''}
       const result = await model.generateContent(cleanInput);
       aiResponse = (await result.response).text();
     }
-    console.log(`[AI Orchestrator] LLM called`);
+    console.log(`[AI] Gemini response received | Length: ${aiResponse.length} chars`);
   } catch (llmErr) {
-    console.warn('[AI Orchestrator] LLM error fallback:', llmErr.message);
-    aiResponse = `### 🚀 ${agentRole} Output\nAnalyzing your request regarding "${cleanInput}". Focus on validating your core target audience and value proposition.\n\n## Next Action\nReach out to 5 target founders on LinkedIn to conduct customer discovery.`;
+    console.error('[AI ERROR] Gemini LLM Execution Failed:', llmErr.message || llmErr);
+    // Explicit error throw - NO silent fake response template masking!
+    throw new Error(`Gemini LLM Execution Failed: ${llmErr.message || 'API request error'}`);
   }
 
-  // 16. Validate AI response
+  // 16. Validate AI Response
   if (!aiResponse || typeof aiResponse !== 'string' || !aiResponse.trim()) {
-    aiResponse = '### 🚀 FounderOS Response\n- Analyzed venture parameters successfully.\n\n## Next Action\nSelect your next target milestone in the workflow dashboard.';
+    throw new Error('AI Service returned an empty or invalid response.');
   }
 
-  // 17. Save Conversation
+  // 17. Save Conversation to Database
   if (isDbConnected && activeVentureId) {
     try {
       await saveMessage({ userId, ventureId: activeVentureId, role: 'user', content: cleanInput });
       await saveMessage({ userId, ventureId: activeVentureId, role: 'assistant', content: aiResponse });
-      console.log(`[AI Orchestrator] Conversation saved`);
+      console.log(`[AI] Conversation saved`);
     } catch (saveErr) {
-      console.warn('[AI Orchestrator] Conversation save warning:', saveErr.message);
+      console.warn('[AI] Conversation save warning:', saveErr.message);
     }
   }
 
-  // 18-19. Extract & Update Durable Venture Memory (Layer 2)
+  // 18-19. Update Durable Venture Memory only if durable startup content was generated
   let memoryUpdated = false;
-  try {
-    const sectionKey = memoryManager.MEMORY_TYPES[agentName.toUpperCase()] || `build.${agentName}`;
-    await memoryManager.updateMemory(activeVentureId, sectionKey, aiResponse, userId);
-    memoryUpdated = true;
-    console.log(`[AI Orchestrator] Memory updated`);
-  } catch (memErr) {
-    console.warn('[AI Orchestrator] Memory update warning:', memErr.message);
+  if (targetAgentId !== 'ai_chat' && targetAgentId !== 'competitor_agent') {
+    try {
+      const sectionKey = memoryManager.MEMORY_TYPES[targetAgentId.toUpperCase()] || `build.${targetAgentId}`;
+      await memoryManager.updateMemory(activeVentureId, sectionKey, aiResponse, userId);
+      memoryUpdated = true;
+      console.log(`[AI] Memory updated`);
+    } catch (memErr) {
+      console.warn('[AI] Memory update warning:', memErr.message);
+    }
   }
 
-  // 20-21. Publish Workflow Event & Recalculate Workflow State (Layer 4)
+  // 20-21. Publish Workflow Event & Update Workflow State (Layer 4)
   let workflowUpdated = false;
-  try {
-    workflowEngine.setModuleState(activeVentureId, agentName, 'Completed', { updatedBy: userId, propagateDownstream: true });
-    workflowEvents.emit(WORKFLOW_EVENT_TYPES.VENTURE_UPDATED, { ventureId: activeVentureId, agentName });
-    workflowUpdated = true;
-    console.log(`[AI Orchestrator] Workflow updated`);
-  } catch (wfErr) {
-    console.warn('[AI Orchestrator] Workflow update warning:', wfErr.message);
+  if (targetAgentId !== 'ai_chat') {
+    try {
+      workflowEngine.setModuleState(activeVentureId, targetAgentId, 'Completed', { updatedBy: userId, propagateDownstream: true });
+      workflowEvents.emit(WORKFLOW_EVENT_TYPES.VENTURE_UPDATED, { ventureId: activeVentureId, targetAgentId });
+      workflowUpdated = true;
+      console.log(`[AI] Workflow updated`);
+    } catch (wfErr) {
+      console.warn('[AI] Workflow update warning:', wfErr.message);
+    }
   }
 
   // 22. Generate ONE Recommended Next Action (Layer 4)
   const nextAction = workflowEngine.recommendNext(activeVentureId);
   const progress = workflowEngine.calculateProgress(activeVentureId);
-  console.log(`[AI Orchestrator] Next action generated`);
+  console.log(`[AI] Next action generated`);
 
   const executionTimeMs = Date.now() - startTime;
 
-  // Log interaction for telemetry
+  // Telemetry log
   if (isDbConnected && activeVentureId) {
     AgentLog.create({
       ventureId: activeVentureId,
       userId,
       userMessage: cleanInput,
-      primaryAgent: agentName,
+      primaryAgent: targetAgentId,
       agentResponse: aiResponse,
       executionTimeMs,
       timestamp: new Date(),
@@ -193,7 +223,7 @@ ${ragResult.ragContext || ''}
     workflowUpdated,
     nextAction,
     agentInfo: {
-      primaryAgent: agentName,
+      primaryAgent: targetAgentId,
       primaryAgentName: agentRole,
       executionTimeMs,
     },
