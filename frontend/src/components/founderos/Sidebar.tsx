@@ -14,28 +14,28 @@ export const STAGED_NAV: NavSection[] = [
   {
     category: "Idea Validation",
     items: [
-      { to: "/workspace/idea-validation", label: "Idea Validation.app" },
+      { to: "/workspace/idea-validation", label: "Idea Validation" },
     ],
   },
   {
     category: "Build",
     items: [
-      { to: "/workspace/mvp-scope", label: "MVP Scope.app" },
-      { to: "/workspace/build-roadmap", label: "Build Roadmap.app" },
+      { to: "/workspace/mvp-scope", label: "MVP Scope" },
+      { to: "/workspace/build-roadmap", label: "Build Roadmap" },
     ],
   },
   {
     category: "Go To Market",
     items: [
-      { to: "/workspace/marketing-plan", label: "Marketing Plan.app" },
+      { to: "/workspace/marketing-plan", label: "Marketing Plan" },
     ],
   },
   {
     category: "Growth",
     items: [
-      { to: "/workspace/launch-sprint", label: "Launch Sprint.app" },
-      { to: "/workspace/traction", label: "Traction.app" },
-      { to: "/workspace/investor-update", label: "Investor Update.app" },
+      { to: "/workspace/launch-sprint", label: "Launch Sprint" },
+      { to: "/workspace/traction", label: "Traction" },
+      { to: "/workspace/investor-update", label: "Investor Update" },
     ],
   },
 ];
