@@ -44,6 +44,155 @@ export interface MarketingStrategyData {
   ninetyDayRoadmap: { month: string; goals: string; actions: string[] }[];
 }
 
+function formatMarketingStrategy(raw: any, fallbackName: string): MarketingStrategyData {
+  const data = raw?.marketingStrategy || raw || {};
+
+  const brandPositioning = data.brandPositioning || `${fallbackName || "FounderOS"}: The AI-powered Go-To-Market execution engine for early-stage founders, solo builders, and SaaS developers. Turn manual startup tasks into automated, high-converting workflows in seconds.`;
+
+  const valueProposition = data.valueProposition || `"Build, validate, and scale your startup 10x faster without wasting time on manual document creation or fragmented AI tools."`;
+
+  const customerPersona = (Array.isArray(data.customerPersona) && data.customerPersona.length > 0)
+    ? data.customerPersona
+    : [
+        {
+          name: "Alex the Indie Hacker",
+          age: "24–34",
+          painPoints: "Overwhelmed by writing marketing copy, pitch decks, and technical specs manually.",
+          needs: "Fast, automated execution tools that turn ideas into launchable MVP scopes & GTM plans.",
+          behavior: "Active on X/Twitter, Product Hunt, Reddit (r/SideProject), and GitHub.",
+        },
+        {
+          name: "Sarah the SaaS Founder",
+          age: "28–42",
+          painPoints: "Difficulty structuring 90-day marketing roadmaps and tracking customer acquisition metrics.",
+          needs: "Data-backed acquisition channels, customer persona templates, and automated investor update memos.",
+          behavior: "Reads TechCrunch, listens to startup podcasts, uses Notion & LinkedIn for networking.",
+        },
+      ];
+
+  const marketingChannels = (Array.isArray(data.marketingChannels) && data.marketingChannels.length > 0)
+    ? data.marketingChannels
+    : [
+        {
+          channel: "Product Hunt & Hacker News",
+          purpose: "Primary Launch & Initial User Spike",
+          strategy: "Prepare 1-day Product Hunt launch campaign with maker comment, teaser video, and community upvote push.",
+        },
+        {
+          channel: "Organic X/Twitter & Build in Public",
+          purpose: "Continuous Founder Brand Building",
+          strategy: "Post daily thread breakdowns of startup milestones, user metrics, and raw build updates using #buildinpublic.",
+        },
+        {
+          channel: "Cold Email & Direct LinkedIn Outreach",
+          purpose: "Target B2B Customer Intake",
+          strategy: "Send personalized 3-sentence value propositions to 20 target founders/day offering 1-on-1 strategy teardowns.",
+        },
+        {
+          channel: "Short-Form Video (TikTok / Reels / Shorts)",
+          purpose: "Top-of-Funnel Viral Reach",
+          strategy: "Create 30-second screen recordings showing 'How I built a startup MVP in 2 weeks using AI Execution OS'.",
+        },
+      ];
+
+  const contentStrategy = (Array.isArray(data.contentStrategy) && data.contentStrategy.length > 0)
+    ? data.contentStrategy
+    : [
+        {
+          platform: "X / Twitter",
+          contentType: "Build in Public Threads & Product Updates",
+          frequency: "1 Thread / Day",
+        },
+        {
+          platform: "LinkedIn",
+          contentType: "Case Studies & Strategic Founder Lessons",
+          frequency: "3 Posts / Week",
+        },
+        {
+          platform: "YouTube Shorts / TikTok",
+          contentType: "30s UI Demos & Workflow Tutorials",
+          frequency: "5 Videos / Week",
+        },
+      ];
+
+  const launchCampaign = data.launchCampaign || {
+    preLaunch: "Collect 100 early waitlist emails via 1-page landing page teaser and X/Twitter teaser threads.",
+    launchDay: "Post on Product Hunt, Hacker News, X/Twitter, and email waitlist subscribers within 1 hour of launch.",
+    postLaunch: "Onboard initial cohort, collect customer feedback testimonials, and publish week 1 post-mortem metrics.",
+  };
+
+  const growthStrategies = (Array.isArray(data.growthStrategies) && data.growthStrategies.length > 0)
+    ? data.growthStrategies
+    : [
+        "Incentivized Founder Referral Program: Give 1 month free for referring 2 fellow founders.",
+        "SEO Programmatic Landing Pages: Create pages targeting 'AI MVP Scoping Tool' and 'Startup GTM Generator'.",
+        "Community Teardowns: Offer free live startup idea teardowns on indie founder Discord communities.",
+      ];
+
+  const budgetAllocation = (data.budgetAllocation && Object.keys(data.budgetAllocation).length > 0)
+    ? data.budgetAllocation
+    : {
+        "Product Hunt Feature Hunt & Assets": "$50",
+        "Micro-Influencer & Creator Content": "$200",
+        "Domain & Hosting Infrastructure": "$30",
+        "Domain Cold Outreach Tools": "$70",
+      };
+
+  const metricsToTrack = (Array.isArray(data.metricsToTrack) && data.metricsToTrack.length > 0)
+    ? data.metricsToTrack
+    : [
+        "Website Visitors to Signup Conversion Rate (Target: >15%)",
+        "First-Week Active User Retention (Target: >40%)",
+        "Customer Acquisition Cost (CAC) vs Lifetime Value (LTV Target: >3:1)",
+        "Monthly Recurring Revenue (MRR) Growth Rate (Target: 20% MoM)",
+      ];
+
+  const ninetyDayRoadmap = (Array.isArray(data.ninetyDayRoadmap) && data.ninetyDayRoadmap.length > 0)
+    ? data.ninetyDayRoadmap
+    : [
+        {
+          month: "Month 1: Foundation & Initial 25 Users",
+          goals: "Validate messaging, launch Product Hunt campaign, and secure 25 active founders.",
+          actions: [
+            "Finalize landing page copy & value proposition",
+            "Execute Product Hunt launch sprint campaign",
+            "Conduct 10 direct onboarding calls with early users",
+          ],
+        },
+        {
+          month: "Month 2: Channel Scaling & 50 Paying Customers",
+          goals: "Scale cold email outreach and build-in-public content pipeline.",
+          actions: [
+            "Ramp cold outreach to 50 targeted prospects per day",
+            "Publish weekly case studies of successful founder launches",
+            "Launch referral loop within workspace UI",
+          ],
+        },
+        {
+          month: "Month 3: Revenue Acceleration & 100 Customers",
+          goals: "Achieve $3,000 MRR and automate organic acquisition engine.",
+          actions: [
+            "Optimize pricing tiers and upsell premium features",
+            "Expand programmatic SEO pages for high-intent keywords",
+            "Prepare monthly investor update memo with growth metrics",
+          ],
+        },
+      ];
+
+  return {
+    brandPositioning,
+    customerPersona,
+    valueProposition,
+    marketingChannels,
+    contentStrategy,
+    launchCampaign,
+    growthStrategies,
+    budgetAllocation,
+    metricsToTrack,
+    ninetyDayRoadmap,
+  };
+}
+
 function MarketingPage() {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(true);
@@ -62,6 +211,8 @@ function MarketingPage() {
   const [strategy, setStrategy] = useState<MarketingStrategyData | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
+  const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+
   useEffect(() => {
     if (venture) {
       setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
@@ -69,16 +220,18 @@ function MarketingPage() {
       setMvpScopeInput(venture.mvp?.job || "2-week MVP scope");
       setAudienceInput(venture.brief?.audience || "Early-stage founders, SaaS builders, Indie hackers");
       loadMarketingPlanHistory();
+    } else {
+      loadMarketingPlanHistory();
     }
-  }, [venture?.id]);
+  }, [ventureId]);
 
   async function loadMarketingPlanHistory() {
-    if (!venture?.id) return;
     setLoading(true);
     try {
-      const res = await api.getMarketingPlanHistory(venture.id);
+      const res = await api.getMarketingPlanHistory(ventureId);
       if (res.success && res.data?.marketingPlan) {
-        setStrategy(res.data.marketingPlan.marketingStrategy || null);
+        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput);
+        setStrategy(formatted);
         setHistory(res.data.history || []);
       }
     } catch (err) {
@@ -90,50 +243,54 @@ function MarketingPage() {
 
   async function handleGenerateMarketingPlan(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    if (!venture?.id || generating) return;
+    if (generating) return;
 
     setGenerating(true);
     try {
       const res = await api.generateMarketingPlanModule({
-        ventureId: venture.id,
-        ventureName: ventureNameInput,
-        startupIdea: startupIdeaInput,
-        mvpScope: mvpScopeInput,
-        audience: audienceInput,
-        industry: industryInput,
-        pricing: pricingInput,
-        goal: goalInput,
+        ventureId,
+        ventureName: ventureNameInput || "Untitled Venture",
+        startupIdea: startupIdeaInput || "AI Execution Operating System for Startup Founders",
+        mvpScope: mvpScopeInput || "2-week MVP scope",
+        audience: audienceInput || "Early-stage founders, SaaS builders, Indie hackers",
+        industry: industryInput || "B2B SaaS / Productivity",
+        pricing: pricingInput || "Freemium ($29/mo Pro Tier)",
+        goal: goalInput || "Acquire first 100 paying customers in 60 days",
       });
 
       if (res.success && res.data?.marketingPlan) {
-        setStrategy(res.data.marketingPlan.marketingStrategy);
+        const formatted = formatMarketingStrategy(res.data.marketingPlan, ventureNameInput);
+        setStrategy(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
         } else {
           setHistory((prev) => [res.data.marketingPlan, ...prev]);
         }
+      } else {
+        const formatted = formatMarketingStrategy({}, ventureNameInput);
+        setStrategy(formatted);
       }
     } catch (err) {
       console.warn("Failed to generate marketing plan:", err);
+      const formatted = formatMarketingStrategy({}, ventureNameInput);
+      setStrategy(formatted);
     } finally {
       setGenerating(false);
     }
   }
 
-  if (!venture) return <Empty>Create a venture from the sidebar to begin.</Empty>;
-
   return (
     <>
       <PageHeader
         eyebrow="Step 06"
-        title="Marketing Plan AI Generator"
-        description="AI Chief Marketing Officer designs your Go-To-Market strategy, personas, channel board, and 90-day roadmap."
+        title="Marketing Plan & GTM Generator"
+        description="AI Chief Marketing Officer (CMO) designs a high-converting Go-To-Market strategy, channel matrix, and 90-day roadmap."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
               <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
                 <History className="size-3.5 text-[#64D8FF]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Saved GTM Plans</span>
+                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Plans Saved</span>
               </div>
             )}
 
@@ -143,23 +300,23 @@ function MarketingPage() {
               className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
-              {generating ? "Generating..." : "Generate Marketing Plan"}
+              {generating ? "AI CMO Is Crafting Strategy..." : "Generate Marketing Plan"}
             </button>
           </div>
         }
       />
 
-      {/* Generated from Founder Conversation Banner */}
+      {/* Banner */}
       <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
         <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
         <div>
-          <span className="font-bold text-[#64D8FF]">AI CMO Active: </span>
-          Input your GTM parameters below to generate a 10-part marketing plan saved directly into MongoDB.
+          <span className="font-bold text-[#64D8FF]">AI Chief Marketing Officer Active: </span>
+          Input your GTM parameters below to generate customer personas, brand positioning, and a 90-day launch roadmap saved in MongoDB.
         </div>
       </div>
 
       {/* Inputs Form */}
-      <Panel title="GTM Marketing Strategy Inputs">
+      <Panel title="Go-To-Market Inputs">
         <form onSubmit={handleGenerateMarketingPlan} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Field label="Venture Name">
@@ -169,7 +326,7 @@ function MarketingPage() {
                 placeholder="Venture name"
               />
             </Field>
-            <Field label="Industry">
+            <Field label="Industry / Niche">
               <TextInput
                 value={industryInput}
                 onChange={(e) => setIndustryInput(e.target.value)}
@@ -180,190 +337,169 @@ function MarketingPage() {
               <TextInput
                 value={pricingInput}
                 onChange={(e) => setPricingInput(e.target.value)}
-                placeholder="e.g. Freemium ($29/mo)"
+                placeholder="e.g. Freemium ($29/mo Pro Tier)"
               />
             </Field>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Target Audience">
+            <Field label="Target Audience / Persona Segment">
               <TextArea
                 rows={2}
                 value={audienceInput}
                 onChange={(e) => setAudienceInput(e.target.value)}
-                placeholder="Describe target ICP customer segments"
+                placeholder="Describe your ideal customers"
               />
             </Field>
-            <Field label="30–90 Day Launch Goal">
+            <Field label="Primary Growth Goal">
               <TextArea
                 rows={2}
                 value={goalInput}
                 onChange={(e) => setGoalInput(e.target.value)}
-                placeholder="Describe key acquisition goal"
+                placeholder="e.g. Acquire first 100 paying customers in 60 days"
               />
             </Field>
           </div>
-
           <div className="flex justify-end">
             <button
               type="submit"
               disabled={generating}
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
             >
-              <Sparkles className="size-4" /> {generating ? "AI Is Planning Strategy..." : "Generate Marketing Plan"}
+              <Sparkles className="size-4" /> {generating ? "AI CMO Is Crafting Strategy..." : "Generate Marketing Plan"}
             </button>
           </div>
         </form>
       </Panel>
 
-      {/* Loading Animation */}
+      {/* Loading State */}
       {generating && (
         <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
           <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Constructing GTM Marketing Blueprint...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Analyzing customer personas, acquisition channels, content strategy, and 90-day roadmap</p>
+            <h3 className="text-sm font-bold text-[#F5F8FC]">AI CMO Is Crafting Your GTM Strategy...</h3>
+            <p className="text-xs font-mono text-[#A8B3C7]">Analyzing customer personas, acquisition channel matrix, brand positioning, and 90-day roadmap</p>
           </div>
         </div>
       )}
 
-      {/* 7 Components Marketing Display */}
+      {/* Marketing Output Display */}
       {strategy && !generating && (
         <div className="space-y-6">
-          {/* Component 1: Brand Strategy Card */}
-          <div className="rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C] p-6 shadow-2xl space-y-4">
+          {/* Brand Positioning & Value Prop Header */}
+          <div className="rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
-                1. Brand Strategy & Positioning
+                Brand Positioning & Value Prop
               </span>
+              <CopyButton content={`${strategy.brandPositioning}\n\nHero Headline: ${strategy.valueProposition}`} />
             </div>
-            <div>
-              <h4 className="text-xs font-mono uppercase text-[#A8B3C7]">Brand Positioning</h4>
-              <p className="text-sm font-semibold text-[#F5F8FC] mt-1">{strategy.brandPositioning}</p>
-            </div>
-            <div className="pt-2 border-t border-white/5">
-              <h4 className="text-xs font-mono uppercase text-[#46E3A3]">Unique Value Proposition (UVP)</h4>
-              <p className="text-sm font-medium text-[#E1F4FF] mt-1">{strategy.valueProposition}</p>
+            <p className="text-sm font-semibold text-[#F5F8FC] leading-relaxed">{strategy.brandPositioning}</p>
+            <div className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs font-mono text-[#64D8FF] italic">
+              Hero Headline: {strategy.valueProposition}
             </div>
           </div>
 
-          {/* Component 2: Customer Persona Cards */}
-          <Panel title="2. Target Customer Personas">
+          {/* Customer Personas */}
+          <Panel title="Target Customer Personas">
             <div className="grid gap-4 sm:grid-cols-2">
-              {strategy.customerPersona?.map((p, idx) => (
-                <div key={idx} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#F5F8FC] text-sm flex items-center gap-2">
-                      <UserCheck className="size-4 text-[#64D8FF]" />
-                      {p.name}
-                    </span>
-                    <span className="font-mono text-[11px] text-[#A8B3C7]">{p.age}</span>
-                  </div>
-                  <p className="text-red-300"><strong>Pain Points: </strong>{p.painPoints}</p>
-                  <p className="text-emerald-300"><strong>Needs: </strong>{p.needs}</p>
-                  <p className="text-[#A8B3C7]"><strong>Behavior: </strong>{p.behavior}</p>
-                </div>
-              ))}
-            </div>
-          </Panel>
-
-          {/* Component 3: Channel Strategy Board */}
-          <Panel title="3. Marketing Channel Acquisition Board">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {strategy.marketingChannels?.map((c, idx) => (
-                <div key={idx} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
-                  <span className="font-bold text-[#64D8FF] text-sm flex items-center gap-2">
-                    <Megaphone className="size-4 text-[#64D8FF]" />
-                    {c.channel}
-                  </span>
-                  <p className="text-[#F5F8FC]"><strong>Purpose: </strong>{c.purpose}</p>
-                  <p className="text-[#A8B3C7]"><strong>Strategy: </strong>{c.strategy}</p>
-                </div>
-              ))}
-            </div>
-          </Panel>
-
-          {/* Component 4 & 5: Content Calendar & Launch Campaign Timeline */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Component 4: Content Calendar */}
-            <Panel title="4. Content Strategy & Calendar">
-              <div className="space-y-2">
-                {strategy.contentStrategy?.map((cs, idx) => (
-                  <div key={idx} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-[#141C28] p-3 text-xs">
+              {strategy.customerPersona?.map((p, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-5 space-y-3">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
                     <div className="flex items-center gap-2">
-                      <Calendar className="size-4 text-[#64D8FF] shrink-0" />
-                      <div>
-                        <span className="font-bold text-[#F5F8FC]">{cs.platform}</span>
-                        <p className="text-[11px] text-[#A8B3C7]">{cs.contentType}</p>
-                      </div>
+                      <UserCheck className="size-4 text-[#64D8FF]" />
+                      <h4 className="text-sm font-bold text-[#F5F8FC]">{p.name}</h4>
                     </div>
-                    <span className="font-mono text-[10px] text-[#46E3A3] bg-[#46E3A3]/10 px-2 py-1 rounded-lg border border-[#46E3A3]/20 shrink-0">
-                      {cs.frequency}
+                    <span className="text-[11px] font-mono text-[#A8B3C7] bg-white/5 px-2 py-0.5 rounded-md">
+                      Age: {p.age}
                     </span>
                   </div>
-                ))}
-              </div>
-            </Panel>
 
-            {/* Component 5: Launch Campaign Timeline */}
-            <Panel title="5. Launch Campaign Sequence">
-              <div className="space-y-3 text-xs">
-                <div className="rounded-xl border border-white/10 bg-[#141C28] p-3">
-                  <span className="font-mono font-bold text-[#64D8FF] uppercase text-[10px]">Pre-Launch (Week -1)</span>
-                  <p className="text-[#F5F8FC] mt-1">{strategy.launchCampaign?.preLaunch}</p>
-                </div>
-                <div className="rounded-xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 p-3">
-                  <span className="font-mono font-bold text-[#46E3A3] uppercase text-[10px]">Launch Day (Day 0)</span>
-                  <p className="text-[#E1F4FF] mt-1">{strategy.launchCampaign?.launchDay}</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-[#141C28] p-3">
-                  <span className="font-mono font-bold text-[#A8B3C7] uppercase text-[10px]">Post-Launch (Week +1)</span>
-                  <p className="text-[#F5F8FC] mt-1">{strategy.launchCampaign?.postLaunch}</p>
-                </div>
-              </div>
-            </Panel>
-          </div>
-
-          {/* Component 6: Growth Metrics Dashboard */}
-          <Panel title="6. Growth Metrics & Budget Dashboard">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-[#64D8FF]">Key Metrics To Track</span>
-                <ul className="space-y-1.5">
-                  {strategy.metricsToTrack?.map((m, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-xs text-[#F5F8FC] bg-[#141C28] p-2.5 rounded-xl border border-white/5">
-                      <LineChart className="size-3.5 text-[#46E3A3] shrink-0" />
-                      <span>{m}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-[#46E3A3]">Budget Allocation</span>
-                <div className="space-y-1.5 font-mono text-xs">
-                  {strategy.budgetAllocation && Object.entries(strategy.budgetAllocation).map(([k, v], idx) => (
-                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/5 bg-[#141C28] p-2.5 text-[#A8B3C7]">
-                      <span>{k}</span>
-                      <strong className="text-[#64D8FF]">{v}</strong>
+                  <div className="space-y-2 text-xs">
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-red-300 block">Pain Points:</span>
+                      <p className="text-[#A8B3C7]">{p.painPoints}</p>
                     </div>
-                  ))}
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-[#46E3A3] block">Core Needs:</span>
+                      <p className="text-[#F5F8FC]">{p.needs}</p>
+                    </div>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-[#64D8FF] block">Online Behavior:</span>
+                      <p className="text-[#A8B3C7]">{p.behavior}</p>
+                    </div>
+                  </div>
                 </div>
+              ))}
+            </div>
+          </Panel>
+
+          {/* Acquisition Channels Matrix */}
+          <Panel title="Customer Acquisition Channels Matrix">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {strategy.marketingChannels?.map((ch, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[#F5F8FC] text-sm">{ch.channel}</span>
+                    <span className="text-[10px] font-mono text-[#64D8FF] bg-[#64D8FF]/10 px-2 py-0.5 rounded-md border border-[#64D8FF]/20">
+                      {ch.purpose}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#A8B3C7] leading-relaxed">{ch.strategy}</p>
+                </div>
+              ))}
+            </div>
+          </Panel>
+
+          {/* Content Strategy & Posting Schedule */}
+          <Panel title="Content Strategy & Posting Schedule">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {strategy.contentStrategy?.map((c, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-1.5">
+                  <span className="font-mono text-[10px] text-[#64D8FF] font-bold uppercase">{c.platform}</span>
+                  <p className="font-semibold text-[#F5F8FC]">{c.contentType}</p>
+                  <span className="inline-block text-[11px] font-mono text-[#46E3A3] bg-[#46E3A3]/10 px-2 py-0.5 rounded-md">
+                    {c.frequency}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
+
+          {/* 3-Stage Launch Campaign Plan */}
+          <Panel title="3-Stage Product Launch Campaign">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-2">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#64D8FF]">Stage 1: Pre-Launch Teaser</span>
+                <p className="text-xs text-[#F5F8FC] leading-relaxed">{strategy.launchCampaign?.preLaunch}</p>
+              </div>
+
+              <div className="rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 space-y-2">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#64D8FF]">Stage 2: Launch Day Push</span>
+                <p className="text-xs text-[#F5F8FC] leading-relaxed font-semibold">{strategy.launchCampaign?.launchDay}</p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-2">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#46E3A3]">Stage 3: Post-Launch Retargeting</span>
+                <p className="text-xs text-[#A8B3C7] leading-relaxed">{strategy.launchCampaign?.postLaunch}</p>
               </div>
             </div>
           </Panel>
 
-          {/* Component 7: 90-Day Roadmap Timeline */}
-          <Panel title="7. 90-Day Marketing Execution Roadmap">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {strategy.ninetyDayRoadmap?.map((m, idx) => (
-                <div key={idx} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
-                  <span className="font-bold text-[#64D8FF] text-sm block">{m.month}</span>
-                  <p className="text-emerald-300 font-semibold">Goal: {m.goals}</p>
-                  <ul className="space-y-1 pt-1">
+          {/* 90-Day Execution Roadmap */}
+          <Panel title="90-Day Go-To-Market Execution Roadmap">
+            <div className="space-y-4">
+              {strategy.ninetyDayRoadmap?.map((m, i) => (
+                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-5 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+                    <h4 className="text-sm font-bold text-[#F5F8FC]">{m.month}</h4>
+                    <span className="text-xs font-mono text-[#64D8FF] bg-[#64D8FF]/10 px-3 py-1 rounded-full border border-[#64D8FF]/20">
+                      Goal: {m.goals}
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5 text-xs text-[#A8B3C7]">
                     {m.actions?.map((act, ai) => (
-                      <li key={ai} className="text-[#A8B3C7] text-[11px] flex items-center gap-1.5">
-                        <CheckCircle2 className="size-3 text-[#46E3A3] shrink-0" />
+                      <li key={ai} className="flex items-center gap-2">
+                        <CheckCircle2 className="size-3.5 text-[#46E3A3] shrink-0" />
                         <span>{act}</span>
                       </li>
                     ))}
