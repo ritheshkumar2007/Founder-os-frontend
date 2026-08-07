@@ -166,6 +166,10 @@ Do NOT mention multiple agents. Present a unified response.
     }
   }
 
+  const workflowEngine = require('../workflow/workflowEngine');
+  const workflowProgress = workflowEngine.calculateProgress(ventureId);
+  const nextRecommendation = workflowEngine.recommendNext(ventureId);
+
   return {
     reply: finalReply,
     agentInfo: {
@@ -174,6 +178,10 @@ Do NOT mention multiple agents. Present a unified response.
       secondaryAgents: secondaryIds,
       reasoning,
       executionTimeMs,
+    },
+    workflow: {
+      progress: workflowProgress,
+      nextRecommendation,
     },
   };
 }
