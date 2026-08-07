@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Button, CopyButton, Empty, Field, LinkButton, PageHeader, Panel, Progress, Stat, TextArea, TextInput } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, Clock, CheckCircle2, Calendar, Target, ShieldAlert, Rocket, History, Users, ArrowRight, AlertTriangle } from "lucide-react";
+import { Sparkles, RefreshCw, Clock, CheckCircle2, Calendar, Target, ShieldAlert, Rocket, History, Users, ArrowRight, AlertTriangle, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import api from "@/lib/api";
 
@@ -42,8 +42,8 @@ export interface SprintPlanData {
 }
 
 function formatLaunchSprintPlan(raw: any, ventureNameInput: string, launchDateInput: string, launchGoalInput: string): SprintPlanData {
-  const data = raw?.sprintPlan || raw || {};
-  const hasRealDate = Boolean(launchDateInput && launchDateInput.trim() && !launchDateInput.includes("7 days"));
+  const data = raw?.launchSprint?.sprintPlan || raw?.sprintPlan || raw || {};
+  const hasRealDate = Boolean(launchDateInput && launchDateInput.trim() && !launchDateInput.includes("7 days") && launchDateInput !== "Not set");
   const launchDateLabel = hasRealDate ? launchDateInput : "Launch date: Not set";
 
   const preLaunch = (Array.isArray(data.preLaunch) && data.preLaunch.length > 0)
@@ -113,7 +113,9 @@ function formatLaunchSprintPlan(raw: any, ventureNameInput: string, launchDateIn
     : [
         {
           metric: "Initial Test Users",
-          target: launchGoalInput ? `Founder-defined launch target: ${launchGoalInput}` : "Suggested launch target: 20–50 initial users",
+          target: launchGoalInput && launchGoalInput !== "Launch target: Not defined"
+            ? `Founder-defined launch target: ${launchGoalInput}`
+            : "Suggested launch target: 20–50 initial users",
         },
         {
           metric: "Core Workflow Completion Rate",
@@ -149,7 +151,9 @@ function formatLaunchSprintPlan(raw: any, ventureNameInput: string, launchDateIn
     launchOverview: data.launchOverview || {
       ventureName: ventureNameInput || "Untitled Venture",
       currentStage: "Early-Stage Execution",
-      launchObjective: launchGoalInput ? `Founder-defined launch target: ${launchGoalInput}` : "Suggested launch target: Acquire 20–50 initial test users",
+      launchObjective: launchGoalInput && launchGoalInput !== "Launch target: Not defined"
+        ? `Founder-defined launch target: ${launchGoalInput}`
+        : "Suggested launch target: Acquire 20–50 initial test users",
       launchDate: launchDateLabel,
       launchStatus: "Ready for launch testing",
       customerEvidence: "Customer interview evidence: Not yet recorded.",
@@ -162,7 +166,7 @@ function SprintPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Form Inputs (clean placeholders - NO hardcoded fake dates/metrics)
+  // Form Inputs (clean inputs - auto-inherits from Venture Memory if present)
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [ideaInput, setIdeaInput] = useState("");
   const [mvpScopeInput, setMvpScopeInput] = useState("");
@@ -175,12 +179,13 @@ function SprintPage() {
   const [history, setHistory] = useState<any[]>([]);
 
   const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
+  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.marketingPlan?.marketingStrategy || venture?.name);
 
   useEffect(() => {
     if (venture) {
-      setVentureNameInput(venture.name || venture.ventureName || "Untitled Venture");
-      setIdeaInput(venture.brief?.building || "AI Execution Operating System for Founders");
-      setMvpScopeInput(venture.mvp?.job || "2-week core MVP scope");
+      setVentureNameInput(venture.name || venture.ventureName || "");
+      setIdeaInput(venture.brief?.building || "");
+      setMvpScopeInput(venture.mvpScope?.mustHaveFeatures?.join(", ") || venture.mvp?.job || "");
       setMarketingPlanInput(venture.marketingPlan?.brandPositioning || "");
       loadLaunchSprintHistory();
     } else {
@@ -196,6 +201,8 @@ function SprintPage() {
         const formatted = formatLaunchSprintPlan(res.data.launchSprint, ventureNameInput, launchDateInput, launchGoalInput);
         setSprintPlan(formatted);
         setHistory(res.data.history || []);
+      } else {
+        setSprintPlan(null);
       }
     } catch (err) {
       console.warn("Failed to load launch sprint history:", err);
@@ -213,7 +220,7 @@ function SprintPage() {
       const res = await api.generateLaunchSprintModule({
         ventureId,
         ventureName: ventureNameInput || "Untitled Venture",
-        idea: ideaInput || "AI Execution Operating System for Founders",
+        idea: ideaInput || "Startup Concept",
         mvpScope: mvpScopeInput || "2-week core MVP scope",
         marketingPlan: marketingPlanInput || "Inherited from Marketing Plan",
         launchDate: launchDateInput || "Not set",
@@ -270,30 +277,40 @@ function SprintPage() {
       />
 
       {/* Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-        <div>
-          <span className="font-bold text-[#64D8FF]">Launch Sprint Agent Active: </span>
-          Connected to Venture Memory, Brief, Validation, MVP Scope, Build Roadmap, and Marketing Plan.
+      {hasVentureMemory ? (
+        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+          <div>
+            <span className="font-bold text-[#64D8FF]">Launch Sprint Agent Active: </span>
+            Connected to Venture Memory, Brief, Validation, MVP Scope, Build Roadmap, and Marketing Plan.
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-amber-400" />
+          <div>
+            <span className="font-bold text-amber-300">No Venture Memory Recorded: </span>
+            Input your launch parameters in the form below or complete previous steps to auto-populate channels and targets.
+          </div>
+        </div>
+      )}
 
       {/* Form Inputs */}
-      <Panel title="Launch Execution Inputs">
+      <Panel title="Launch Execution Inputs (Leave Blank if Not Set)">
         <form onSubmit={handleGenerateLaunchSprint} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Field label="Venture Name">
               <TextInput
                 value={ventureNameInput}
                 onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="Venture name"
+                placeholder="e.g. Acme SaaS or leave blank"
               />
             </Field>
             <Field label="Target Launch Date">
               <TextInput
                 value={launchDateInput}
                 onChange={(e) => setLaunchDateInput(e.target.value)}
-                placeholder="e.g. 2026-09-15 or leave blank (Launch date: Not set)"
+                placeholder="e.g. 2026-09-15 (or leave blank for 'Not set')"
               />
             </Field>
             <Field label="Launch Target / Goal">
@@ -310,7 +327,7 @@ function SprintPage() {
                 rows={2}
                 value={ideaInput}
                 onChange={(e) => setIdeaInput(e.target.value)}
-                placeholder="Core product concept"
+                placeholder="Describe your core product concept"
               />
             </Field>
             <Field label="Marketing Channels (Inherited from Marketing Plan)">
@@ -497,6 +514,17 @@ function SprintPage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Empty State Banner when no sprint has been generated yet */}
+      {!sprintPlan && !generating && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
+          <Rocket className="size-10 text-[#64D8FF]/60" />
+          <h3 className="text-base font-bold text-[#F5F8FC]">No Launch Sprint Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+            Review your launch parameters in the form above, or click <strong>Generate Launch Sprint</strong> to create an evidence-based task matrix, content plan, and risk mitigation roadmap.
+          </p>
         </div>
       )}
 
