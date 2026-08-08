@@ -1,13 +1,18 @@
 {
-  "name": "founderos-backend",
+  "name": "founderos-platform",
   "version": "1.0.0",
-  "description": "Production-ready Authentication Backend for FounderOS",
+  "description": "FounderOS - AI-Powered Co-Founder Platform",
   "main": "frontend/backend/src/server.js",
   "scripts": {
-    "postinstall": "cd frontend/backend && npm install",
-    "build": "cd frontend/backend && npm install",
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install && NITRO_PRESET=vercel npm run build && mkdir -p ../.vercel && cp -r .vercel/output ../.vercel/ 2>/dev/null || true",
     "start": "cd frontend/backend && node src/server.js",
-    "dev": "cd frontend/backend && npm run dev"
+    "backend:install": "cd frontend/backend && npm install",
+    "backend:dev": "cd frontend/backend && npm run dev",
+    "backend:start": "cd frontend/backend && npm start",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:build": "cd frontend && npm install && NITRO_PRESET=vercel npm run build",
+    "frontend:dev": "cd frontend && npm run dev"
   },
   "keywords": [
     "express",
