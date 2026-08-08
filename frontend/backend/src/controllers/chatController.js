@@ -53,10 +53,12 @@ const sendMessage = async (req, res, next) => {
       });
       replyContent = orchResult.response;
     } catch (err) {
-      console.error('[Chat Controller Error] Failed to generate AI reply via pipeline:', err.message);
-      return res.status(500).json({
-        success: false,
-        message: `AI Chat Error: ${err.message || 'Failed to process AI chat message'}`,
+      console.warn('[Chat Controller Warning] Falling back to aiService:', err.message);
+      replyContent = await generateChatReply({
+        venture,
+        workspace,
+        conversation: chat.conversation,
+        message,
       });
     }
 
