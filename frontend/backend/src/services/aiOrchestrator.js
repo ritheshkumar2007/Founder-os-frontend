@@ -82,13 +82,61 @@ function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
 - **Value Proposition:** "Turn your exam deadlines into an automated, stress-free daily study plan in 30 seconds."`;
   }
 
-  // 5. Flexible regex check for Greetings (supports "hii", "hiii", "heyy", "helloo", "hi", "hello")
+  // 5. Check for explicit Idea Score / Rating intent
+  if (
+    lowerMsg.includes('score') ||
+    lowerMsg.includes('rate') ||
+    lowerMsg.includes('rating') ||
+    lowerMsg.includes('points') ||
+    lowerMsg.includes('grade') ||
+    lowerMsg.includes('evaluate') ||
+    lowerMsg.includes('viability')
+  ) {
+    const rawScore = venture?.ideaValidation?.ideaScore?.overallScore || 78;
+    const tier = venture?.ideaValidation?.ideaScore?.tier || 'Promising';
+    const pillars = venture?.ideaValidation?.ideaScore?.pillars || {
+      problemSeverity: { score: 20, max: 25, reasoning: 'High workflow automation urgency.' },
+      willingnessToPay: { score: 16, max: 20, reasoning: 'Clear willingness to pay for scheduling relief.' },
+      distribution: { score: 15, max: 20, reasoning: 'High demographic density across campus communities.' },
+      unfairAdvantage: { score: 11, max: 15, reasoning: 'Proprietary course mapping algorithm.' },
+      executionSpeed: { score: 16, max: 20, reasoning: 'Actionable 7 to 14-day prototype feasibility.' },
+    };
+
+    return `### 🏆 100-Point Idea Viability Score (IV-Score)
+
+**Overall Score: ${rawScore}/100 • [Tier: ${tier}]**
+
+---
+
+#### 📊 5-Pillar Score Breakdown:
+1. **Problem Urgency & Severity**: **${pillars.problemSeverity.score} / ${pillars.problemSeverity.max} pts**
+   * *${pillars.problemSeverity.reasoning}*
+2. **Willingness to Pay & Monetization**: **${pillars.willingnessToPay.score} / ${pillars.willingnessToPay.max} pts**
+   * *${pillars.willingnessToPay.reasoning}*
+3. **Distribution & Acquisition Velocity**: **${pillars.distribution.score} / ${pillars.distribution.max} pts**
+   * *${pillars.distribution.reasoning}*
+4. **Unfair Advantage & Moat**: **${pillars.unfairAdvantage.score} / ${pillars.unfairAdvantage.max} pts**
+   * *${pillars.unfairAdvantage.reasoning}*
+5. **Execution & 7-Day MVP Speed**: **${pillars.executionSpeed.score} / ${pillars.executionSpeed.max} pts**
+   * *${pillars.executionSpeed.reasoning}*
+
+---
+
+#### 🚀 Key Actions to Boost Your Score to 90+:
+1. **Customer Interviews**: Log 3 customer interviews with verified High Pain.
+2. **Monetization Validation**: Secure pre-orders or ask interviewees what they currently pay for Notion/Quizlet.
+3. **Ship 7-Day MVP**: Focus exclusively on automated course schedule import.
+
+*💡 You can also click the **"Score: ${rawScore}/100"** button in your top header to open the full interactive scorecard modal.*`;
+  }
+
+  // 6. Flexible regex check for Greetings (supports "hii", "hiii", "heyy", "helloo", "hi", "hello")
   const isGreeting = /\b(hello+|h+i+|h+e+y+|greetings|welcome)\b/i.test(msg);
   if (isGreeting) {
     return `Hello! Welcome to FounderOS. I am your AI Co-Pilot for "${ventureName}". I am ready to help you validate your target audience (${targetCustomer}), scope your MVP, or plan your GTM strategy. How can I assist you today?`;
   }
 
-  // 6. Conversational language check
+  // 7. Conversational language check
   if (lowerMsg.includes('understand') || lowerMsg.includes('language') || lowerMsg.includes('hear me')) {
     return `Yes! I understand your message clearly: "${msg}". As your FounderOS Co-Pilot for "${ventureName}", I can process your questions, validate ideas, scope MVPs, and track roadmaps. What startup goal shall we tackle next?`;
   }

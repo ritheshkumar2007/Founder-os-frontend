@@ -94,7 +94,7 @@ export const ChatPage: React.FC = () => {
 
       const aiReplyText = res.success && res.data?.reply
         ? res.data.reply
-        : generateMockAiResponse(text, updatedMessages);
+        : generateMockAiResponse(text, updatedMessages, venture);
 
       if (res.success && Array.isArray(res.data?.reports)) {
         setLatestReports(res.data.reports);
@@ -122,7 +122,7 @@ export const ChatPage: React.FC = () => {
         };
       });
     } catch {
-      const fallbackReply = generateMockAiResponse(text, updatedMessages);
+      const fallbackReply = generateMockAiResponse(text, updatedMessages, venture);
       const aiMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
