@@ -170,6 +170,53 @@ const generateChatReply = async ({ venture, workspace, conversation = [], messag
   const problem = brief.problem || 'core problem';
   const lowerMsg = message.toLowerCase();
 
+  if (
+    lowerMsg.includes('score') ||
+    lowerMsg.includes('rate') ||
+    lowerMsg.includes('rating') ||
+    lowerMsg.includes('viability') ||
+    lowerMsg.includes('points') ||
+    lowerMsg.includes('grade') ||
+    lowerMsg.includes('evaluation')
+  ) {
+    const rawScore = venture.ideaValidation?.ideaScore?.overallScore || 78;
+    const tier = venture.ideaValidation?.ideaScore?.tier || 'Promising';
+    const pillars = venture.ideaValidation?.ideaScore?.pillars || {
+      problemSeverity: { score: 20, max: 25, reasoning: 'High workflow automation urgency.' },
+      willingnessToPay: { score: 16, max: 20, reasoning: 'Clear willingness to pay for scheduling relief.' },
+      distribution: { score: 15, max: 20, reasoning: 'High demographic density across target communities.' },
+      unfairAdvantage: { score: 11, max: 15, reasoning: 'Proprietary course mapping algorithm.' },
+      executionSpeed: { score: 16, max: 20, reasoning: 'Actionable 7 to 14-day prototype feasibility.' },
+    };
+
+    return `### 🏆 100-Point Idea Viability Score (IV-Score)
+
+**Overall Score: ${rawScore}/100 • [Tier: ${tier}]**
+
+---
+
+#### 📊 5-Pillar Score Breakdown:
+1. **Problem Urgency & Severity**: **${pillars.problemSeverity.score} / ${pillars.problemSeverity.max} pts**
+   * *${pillars.problemSeverity.reasoning}*
+2. **Willingness to Pay & Monetization**: **${pillars.willingnessToPay.score} / ${pillars.willingnessToPay.max} pts**
+   * *${pillars.willingnessToPay.reasoning}*
+3. **Distribution & Acquisition Velocity**: **${pillars.distribution.score} / ${pillars.distribution.max} pts**
+   * *${pillars.distribution.reasoning}*
+4. **Unfair Advantage & Moat**: **${pillars.unfairAdvantage.score} / ${pillars.unfairAdvantage.max} pts**
+   * *${pillars.unfairAdvantage.reasoning}*
+5. **Execution & 7-Day MVP Speed**: **${pillars.executionSpeed.score} / ${pillars.executionSpeed.max} pts**
+   * *${pillars.executionSpeed.reasoning}*
+
+---
+
+#### 🚀 Key Recommendations to Reach 90+ Score:
+1. **Customer Interviews**: Log 3 customer discovery interviews with verified High Pain.
+2. **Monetization Validation**: Ask interviewees: *"What do you currently spend on Notion/Quizlet/planners?"*
+3. **Lock 7-Day MVP Scope**: Strip away secondary features and launch only the core schedule generator.
+
+*💡 You can also click the **"Score: ${rawScore}/100"** badge in your top header to view the full interactive radial scorecard modal anytime!*`;
+  }
+
   if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
     return `Hello! I am your FounderOS Co-pilot for "${ventureName}". I am currently tracking your active workspace: [${workspace || 'General'}]. How can I help you accelerate your launch today?`;
   }
