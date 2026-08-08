@@ -158,6 +158,41 @@ const ventureSchema = new mongoose.Schema(
         unlockedStep: { type: String, default: 'Venture Brief' },
         completedSteps: [{ type: String }],
       },
+      ideaScore: {
+        overallScore: { type: Number, default: 0, min: 0, max: 100 },
+        tier: {
+          type: String,
+          enum: ['Exceptional', 'Promising', 'Early Stage', 'High Risk', 'Unrated'],
+          default: 'Unrated',
+        },
+        pillars: {
+          problemSeverity: {
+            score: { type: Number, default: 0, min: 0, max: 25 },
+            reasoning: { type: String, default: '' },
+          },
+          willingnessToPay: {
+            score: { type: Number, default: 0, min: 0, max: 20 },
+            reasoning: { type: String, default: '' },
+          },
+          distribution: {
+            score: { type: Number, default: 0, min: 0, max: 20 },
+            reasoning: { type: String, default: '' },
+          },
+          unfairAdvantage: {
+            score: { type: Number, default: 0, min: 0, max: 15 },
+            reasoning: { type: String, default: '' },
+          },
+          executionSpeed: {
+            score: { type: Number, default: 0, min: 0, max: 20 },
+            reasoning: { type: String, default: '' },
+          },
+        },
+        strengths: [{ type: String }],
+        risks: [{ type: String }],
+        recommendations: [{ type: String }],
+        interviewMultiplier: { type: Number, default: 1.0 },
+        lastCalculatedAt: { type: Date },
+      },
     },
     mvpScope: {
       coreCustomerProblem: { type: String, trim: true, default: '' },

@@ -113,6 +113,17 @@ router.route('/:ventureId/founder-notes')
 
 router.get('/:ventureId/progress', checkVentureOwnership, getProgress);
 
+// ====================================================
+// 100-POINT IDEA VIABILITY SCORE (IV-SCORE) ROUTES
+// ====================================================
+
+const { calculateIdeaScore, getIdeaScore } = require('../controllers/scoreController');
+
+router.route('/:ventureId/score')
+  .all(checkVentureOwnership)
+  .get(getIdeaScore)
+  .post(calculateIdeaScore);
+
 // Import sub-routers
 const mvpScopeRouter = require('./mvpScope');
 const roadmapRouter = require('./roadmap');

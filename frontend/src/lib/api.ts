@@ -189,6 +189,15 @@ export const api = {
   getProgress: (ventureId: string) =>
     request(`ventures/${ventureId}/progress`),
 
+  // 100-Point Idea Viability Score (IV-Score)
+  getIdeaScore: (ventureId: string) =>
+    request(`ventures/${ventureId}/score`),
+
+  calculateIdeaScore: (ventureId: string) =>
+    request(`ventures/${ventureId}/score`, {
+      method: "POST",
+    }),
+
   // MVP Scope
   getMvpScope: (ventureId: string) =>
     request(`ventures/${ventureId}/mvp-scope`),

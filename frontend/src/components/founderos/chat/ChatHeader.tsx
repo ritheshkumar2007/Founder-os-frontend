@@ -1,14 +1,26 @@
 import React from "react";
-import { Sparkles, Bot, ShieldCheck, Zap, FileText, Kanban, TrendingUp } from "lucide-react";
+import { Sparkles, Bot, ShieldCheck, Zap, FileText, Kanban, TrendingUp, Award } from "lucide-react";
+import { useActiveVenture } from "@/lib/founderos/store";
+import { deriveIdeaScore } from "@/lib/founderos/derive";
 
 interface ChatHeaderProps {
   onOpenReports?: () => void;
   onOpenExecution?: () => void;
   onOpenGrowth?: () => void;
+  onOpenScore?: () => void;
   latestReports?: any[];
 }
 
-export const ChatHeader: React.FC<ChatHeaderProps> = ({ onOpenReports, onOpenExecution, onOpenGrowth }) => {
+export const ChatHeader: React.FC<ChatHeaderProps> = ({
+  onOpenReports,
+  onOpenExecution,
+  onOpenGrowth,
+  onOpenScore,
+}) => {
+  const { venture } = useActiveVenture();
+  const ideaScore = venture ? deriveIdeaScore(venture) : null;
+  const scoreVal = ideaScore?.overallScore ?? 0;
+
   return (
     <div className="sticky top-0 z-20 border-b border-white/10 bg-[#0E131C]/90 backdrop-blur-2xl px-6 py-4 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -35,11 +47,23 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ onOpenReports, onOpenExe
         </div>
 
         {/* Right Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {onOpenScore ? (
+            <button
+              onClick={onOpenScore}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 px-3 py-1.5 text-xs font-bold text-indigo-300 transition hover:from-indigo-500/30 hover:to-purple-500/30 hover:scale-[1.02] shadow-[0_0_15px_rgba(99,102,241,0.25)]"
+            >
+              <Award className="size-4 text-indigo-400" />
+              <span>Score:</span>
+              <span className="font-mono text-white font-extrabold">{scoreVal}/100</span>
+              <Sparkles className="size-3 text-indigo-300" />
+            </button>
+          ) : null}
+
           {onOpenGrowth ? (
             <button
               onClick={onOpenGrowth}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#4F8CFF]/30 bg-[#4F8CFF]/10 px-3.5 py-1.5 text-xs font-bold text-[#4F8CFF] transition hover:bg-[#4F8CFF]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(79,140,255,0.2)]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#4F8CFF]/30 bg-[#4F8CFF]/10 px-3 py-1.5 text-xs font-bold text-[#4F8CFF] transition hover:bg-[#4F8CFF]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(79,140,255,0.2)]"
             >
               <TrendingUp className="size-4 text-[#4F8CFF]" />
               <span>Growth OS</span>
@@ -49,7 +73,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ onOpenReports, onOpenExe
           {onOpenExecution ? (
             <button
               onClick={onOpenExecution}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 px-3.5 py-1.5 text-xs font-bold text-[#46E3A3] transition hover:bg-[#46E3A3]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(70,227,163,0.2)]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 px-3 py-1.5 text-xs font-bold text-[#46E3A3] transition hover:bg-[#46E3A3]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(70,227,163,0.2)]"
             >
               <Kanban className="size-4 text-[#46E3A3]" />
               <span>Execution OS</span>
@@ -59,23 +83,23 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ onOpenReports, onOpenExe
           {onOpenReports ? (
             <button
               onClick={onOpenReports}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 px-3.5 py-1.5 text-xs font-bold text-[#64D8FF] transition hover:bg-[#64D8FF]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(100,216,255,0.2)]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 px-3 py-1.5 text-xs font-bold text-[#64D8FF] transition hover:bg-[#64D8FF]/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(100,216,255,0.2)]"
             >
               <FileText className="size-4 text-[#64D8FF]" />
-              <span>AI Reports</span>
-              <Sparkles className="size-3 text-[#64D8FF]" />
+              <span>Reports</span>
             </button>
           ) : null}
 
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/5 bg-[#161F2D]/80 text-xs font-mono text-[#A8B3C7]">
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/5 bg-[#161F2D]/80 text-xs font-mono text-[#A8B3C7]">
             <ShieldCheck className="size-4 text-[#4F8CFF]" />
-            <span>Continuous Context Active</span>
+            <span>AI Context Active</span>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 
 

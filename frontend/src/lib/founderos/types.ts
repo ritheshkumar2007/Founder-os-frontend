@@ -92,6 +92,31 @@ export interface InvestorUpdate {
   ask: string;
 }
 
+export interface ScorePillar {
+  score: number;
+  max: number;
+  reasoning: string;
+}
+
+export type ScoreTier = "Exceptional" | "Promising" | "Early Stage" | "High Risk" | "Unrated";
+
+export interface IdeaScore {
+  overallScore: number;
+  tier: ScoreTier;
+  pillars: {
+    problemSeverity: ScorePillar;
+    willingnessToPay: ScorePillar;
+    distribution: ScorePillar;
+    unfairAdvantage: ScorePillar;
+    executionSpeed: ScorePillar;
+  };
+  strengths: string[];
+  risks: string[];
+  recommendations: string[];
+  interviewMultiplier: number;
+  lastCalculatedAt: string;
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -107,6 +132,7 @@ export interface Venture {
   interviews: Interview[];
   summaryNotes: string;
   analyzed: boolean;
+  ideaScore?: IdeaScore;
   mvp: MvpScope;
   milestones: Milestone[];
   marketing: MarketingPlan;

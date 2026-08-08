@@ -7,6 +7,7 @@ import { ChatInput } from "./ChatInput";
 import { ReportsDrawer, ReportItem } from "./ReportsDrawer";
 import { ExecutionDrawer } from "./ExecutionDrawer";
 import { GrowthDrawer } from "./GrowthDrawer";
+import { IdeaScoreModal } from "./IdeaScoreModal";
 import api from "@/lib/api";
 
 const INITIAL_GREETING_CONTENT = `Hi! I'm your FounderOS AI Coach.
@@ -22,6 +23,7 @@ What are you building?`;
 export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(false);
+  const [scoreOpen, setScoreOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
   const [executionOpen, setExecutionOpen] = useState(false);
   const [growthOpen, setGrowthOpen] = useState(false);
@@ -115,7 +117,7 @@ export const ChatPage: React.FC = () => {
       const errorMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
-        content: "I'm having trouble connecting right now. Please check your connection and try again.",
+        content: "I'm having trouble communicating right now. Please verify your connection.",
         createdAt: new Date().toISOString(),
       };
       update((v) => ({ ...v, chat: [...updatedMessages, errorMsg] }));
@@ -128,6 +130,7 @@ export const ChatPage: React.FC = () => {
     <div className="flex flex-col h-screen max-h-screen bg-[#080A0F] text-[#F5F8FC] overflow-hidden selection:bg-[#4F8CFF]/30">
       {/* Header */}
       <ChatHeader
+        onOpenScore={() => setScoreOpen(true)}
         onOpenReports={() => setReportsOpen(true)}
         onOpenExecution={() => setExecutionOpen(true)}
         onOpenGrowth={() => setGrowthOpen(true)}
@@ -138,6 +141,12 @@ export const ChatPage: React.FC = () => {
 
       {/* Bottom Input Area */}
       <ChatInput onSend={handleSendMessage} disabled={loading} />
+
+      {/* 100-Point Idea Scorecard Modal */}
+      <IdeaScoreModal
+        open={scoreOpen}
+        onClose={() => setScoreOpen(false)}
+      />
 
       {/* Reports Drawer Overlay */}
       <ReportsDrawer
@@ -160,6 +169,3 @@ export const ChatPage: React.FC = () => {
     </div>
   );
 };
-
-
-
