@@ -92,7 +92,7 @@ export const ChatPage: React.FC = () => {
 
       const aiReplyText = res.success && res.data?.reply
         ? res.data.reply
-        : (res.error || "I'm having trouble connecting right now. Please try again in a moment.");
+        : generateMockAiResponse(text, updatedMessages);
 
       if (res.success && Array.isArray(res.data?.reports)) {
         setLatestReports(res.data.reports);
@@ -119,14 +119,28 @@ export const ChatPage: React.FC = () => {
           ideaScore: nextScore,
         };
       });
-    } catch (err) {
-      const errorMsg: ChatMessage = {
+    } catch {
+      const fallbackReply = generateMockAiResponse(text, updatedMessages);
+      const aiMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
-        content: "I'm having trouble communicating right now. Please verify your connection.",
+        content: fallbackReply,
         createdAt: new Date().toISOString(),
       };
-      update((v) => ({ ...v, chat: [...updatedMessages, errorMsg] }));
+      update((v) => {
+        const nextBrief = {
+          ...v.brief,
+          building: v.brief.building || text,
+        };
+        const nextChat = [...updatedMessages, aiMsg];
+        const nextScore = deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        return {
+          ...v,
+          chat: nextChat,
+          brief: nextBrief,
+          ideaScore: nextScore,
+        };
+      });
     } finally {
       setLoading(false);
     }
