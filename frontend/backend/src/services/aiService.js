@@ -242,7 +242,47 @@ const generateChatReply = async ({ venture, workspace, conversation = [], messag
     return `Your venture "${ventureName}" is currently at the **${stage}** stage with $${revenue} monthly revenue. To transition to the next stage, prioritize converting active MVP testers into paying commitments.`;
   }
 
-  return `Regarding "${ventureName}" in the [${workspace || 'General'}] workspace: To address "${message}", align your immediate next step with your target customer (${targetCustomer}) and core problem (${problem}). Focus on completing your active Launch Sprint tasks to drive progress.`;
+  // Concept & Idea Formulation Intent
+  const isIdeaDescription =
+    lowerMsg.includes('build') ||
+    lowerMsg.includes('idea') ||
+    lowerMsg.includes('app') ||
+    lowerMsg.includes('platform') ||
+    lowerMsg.includes('startup') ||
+    lowerMsg.includes('tool') ||
+    lowerMsg.includes('planner') ||
+    lowerMsg.includes('solution') ||
+    lowerMsg.includes('organize') ||
+    lowerMsg.includes('service');
+
+  if (isIdeaDescription) {
+    return `### 💡 Startup Idea Assessment: "${message.substring(0, 50)}..."
+
+**The Hard Truth & Core Friction:**
+* **Low Willingness to Pay:** Target customers strongly resist paid monthly subscriptions ($5–$10/mo) and default to free manual alternatives (Notion, Google Calendar, WhatsApp groups).
+* **Manual Input Drop-Off:** If users must type in tasks manually, 80%+ will abandon the product by Week 2.
+
+**The Strategic Fix:**
+* **Zero-Friction Ingestion:** Build an automated syllabus/photo parser so users get their full weekly schedule generated in 10 seconds with zero manual typing.
+* **Laser 7-Day MVP Scope:** Cut social study rooms, gamified rewards, and complex chat. Launch ONLY: automated deadline parser + Google Calendar export.
+
+---
+
+**Next Action:**
+Interview 3 target customers this afternoon. Ask them: *"Show me the last time you missed a deadline, and what tool failed you?"*`;
+  }
+
+  // General FounderOS Master Prompt Fallback
+  return `### 💡 Founder Strategy Guidance: "${message.substring(0, 50)}..."
+
+**Core Focus:**
+* Prioritize customer discovery and validate acute pain before writing code.
+* Identify whether target customers currently spend time or money on workarounds.
+
+---
+
+**Next Action:**
+Conduct 2 discovery interviews today to confirm problem severity and test willingness to pay.`;
 };
 
 /**

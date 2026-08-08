@@ -130,19 +130,47 @@ function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
 *💡 You can also click the **"Score: ${rawScore}/100"** button in your top header to open the full interactive scorecard modal.*`;
   }
 
-  // 6. Flexible regex check for Greetings (supports "hii", "hiii", "heyy", "helloo", "hi", "hello")
-  const isGreeting = /\b(hello+|h+i+|h+e+y+|greetings|welcome)\b/i.test(msg);
-  if (isGreeting) {
-    return `Hello! Welcome to FounderOS. I am your AI Co-Pilot for "${ventureName}". I am ready to help you validate your target audience (${targetCustomer}), scope your MVP, or plan your GTM strategy. How can I assist you today?`;
+  // 8. Concept & Idea Formulation Intent (e.g. "I want to build...", "Building a...", "An app that...")
+  const isIdeaDescription =
+    lowerMsg.includes('build') ||
+    lowerMsg.includes('idea') ||
+    lowerMsg.includes('app') ||
+    lowerMsg.includes('platform') ||
+    lowerMsg.includes('startup') ||
+    lowerMsg.includes('tool') ||
+    lowerMsg.includes('planner') ||
+    lowerMsg.includes('solution') ||
+    lowerMsg.includes('organize') ||
+    lowerMsg.includes('service');
+
+  if (isIdeaDescription) {
+    return `### 💡 Startup Idea Assessment: "${msg.substring(0, 50)}..."
+
+**The Hard Truth & Core Friction:**
+* **Low Willingness to Pay:** Target customers strongly resist paid monthly subscriptions ($5–$10/mo) and default to free manual alternatives (Notion, Google Calendar, WhatsApp groups).
+* **Manual Input Drop-Off:** If users must type in tasks manually, 80%+ will abandon the product by Week 2.
+
+**The Strategic Fix:**
+* **Zero-Friction Ingestion:** Build an automated syllabus/photo parser so users get their full weekly schedule generated in 10 seconds with zero manual typing.
+* **Laser 7-Day MVP Scope:** Cut social study rooms, gamified rewards, and complex chat. Launch ONLY: automated deadline parser + Google Calendar export.
+
+---
+
+**Next Action:**
+Interview 3 target customers this afternoon. Ask them: *"Show me the last time you missed a deadline, and what tool failed you?"*`;
   }
 
-  // 7. Conversational language check
-  if (lowerMsg.includes('understand') || lowerMsg.includes('language') || lowerMsg.includes('hear me')) {
-    return `Yes! I understand your message clearly: "${msg}". As your FounderOS Co-Pilot for "${ventureName}", I can process your questions, validate ideas, scope MVPs, and track roadmaps. What startup goal shall we tackle next?`;
-  }
+  // General FounderOS Master Prompt Fallback
+  return `### 💡 Founder Strategy Guidance: "${msg.substring(0, 50)}..."
 
-  // General fallback
-  return `Regarding "${msg}" for "${ventureName}": I am analyzing your parameters. We can focus on your MVP scope, customer validation, launch roadmap, or growth metrics. Which area would you like to explore?`;
+**Core Focus:**
+* Prioritize customer discovery and validate acute pain before writing code.
+* Identify whether target customers currently spend time or money on workarounds.
+
+---
+
+**Next Action:**
+Conduct 2 discovery interviews today to confirm problem severity and test willingness to pay.`;
 }
 
 /**
