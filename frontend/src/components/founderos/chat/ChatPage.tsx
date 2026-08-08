@@ -8,6 +8,8 @@ import { ReportsDrawer, ReportItem } from "./ReportsDrawer";
 import { ExecutionDrawer } from "./ExecutionDrawer";
 import { GrowthDrawer } from "./GrowthDrawer";
 import { IdeaScoreModal } from "./IdeaScoreModal";
+import { generateMockAiResponse } from "./mockAiEngine";
+import { deriveIdeaScore } from "@/lib/founderos/derive";
 import api from "@/lib/api";
 
 const INITIAL_GREETING_CONTENT = `Hi! I'm your FounderOS AI Coach.
