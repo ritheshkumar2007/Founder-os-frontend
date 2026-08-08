@@ -135,6 +135,55 @@ export function deriveIdeaScore(v: Venture) {
   const workaround = brief?.workaround?.trim() || "";
   const outcome = brief?.outcome?.trim() || "";
 
+  // Combine brief text with chat messages to understand the exact concept
+  const chatText = Array.isArray(v?.chat)
+    ? v.chat.filter((m) => m.role === "user").map((m) => m.content).join(" ")
+    : "";
+  const fullText = `${v?.name || ""} ${building} ${audience} ${problem} ${workaround} ${outcome} ${chatText}`.toLowerCase();
+
+  // Concept Type Classifiers
+  const isB2bOrAutomation =
+    fullText.includes("saas") ||
+    fullText.includes("b2b") ||
+    fullText.includes("automate") ||
+    fullText.includes("workflow") ||
+    fullText.includes("platform") ||
+    fullText.includes("schedule") ||
+    fullText.includes("student") ||
+    fullText.includes("business") ||
+    fullText.includes("enterprise") ||
+    fullText.includes("lms") ||
+    fullText.includes("canvas") ||
+    fullText.includes("course");
+
+  const isDeepTechOrHardware =
+    fullText.includes("hardware") ||
+    fullText.includes("biotech") ||
+    fullText.includes("medical") ||
+    fullText.includes("clinic") ||
+    fullText.includes("device") ||
+    fullText.includes("fda") ||
+    fullText.includes("crypto") ||
+    fullText.includes("token") ||
+    fullText.includes("robotics");
+
+  const isGenericOrCrowded =
+    fullText.includes("to-do") ||
+    fullText.includes("todo") ||
+    fullText.includes("habit tracker") ||
+    fullText.includes("note app") ||
+    fullText.includes("notes app") ||
+    fullText.includes("social network for") ||
+    fullText.includes("recipe app");
+
+  const isMarketplace =
+    fullText.includes("marketplace") ||
+    fullText.includes("uber for") ||
+    fullText.includes("airbnb for") ||
+    fullText.includes("connect buyers") ||
+    fullText.includes("two-sided");
+
+  // Dynamic Concept Baseline Scores
   let problemScore = 14;
   let payScore = 10;
   let distributionScore = 11;
@@ -151,50 +200,68 @@ export function deriveIdeaScore(v: Venture) {
   const risks: string[] = [];
   const recommendations: string[] = [];
 
-  // Problem Severity
-  if (problem.length > 15 && audience.length > 5) problemScore += 5;
+  // Concept-Specific Adjustments
+  if (isB2bOrAutomation) {
+    problemScore = 19;
+    payScore = 16;
+    distributionScore = 15;
+    executionScore = 17;
+    moatScore = 10;
+    problemReasoning = "High workflow automation value with direct quantifiable time/cost savings for users.";
+    payReasoning = "Clear commercial utility with high willingness to pay for productivity and scheduling relief.";
+    distributionReasoning = "Concentrated target demographic with high community density and word-of-mouth potential.";
+    strengths.push("High-leverage automation concept with clear ROI and time-saving value.");
+    strengths.push("Target audience has existing workflow friction that creates urgency.");
+  } else if (isDeepTechOrHardware) {
+    problemScore = 22;
+    payScore = 18;
+    distributionScore = 10;
+    executionScore = 6;
+    moatScore = 14;
+    problemReasoning = "High problem severity with critical clinical or technical urgency.";
+    executionReasoning = "Heavy technical, regulatory, or hardware dependencies slow down rapid 7-day MVP testing.";
+    risks.push("Significant R&D or compliance hurdles create capital-intensive launch barriers.");
+    recommendations.push("Build a software concierge or manual prototype to test demand before building hardware.");
+  } else if (isGenericOrCrowded) {
+    problemScore = 9;
+    payScore = 6;
+    distributionScore = 8;
+    executionScore = 18;
+    moatScore = 4;
+    moatReasoning = "Crowded category with zero switching costs and dozens of free incumbent alternatives.";
+    risks.push("Highly saturated market makes customer acquisition expensive without a sharp niche.");
+    recommendations.push("Pivot from a broad consumer tool to a specialized vertical for a single high-paying niche.");
+  } else if (isMarketplace) {
+    problemScore = 15;
+    payScore = 13;
+    distributionScore = 8;
+    executionScore = 11;
+    moatScore = 9;
+    distributionReasoning = "Two-sided market requires overcoming the initial chicken-and-egg liquidity problem.";
+    risks.push("Dual-sided customer acquisition risks splitting marketing bandwidth between supply and demand.");
+    recommendations.push("Manually onboard and guarantee supply on one side of the market before launching to buyers.");
+  }
+
+  // Factor in Real Empirical Customer Interviews
   if (high > 0) {
     problemScore = Math.min(25, problemScore + Math.min(6, high * 2));
-    problemReasoning = `${high} customer interview(s) directly confirmed high severity for this pain point.`;
+    problemReasoning = `${high} customer discovery interview(s) directly validated acute pain level for "${problem || 'this problem'}".`;
     strengths.push(`Confirmed acute pain point with ${high} target user(s).`);
   } else if (total === 0) {
     risks.push("Zero customer interviews logged — problem severity remains an unverified hypothesis.");
     recommendations.push("Conduct at least 3 customer discovery interviews to validate pain severity.");
   }
 
-  // Willingness to Pay
-  if (workaround.length > 10) {
-    payScore += 3;
-    strengths.push(`Identified active workaround (${workaround}), indicating existing demand.`);
-  }
   if (willPay > 0) {
     payScore = Math.min(20, payScore + Math.min(7, willPay * 3));
-    payReasoning = `${willPay} customer(s) stated direct willingness to pay for a dedicated solution.`;
+    payReasoning = `${willPay} customer(s) explicitly confirmed willingness to pay for a dedicated solution.`;
     strengths.push(`${willPay} customer(s) explicitly confirmed willingness to pay.`);
   } else if (total > 0 && willPay === 0) {
     risks.push('No interviewees have committed to paying yet; risk of building a "nice-to-have" tool.');
     recommendations.push("Ask target users in interviews what they currently budget for workarounds.");
   }
 
-  // Distribution
-  if (audience.length > 15) {
-    distributionScore += 4;
-    distributionReasoning = `Specific niche customer segment (${audience}) enables targeted outreach.`;
-  } else {
-    risks.push("Target customer profile is broad; broad audiences increase customer acquisition costs.");
-    recommendations.push("Narrow your beachhead audience to a specific role, industry, or company stage.");
-  }
-
-  // Unfair Advantage & Moat
-  if (building.length > 15 && outcome.length > 15) {
-    moatScore += 3;
-  }
-
-  // Execution Speed
-  if (building.length > 0) {
-    executionScore += 3;
-  }
-
+  // Generic fallback fillers if empty
   if (recommendations.length === 0) {
     recommendations.push("Ship a 7-day MVP to test customer activation.");
     recommendations.push("Set up direct 1-on-1 demos with early interviewees.");
@@ -207,7 +274,7 @@ export function deriveIdeaScore(v: Venture) {
     risks.push("Early-stage market assumptions require continued customer feedback iteration.");
   }
 
-  let multiplier = 0.85;
+  let multiplier = 0.88;
   if (total > 0) {
     if (high >= 3 && willPay >= 2) multiplier = 1.15;
     else if (high >= 1 && (willPay >= 1 || maybePay >= 1)) multiplier = 1.05;

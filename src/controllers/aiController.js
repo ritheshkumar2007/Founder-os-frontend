@@ -158,15 +158,25 @@ const aiChat = async (req, res, next) => {
     let kanbanTasks = null;
     let pillarProgress = null;
     let growth = null;
-    if (activeVentureId) {
-      kanbanTasks = await getTasksForVenture(activeVentureId);
-      pillarProgress = await calculatePillarProgress(activeVentureId);
-      growth = await getLatestGrowthData(activeVentureId);
+    let ideaScore = null;
+    if (activeVentureId && venture) {
+      try { kanbanTasks = await getTasksForVenture(activeVentureId); } catch (e) {}
+      try { pillarProgress = await calculatePillarProgress(activeVentureId); } catch (e) {}
+      try { growth = await getLatestGrowthData(activeVentureId); } catch (e) {}
+      try {
+        const { evaluateIdeaScore } = require('../services/aiService');
+        ideaScore = await evaluateIdeaScore({ venture });
+        venture.ideaValidation.ideaScore = ideaScore;
+        await venture.save();
+      } catch (scoreErr) {
+        console.warn('Idea score calculation warning:', scoreErr.message);
+      }
     }
 
     return res.status(200).json({
       success: true,
       reply: aiResponse,
+      ideaScore,
       agentInfo,
       validationReport,
       coachRecommendations,

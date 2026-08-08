@@ -105,14 +105,20 @@ export const ChatPage: React.FC = () => {
         createdAt: new Date().toISOString(),
       };
 
-      update((v) => ({
-        ...v,
-        chat: [...updatedMessages, aiMsg],
-        brief: {
+      update((v) => {
+        const nextBrief = {
           ...v.brief,
           building: v.brief.building || text,
-        },
-      }));
+        };
+        const nextChat = [...updatedMessages, aiMsg];
+        const nextScore = res.data?.ideaScore || deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        return {
+          ...v,
+          chat: nextChat,
+          brief: nextBrief,
+          ideaScore: nextScore,
+        };
+      });
     } catch (err) {
       const errorMsg: ChatMessage = {
         id: uid(),
