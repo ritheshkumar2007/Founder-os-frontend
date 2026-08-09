@@ -40,13 +40,27 @@ const sendMessage = async (req, res, next) => {
     };
     chat.conversation.push(userMsg);
 
-    // 2. Generate AI Assistant Reply with Venture Context
-    const replyContent = await generateChatReply({
-      venture,
-      workspace,
-      conversation: chat.conversation,
-      message,
-    });
+    // 2. Generate AI Assistant Reply using Unified 4-Layer AI Pipeline
+    const { processAIRequest } = require('../services/aiOrchestrator');
+    let replyContent = '';
+    try {
+      const orchResult = await processAIRequest({
+        userId: req.user.id,
+        ventureId: venture._id.toString(),
+        agentName: 'ai_chat',
+        userInput: message,
+        history: chat.conversation,
+      });
+      replyContent = orchResult.response;
+    } catch (err) {
+      console.warn('[Chat Controller Warning] Falling back to aiService:', err.message);
+      replyContent = await generateChatReply({
+        venture,
+        workspace,
+        conversation: chat.conversation,
+        message,
+      });
+    }
 
     // 3. Add Assistant Response
     const assistantMsg = {

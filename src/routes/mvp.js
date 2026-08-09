@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { protect } = require('../middleware/authMiddleware');
 const Venture = require('../models/Venture');
 const {
@@ -21,7 +22,10 @@ router.get('/:ventureId', async (req, res, next) => {
     const { ventureId } = req.params;
     const userId = req.user.id;
 
-    let venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    let venture = null;
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
+      venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    }
     if (!venture) {
       venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
     }
@@ -52,7 +56,7 @@ router.post('/generate', async (req, res, next) => {
     const userId = req.user.id;
 
     let venture = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) {
@@ -84,9 +88,14 @@ router.put('/:ventureId', async (req, res, next) => {
   try {
     const { ventureId } = req.params;
     const userId = req.user.id;
+    let targetVentureId = ventureId;
+    if (!ventureId || !mongoose.Types.ObjectId.isValid(ventureId)) {
+      const venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
+      if (venture) targetVentureId = venture._id;
+    }
     const { coreGoal, features } = req.body;
 
-    const updatedMvp = await updateMvpScope(ventureId, userId, { coreGoal, features });
+    const updatedMvp = await updateMvpScope(targetVentureId, userId, { coreGoal, features });
 
     return res.status(200).json({
       success: true,

@@ -1,5 +1,6 @@
 const express = require('express');
 const { protect } = require('../middleware/authMiddleware');
+const mongoose = require('mongoose');
 const Venture = require('../models/Venture');
 const { getTasksForVenture, updateTaskStatus } = require('../services/taskService');
 const { getMilestonesForVenture } = require('../services/milestoneService');
@@ -120,9 +121,13 @@ router.get('/:ventureId/review', async (req, res, next) => {
   try {
     const { ventureId } = req.params;
     const userId = req.user.id;
-    const venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    let venture = null;
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
+      venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    }
+    if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
 
-    const review = await getLatestWeeklyReview(ventureId, userId, venture);
+    const review = await getLatestWeeklyReview(venture ? venture._id : ventureId, userId, venture);
     return res.status(200).json({ success: true, review });
   } catch (error) {
     next(error);
@@ -138,9 +143,13 @@ router.post('/:ventureId/review/generate', async (req, res, next) => {
   try {
     const { ventureId } = req.params;
     const userId = req.user.id;
-    const venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    let venture = null;
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
+      venture = await Venture.findOne({ _id: ventureId, owner: userId });
+    }
+    if (!venture) venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
 
-    const review = await generateWeeklyReview({ ventureId, userId, venture });
+    const review = await generateWeeklyReview({ ventureId: venture ? venture._id : ventureId, userId, venture });
     return res.status(200).json({ success: true, review });
   } catch (error) {
     next(error);

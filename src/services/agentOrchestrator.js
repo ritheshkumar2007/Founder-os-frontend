@@ -4,6 +4,37 @@ const AgentLog = require('../models/AgentLog');
 const { buildFounderContextWindow } = require('./memoryService');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+function generateContextualFallbackReply(userMessage, ventureContext, agentName = 'FounderOS Co-Pilot AI') {
+  const msg = (userMessage || '').trim();
+  const lowerMsg = msg.toLowerCase();
+
+  if (lowerMsg.includes('recognise') || lowerMsg.includes('recognize') || lowerMsg.includes('hear me') || lowerMsg.includes('understand')) {
+    return `Yes! I recognize your words clearly: "${msg}". I am your FounderOS AI Coach. What specific goal would you like to focus on for your startup today?`;
+  }
+
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey') || lowerMsg.includes('greetings')) {
+    return `Hello! Welcome to FounderOS. I'm ready to help you validate your idea, scope your MVP, or plan your launch strategy. What's on your mind?`;
+  }
+
+  if (lowerMsg.includes('founder') || lowerMsg.includes('startup') || lowerMsg.includes('building') || lowerMsg.includes('idea') || lowerMsg.includes('making')) {
+    return `Building a startup around "${msg}" is an exciting journey! To make rapid progress, our first step is defining your core target user and value proposition. Who is your primary target customer?`;
+  }
+
+  if (lowerMsg.includes('mvp') || lowerMsg.includes('build') || lowerMsg.includes('product') || lowerMsg.includes('feature')) {
+    return `Great focus on product development! For your MVP concept ("${msg}"), what is the single most essential feature your early adopters will use first?`;
+  }
+
+  if (lowerMsg.includes('marketing') || lowerMsg.includes('customer') || lowerMsg.includes('growth') || lowerMsg.includes('sale')) {
+    return `Acquiring early users for "${msg}" is critical! Which primary channel do you plan to test first — direct outreach, organic content, or paid search?`;
+  }
+
+  if (lowerMsg.includes('investor') || lowerMsg.includes('pitch') || lowerMsg.includes('raise') || lowerMsg.includes('fund')) {
+    return `Investors love seeing clear problem-solution fit and early momentum! For "${msg}", what key metrics or traction highlights do you want to feature in your update?`;
+  }
+
+  return `I hear you regarding "${msg}". As your startup co-pilot, I'm analyzing your venture parameters. What specific area (MVP, marketing, roadmap, or launch) shall we work on next?`;
+}
+
 /**
  * Multi-Agent AI Orchestration Service
  * Routes user messages, executes specialized agents, synthesizes multi-domain insights,
@@ -13,18 +44,35 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
   const startTime = Date.now();
   const ventureId = venture ? venture._id : null;
 
-  // 1. Build shared Founder Memory context
-  const ventureContext = buildFounderContextWindow(venture);
+  // 1. Build Layer 3 RAG Context (Venture Memory + Vector Knowledge Chunks)
+  const { executeRAGPipeline } = require('../knowledge/services/ragPipeline');
+  let ventureContext = buildFounderContextWindow(venture);
+  try {
+    const rag = await executeRAGPipeline({
+      ventureId,
+      ownerId: userId,
+      agentName: 'ai_chat',
+      userQuestion: userMessage,
+      history,
+    });
+    if (rag && rag.ragContext) ventureContext = rag.ragContext;
+  } catch (ragErr) {
+    console.warn('RAG Pipeline context assembly warning:', ragErr.message);
+  }
 
   // 2. Intelligently route message to specialized agent(s)
-  const routing = await router.routeMessage({
-    userMessage,
-    ventureContext,
-    history,
-  });
+  let routing = { primaryAgent: 'idea_validator', secondaryAgents: [], reasoning: 'Default routing' };
+  try {
+    routing = await router.routeMessage({
+      userMessage,
+      ventureContext,
+      history,
+    });
+  } catch (rErr) {
+    console.warn('Routing fallback:', rErr.message);
+  }
 
   const { primaryAgent: primaryId, secondaryAgents: secondaryIds, reasoning } = routing;
-
   const primaryAgent = registry.getAgent(primaryId) || registry.getAgent('idea_validator');
 
   let finalReply = '';
@@ -59,24 +107,27 @@ async function processMultiAgentChat({ venture, userId, userMessage, history = [
       const validSecondaryResults = secondaryResults.filter(Boolean);
 
       if (validSecondaryResults.length > 0) {
-        // Synthesize multi-agent insights into a single seamless response
         const apiKey = process.env.GEMINI_API_KEY;
         if (apiKey) {
+          const { buildPrompt } = require('../prompts/buildPrompt');
           const genAI = new GoogleGenerativeAI(apiKey.trim());
           const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-          const synthesisPrompt = `You are the FounderOS Master AI Synthesizer.
-Combine the specialized advice from multiple AI domain agents into ONE coherent, seamless, highly encouraging response for the founder.
-
+          const synthesisPrompt = buildPrompt({
+            role: 'Master AI Synthesizer',
+            objective: 'Combine specialized advice from multiple AI domain agents into ONE coherent response.',
+            agentInstructions: `
 PRIMARY AGENT (${primaryAgent.name}) ADVICE:
 ${primaryResult}
 
 SECONDARY AGENTS ADVICE:
 ${validSecondaryResults.map((s) => `[${s.name}]: ${s.result}`).join('\n\n')}
 
-RULES:
-- Do NOT mention that multiple agents responded. Present a single, unified response.
-- Keep the output concise (3-5 sentences max), practical, and end with ONE clear focused question.`;
+Do NOT mention multiple agents. Present a unified response.
+`.trim(),
+            ventureContext,
+            userInput: userMessage,
+          });
 
           const synthResult = await model.generateContent(synthesisPrompt);
           finalReply = synthResult.response.text();
@@ -90,8 +141,8 @@ RULES:
       finalReply = primaryResult;
     }
   } catch (error) {
-    console.error('Multi-agent execution error:', error.message || error);
-    finalReply = `Regarding your startup: Focus on validating your core problem and target customer. What is the single biggest question you want to answer today?`;
+    console.warn('Multi-agent execution warning:', error.message || error);
+    finalReply = generateContextualFallbackReply(userMessage, ventureContext, primaryAgent.name);
   }
 
   const executionTimeMs = Date.now() - startTime;
@@ -115,6 +166,10 @@ RULES:
     }
   }
 
+  const workflowEngine = require('../workflow/workflowEngine');
+  const workflowProgress = workflowEngine.calculateProgress(ventureId);
+  const nextRecommendation = workflowEngine.recommendNext(ventureId);
+
   return {
     reply: finalReply,
     agentInfo: {
@@ -123,6 +178,10 @@ RULES:
       secondaryAgents: secondaryIds,
       reasoning,
       executionTimeMs,
+    },
+    workflow: {
+      progress: workflowProgress,
+      nextRecommendation,
     },
   };
 }

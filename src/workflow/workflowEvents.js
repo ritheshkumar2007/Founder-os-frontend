@@ -1,0 +1,21 @@
+const EventEmitter = require('events');
+
+class WorkflowEventEmitter extends EventEmitter {}
+
+const workflowEvents = new WorkflowEventEmitter();
+
+const WORKFLOW_EVENT_TYPES = {
+  VENTURE_UPDATED: 'VENTURE_UPDATED',
+  VALIDATION_COMPLETED: 'VALIDATION_COMPLETED',
+  MVP_UPDATED: 'MVP_UPDATED',
+  ROADMAP_CREATED: 'ROADMAP_CREATED',
+  MARKETING_UPDATED: 'MARKETING_UPDATED',
+  LAUNCH_COMPLETED: 'LAUNCH_COMPLETED',
+  TRACTION_UPDATED: 'TRACTION_UPDATED',
+  INVESTOR_UPDATE_CREATED: 'INVESTOR_UPDATE_CREATED',
+};
+
+module.exports = {
+  workflowEvents,
+  WORKFLOW_EVENT_TYPES,
+};

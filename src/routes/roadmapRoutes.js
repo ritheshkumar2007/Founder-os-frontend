@@ -6,18 +6,11 @@ const router = express.Router();
 
 router.use(protect);
 
-/**
- * @route   POST /api/build-roadmap/generate
- * @desc    Generate a complete software development roadmap using Gemini CTO prompt and save to MongoDB
- * @access  Private
- */
 router.post('/generate', generateRoadmap);
-
-/**
- * @route   GET /api/build-roadmap/:ventureId
- * @desc    Get latest Build Roadmap and history from MongoDB
- * @access  Private
- */
+router.post('/', generateRoadmap);
+router.get('/history', getRoadmapHistory);
+router.get('/history/:ventureId', getRoadmapHistory);
 router.get('/:ventureId', getRoadmapHistory);
+router.get('/', getRoadmapHistory);
 
 module.exports = router;

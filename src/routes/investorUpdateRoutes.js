@@ -6,20 +6,11 @@ const router = express.Router();
 
 router.use(protect);
 
-/**
- * @route   POST /api/investor-update/generate
- * @desc    Generate an investor update memorandum using Gemini API and save to MongoDB
- * @access  Private
- */
 router.post('/generate', generateUpdate);
-
-/**
- * @route   GET /api/investor-update/history
- * @desc    Get investor update history from MongoDB
- * @access  Private
- */
+router.post('/', generateUpdate);
 router.get('/history', getUpdateHistory);
 router.get('/history/:ventureId', getUpdateHistory);
 router.get('/:ventureId', getUpdateHistory);
+router.get('/', getUpdateHistory);
 
 module.exports = router;

@@ -19,8 +19,8 @@ function registerAgent(agent) {
     throw new Error('Agent definition must include a unique string "id"');
   }
 
-  if (!agent.name || !agent.systemPrompt) {
-    throw new Error(`Agent "${agent.id}" must include "name" and "systemPrompt"`);
+  if (!agent.name || (!agent.systemPrompt && typeof agent.run !== 'function')) {
+    throw new Error(`Agent "${agent.id}" must include "name" and "systemPrompt" or "run" function`);
   }
 
   agentsRegistry.set(agent.id.toLowerCase().trim(), agent);

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const MvpScope = require('../models/MvpScope');
 const Venture = require('../models/Venture');
 const { generateMvpScopeFromGemini } = require('../services/mvpGeminiService');
@@ -16,7 +17,7 @@ async function generateScope(req, res, next) {
     }
 
     let venture = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) {
@@ -44,10 +45,12 @@ async function generateScope(req, res, next) {
       problem,
     });
 
+    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
+
     // Save to MongoDB
     const newScope = await MvpScope.create({
       userId,
-      ventureId: ventureId || undefined,
+      ventureId: targetVentureId,
       ventureName,
       idea,
       targetUsers,
@@ -75,9 +78,10 @@ async function getScopeHistory(req, res, next) {
     const userId = req.user.id;
 
     let scopes = [];
-    if (ventureId && ventureId !== 'latest') {
+    if (ventureId && ventureId !== 'latest' && mongoose.Types.ObjectId.isValid(ventureId)) {
       scopes = await MvpScope.find({ ventureId, userId }).sort({ createdAt: -1 });
-    } else {
+    }
+    if (!scopes || scopes.length === 0) {
       scopes = await MvpScope.find({ userId }).sort({ createdAt: -1 });
     }
 

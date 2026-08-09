@@ -253,74 +253,36 @@ const generateChatReply = async ({ venture, workspace, conversation = [], messag
     lowerMsg.includes('planner') ||
     lowerMsg.includes('solution') ||
     lowerMsg.includes('organize') ||
-    lowerMsg.includes('service') ||
-    lowerMsg.includes('student') ||
-    lowerMsg.includes('campus');
+    lowerMsg.includes('service');
 
   if (isIdeaDescription) {
-    const rawScore = venture.ideaValidation?.ideaScore?.overallScore || 75;
-    const tier = venture.ideaValidation?.ideaScore?.tier || 'Promising';
-    const pillars = venture.ideaValidation?.ideaScore?.pillars || {
-      problemSeverity: { score: 19, max: 25, reasoning: 'Acute deadline and multi-course scheduling friction.' },
-      willingnessToPay: { score: 14, max: 20, reasoning: 'Direct utility, but high student price sensitivity.' },
-      distribution: { score: 15, max: 20, reasoning: 'Dense campus networks enable organic peer distribution.' },
-      unfairAdvantage: { score: 10, max: 15, reasoning: 'Differentiation requires zero-manual-entry parsing.' },
-      executionSpeed: { score: 17, max: 20, reasoning: 'Core schedule aggregator can be built in 7 to 14 days.' },
-    };
+    return `### 💡 Startup Idea Assessment: "${message.substring(0, 50)}..."
 
-    return `### 🏆 100-Point Idea Viability Scorecard: ${rawScore}/100 [${tier}]
+**The Hard Truth & Core Friction:**
+* **Low Willingness to Pay:** Target customers strongly resist paid monthly subscriptions ($5–$10/mo) and default to free manual alternatives (Notion, Google Calendar, WhatsApp groups).
+* **Manual Input Drop-Off:** If users must type in tasks manually, 80%+ will abandon the product by Week 2.
 
-**1. Problem & Market Need:** **${pillars.problemSeverity.score} / ${pillars.problemSeverity.max} pts**
-*${pillars.problemSeverity.reasoning}*
-
-**2. Target Market Specificity:** **${pillars.distribution.score} / ${pillars.distribution.max} pts**
-*${pillars.distribution.reasoning}*
-
-**3. Competitive Differentiation:** **${pillars.unfairAdvantage.score} / ${pillars.unfairAdvantage.max} pts**
-*${pillars.unfairAdvantage.reasoning}*
-
-**4. Feasibility of 7-Day MVP:** **${pillars.executionSpeed.score} / ${pillars.executionSpeed.max} pts**
-*${pillars.executionSpeed.reasoning}*
-
-**5. Monetization Potential:** **${pillars.willingnessToPay.score} / ${pillars.willingnessToPay.max} pts**
-*${pillars.willingnessToPay.reasoning}*
+**The Strategic Fix:**
+* **Zero-Friction Ingestion:** Build an automated syllabus/photo parser so users get their full weekly schedule generated in 10 seconds with zero manual typing.
+* **Laser 7-Day MVP Scope:** Cut social study rooms, gamified rewards, and complex chat. Launch ONLY: automated deadline parser + Google Calendar export.
 
 ---
 
-### ⚠️ Core Risk & Critical Gap
-Study planner and productivity apps operate in a crowded market with high student price sensitivity — if users must type assignments manually, retention drops severely by Week 2.
-
----
-
-**Next Step:** Want me to scope the 7-day MVP feature set next?`;
+**Next Action:**
+Interview 3 target customers this afternoon. Ask them: *"Show me the last time you missed a deadline, and what tool failed you?"*`;
   }
 
   // General FounderOS Master Prompt Fallback
-  return `### 🏆 100-Point Idea Viability Scorecard: 75/100 [Promising]
+  return `### 💡 Founder Strategy Guidance: "${message.substring(0, 50)}..."
 
-**1. Problem & Market Need:** **19 / 25 pts**
-*Acute workflow bottleneck identified.*
-
-**2. Target Market Specificity:** **15 / 20 pts**
-*Beachhead audience identified for early testing.*
-
-**3. Competitive Differentiation:** **10 / 15 pts**
-*Differentiation must be proven against free manual workarounds.*
-
-**4. Feasibility of 7-Day MVP:** **17 / 20 pts**
-*Core utility can be prototyped within 7 to 14 days.*
-
-**5. Monetization Potential:** **14 / 20 pts**
-*Monetization requires verifying willingness to pay in discovery interviews.*
+**Core Focus:**
+* Prioritize customer discovery and validate acute pain before writing code.
+* Identify whether target customers currently spend time or money on workarounds.
 
 ---
 
-### ⚠️ Core Risk & Critical Gap
-Customer discovery is required to confirm whether target users will pay for a dedicated solution versus using free templates.
-
----
-
-**Next Step:** Want me to scope the 7-day MVP feature set next?`;
+**Next Action:**
+Conduct 2 discovery interviews today to confirm problem severity and test willingness to pay.`;
 };
 
 /**

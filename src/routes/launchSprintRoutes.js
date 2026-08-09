@@ -6,18 +6,11 @@ const router = express.Router();
 
 router.use(protect);
 
-/**
- * @route   POST /api/launch-sprint/generate
- * @desc    Generate a complete launch sprint execution plan using Gemini API and save to MongoDB
- * @access  Private
- */
 router.post('/generate', generateSprint);
-
-/**
- * @route   GET /api/launch-sprint/:ventureId
- * @desc    Get latest Launch Sprint and history from MongoDB
- * @access  Private
- */
+router.post('/', generateSprint);
+router.get('/history', getSprintHistory);
+router.get('/history/:ventureId', getSprintHistory);
 router.get('/:ventureId', getSprintHistory);
+router.get('/', getSprintHistory);
 
 module.exports = router;

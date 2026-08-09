@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const BuildRoadmap = require('../models/BuildRoadmap');
 const Venture = require('../models/Venture');
 const { generateBuildRoadmapFromGemini } = require('../services/roadmapGeminiService');
@@ -11,7 +12,7 @@ async function generateRoadmap(req, res, next) {
     let { ventureId, ventureName, startupIdea, mvpScope, users, stack } = req.body;
 
     let venture = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) {
@@ -43,10 +44,12 @@ async function generateRoadmap(req, res, next) {
       stack,
     });
 
+    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
+
     // Save to MongoDB
     const newRoadmap = await BuildRoadmap.create({
       userId,
-      ventureId: ventureId || undefined,
+      ventureId: targetVentureId,
       ventureName,
       startupIdea,
       mvpScope,
@@ -73,9 +76,10 @@ async function getRoadmapHistory(req, res, next) {
     const userId = req.user.id;
 
     let roadmaps = [];
-    if (ventureId && ventureId !== 'latest') {
+    if (ventureId && ventureId !== 'latest' && mongoose.Types.ObjectId.isValid(ventureId)) {
       roadmaps = await BuildRoadmap.find({ ventureId, userId }).sort({ createdAt: -1 });
-    } else {
+    }
+    if (!roadmaps || roadmaps.length === 0) {
       roadmaps = await BuildRoadmap.find({ userId }).sort({ createdAt: -1 });
     }
 

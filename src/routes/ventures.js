@@ -28,10 +28,9 @@ const router = express.Router();
 router.use(protect);
 
 // ====================================================
-// VENTURE MANAGEMENT ROUTES
+// VENTURE COLLECTION MANAGEMENT
 // ====================================================
 
-// Validation for venture creation
 const ventureValidation = [
   body('ventureName').trim().notEmpty().withMessage('Venture name is required'),
 ];
@@ -39,12 +38,6 @@ const ventureValidation = [
 router.route('/')
   .post(ventureValidation, createVenture)
   .get(getVentures);
-
-router.route('/:ventureId')
-  .all(checkVentureOwnership)
-  .get(getVentureById)
-  .put(updateVenture)
-  .delete(deleteVenture);
 
 // ====================================================
 // IDEA VALIDATION - VENTURE BRIEF ROUTES
@@ -149,5 +142,15 @@ router.use('/:ventureId/marketing-plan', marketingRouter);
 router.use('/:ventureId/launch-sprint', launchSprintRouter);
 router.use('/:ventureId/traction', tractionRouter);
 router.use('/:ventureId/investor-update', investorUpdateRouter);
+
+// ====================================================
+// SINGLE VENTURE MANAGEMENT ROUTE (MUST BE LAST)
+// ====================================================
+
+router.route('/:ventureId')
+  .all(checkVentureOwnership)
+  .get(getVentureById)
+  .put(updateVenture)
+  .delete(deleteVenture);
 
 module.exports = router;

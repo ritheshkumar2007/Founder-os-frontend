@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const AIConversation = require('../models/AIConversation');
 const Venture = require('../models/Venture');
 const { chatWithFounderAI, aggregateStartupContext } = require('../services/founderGeminiService');
@@ -15,7 +16,7 @@ async function handleChat(req, res, next) {
     }
 
     let venture = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) {
@@ -26,8 +27,11 @@ async function handleChat(req, res, next) {
 
     // Retrieve or create AIConversation
     let conversation = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       conversation = await AIConversation.findOne({ ventureId, userId }).sort({ createdAt: -1 });
+    }
+    if (!conversation) {
+      conversation = await AIConversation.findOne({ userId }).sort({ createdAt: -1 });
     }
 
     if (!conversation) {
@@ -74,13 +78,17 @@ async function getHistory(req, res, next) {
     const userId = req.user.id;
 
     let conversation = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       conversation = await AIConversation.findOne({ ventureId, userId }).sort({ createdAt: -1 });
-    } else {
+    }
+    if (!conversation) {
       conversation = await AIConversation.findOne({ userId }).sort({ createdAt: -1 });
     }
 
-    const currentContext = await aggregateStartupContext(ventureId, userId);
+    const currentContext = await aggregateStartupContext(
+      (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : undefined,
+      userId
+    );
 
     return res.status(200).json({
       success: true,

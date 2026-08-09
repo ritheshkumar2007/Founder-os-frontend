@@ -37,17 +37,31 @@ const app = express();
 // Trust proxy header for platforms like Render, Railway, Fly.io, Heroku
 app.set('trust proxy', 1);
 
-// Security HTTP headers
-app.use(helmet());
+// Universal CORS preflight middleware (Guarantees Access-Control-Allow-Origin header on ALL origins)
+app.use((req, res, next) => {
+  const reqOrigin = req.headers.origin || '*';
+  res.header('Access-Control-Allow-Origin', reqOrigin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 
-// Enable CORS
-const corsOptions = {
-  origin: (origin, callback) => callback(null, true),
+// Enable standard cors middleware
+app.use(cors({
+  origin: true,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-app.use(cors(corsOptions));
+}));
+
+// Security HTTP headers (configured to not block cross-origin requests)
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginEmbedderPolicy: false,
+}));
 
 // Parse JSON request body
 app.use(express.json({ limit: '10mb' }));
@@ -55,101 +69,63 @@ app.use(express.json({ limit: '10mb' }));
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Cookie parser middleware
+// Parse Cookie header
 app.use(cookieParser());
 
-// Prevent NoSQL query injection
+// Sanitize user input against NoSQL query injection
 app.use(mongoSanitize());
 
-// Ensure Database Connection Middleware
-app.use(async (req, res, next) => {
-  if (req.path === '/api/health') return next();
-  if (mongoose.connection.readyState !== 1) {
-    try {
-      await connectDB();
-    } catch (err) {
-      return res.status(503).json({
-        success: false,
-        message: `Database connection error: ${err.message}`,
-        help: 'Please check MONGODB_URI in Render Environment Variables and MongoDB Atlas IP Whitelist (0.0.0.0/0).',
-      });
-    }
-  }
-  next();
-});
-
-// HTTP request logger middleware
-if (process.env.NODE_ENV === 'production') {
-  app.use(morgan('combined'));
-} else {
+// HTTP request logger in development
+if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Root welcome endpoint
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    message: '🚀 FounderOS Backend REST API is live and active.',
-    healthCheck: '/api/health',
-    documentation: 'API endpoints available at /api/*',
-  });
-});
-
-// Health check endpoint (for deployment platforms & load balancers)
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    uptime: `${Math.floor(process.uptime())}s`,
-    environment: process.env.NODE_ENV || 'development',
-    service: 'FounderOS Production Backend API',
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// Legacy /health endpoint compatibility
+// Health check endpoint for monitoring & platform deployment checks
 app.get('/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({
-    status: 'ok',
-    service: 'FounderOS Backend API',
+    status: 'UP',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: dbStatus,
   });
 });
 
-// API Routes with Rate Limiters
-app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/ventures', apiLimiter, ventureRoutes);
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/ventures', ventureRoutes);
 app.use('/api/chat', chatRoutes);
-app.use('/api/ai', apiLimiter, aiRoutes);
-app.use('/api/coach', apiLimiter, coachRoutes);
-app.use('/api/reports', apiLimiter, reportsRoutes);
-app.use('/api/execution', apiLimiter, executionRoutes);
-app.use('/api/growth', apiLimiter, growthRoutes);
-app.use('/api/mvp', apiLimiter, mvpRoutes);
-app.use('/api/mvp-scope', apiLimiter, mvpScopeRoutes);
-app.use('/api/roadmap', apiLimiter, roadmapRoutes);
-app.use('/api/build-roadmap', apiLimiter, buildRoadmapRoutes);
-app.use('/api/marketing', apiLimiter, marketingRoutes);
-app.use('/api/marketing-plan', apiLimiter, marketingPlanRoutes);
-app.use('/api/launch', apiLimiter, launchRoutes);
-app.use('/api/launch-sprint', apiLimiter, launchSprintModuleRoutes);
-app.use('/api/traction', apiLimiter, tractionRoutes);
-app.use('/api/traction-analyzer', apiLimiter, tractionModuleRoutes);
-app.use('/api/investor', apiLimiter, investorRoutes);
-app.use('/api/investor-update-generator', apiLimiter, investorUpdateModuleRoutes);
-app.use('/api/investor-update', apiLimiter, investorUpdateModuleRoutes);
-app.use('/api/founder-ai', apiLimiter, founderAIRoutes);
-app.use('/api/intelligence-command', apiLimiter, intelligenceModuleRoutes);
-app.use('/api/intelligence', apiLimiter, intelligenceModuleRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/coach', coachRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/execution', executionRoutes);
+app.use('/api/growth', growthRoutes);
+app.use('/api/mvp-scope', mvpScopeRoutes);
+app.use('/api/roadmap', buildRoadmapRoutes);
+app.use('/api/marketing-plan', marketingPlanRoutes);
+app.use('/api/launch-sprint', launchSprintModuleRoutes);
+app.use('/api/traction', tractionModuleRoutes);
+app.use('/api/investor-update', investorUpdateModuleRoutes);
+app.use('/api/founder-ai', founderAIRoutes);
+app.use('/api/intelligence', intelligenceModuleRoutes);
 
-// 404 Catch-All Handler for Undefined Routes
+// Module route aliases for workspace endpoints
+app.use('/api/ventures/:ventureId/mvp-scope', mvpRoutes);
+app.use('/api/ventures/:ventureId/roadmap', roadmapRoutes);
+app.use('/api/ventures/:ventureId/marketing-plan', marketingRoutes);
+app.use('/api/ventures/:ventureId/launch-sprint', launchRoutes);
+app.use('/api/ventures/:ventureId/traction', tractionRoutes);
+app.use('/api/ventures/:ventureId/investor-update', investorRoutes);
+
+// 404 Route Handler
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
-    message: `Route not found - ${req.originalUrl}`,
-    errors: [],
+    message: `API Route Not Found - ${req.originalUrl}`,
   });
 });
 
-// Centralized global error handling middleware
+// Centralized Error Handling Middleware
 app.use(errorHandler);
 
 module.exports = app;

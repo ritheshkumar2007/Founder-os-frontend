@@ -6,10 +6,13 @@ const jwt = require('jsonwebtoken');
  * @param {string} email - User's email address
  * @returns {string} JWT Token string
  */
+const DEFAULT_JWT_SECRET = 'founderos_jwt_secret_key_super_secure_2026_change_in_production';
+
 const generateToken = (userId, email) => {
+  const secret = process.env.JWT_SECRET || DEFAULT_JWT_SECRET;
   return jwt.sign(
     { userId, email },
-    process.env.JWT_SECRET,
+    secret,
     { expiresIn: '7d' }
   );
 };

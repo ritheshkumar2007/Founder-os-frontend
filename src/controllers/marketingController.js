@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const MarketingPlan = require('../models/MarketingPlan');
 const Venture = require('../models/Venture');
 const { generateMarketingPlanFromGemini } = require('../services/marketingGeminiService');
@@ -11,7 +12,7 @@ async function generatePlan(req, res, next) {
     let { ventureId, ventureName, startupIdea, mvpScope, audience, industry, pricing, goal } = req.body;
 
     let venture = null;
-    if (ventureId) {
+    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
       venture = await Venture.findOne({ _id: ventureId, owner: userId });
     }
     if (!venture) {
@@ -49,10 +50,12 @@ async function generatePlan(req, res, next) {
       goal,
     });
 
+    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
+
     // Save to MongoDB
     const newPlan = await MarketingPlan.create({
       userId,
-      ventureId: ventureId || undefined,
+      ventureId: targetVentureId,
       ventureName,
       startupIdea,
       targetAudience: audience,
@@ -79,9 +82,10 @@ async function getPlanHistory(req, res, next) {
     const userId = req.user.id;
 
     let plans = [];
-    if (ventureId && ventureId !== 'latest') {
+    if (ventureId && ventureId !== 'latest' && mongoose.Types.ObjectId.isValid(ventureId)) {
       plans = await MarketingPlan.find({ ventureId, userId }).sort({ createdAt: -1 });
-    } else {
+    }
+    if (!plans || plans.length === 0) {
       plans = await MarketingPlan.find({ userId }).sort({ createdAt: -1 });
     }
 
