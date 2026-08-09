@@ -15,6 +15,22 @@ function formatVentureContext(context = {}) {
   const businessModel = context.businessModel || 'Not Specified';
   const goal = context.goal || 'Not Specified';
 
+  const idea = context.ideaValidation?.ideaScore;
+  const scoreBlock = idea
+    ? `
+Overall Score: ${idea.overallScore ?? 'Not yet calculated'}/100
+Tier: ${idea.tier || 'Unrated'}
+Pillar Breakdown:
+  - Problem Severity: ${idea.pillars?.problemSeverity?.score ?? 0}/25
+  - Willingness to Pay: ${idea.pillars?.willingnessToPay?.score ?? 0}/20
+  - Distribution: ${idea.pillars?.distribution?.score ?? 0}/20
+  - Unfair Advantage: ${idea.pillars?.unfairAdvantage?.score ?? 0}/15
+  - Execution Speed: ${idea.pillars?.executionSpeed?.score ?? 0}/20
+Strengths: ${(idea.strengths || []).join('; ') || 'None recorded'}
+Risks: ${(idea.risks || []).join('; ') || 'None recorded'}`
+    : `
+Overall Score: Not yet calculated (idea has not been scored)`;
+
   return `
 === ACTIVE VENTURE CONTEXT ===
 Name: ${name}
@@ -23,6 +39,8 @@ Stage: ${stage}
 Target Customer: ${customer}
 Business Model: ${businessModel}
 Goal: ${goal}
+
+=== IDEA VALIDATION SCORE ===${scoreBlock}
 === END ACTIVE VENTURE CONTEXT ===
 `.trim();
 }

@@ -72,6 +72,25 @@ const aiChat = async (req, res, next) => {
       }
     }
 
+    // 3.5. Evaluate and save Idea Score BEFORE processAIRequest so prompt has current score
+    if (isDbConnected && venture) {
+      try {
+        const needsRescore =
+          !venture.ideaValidation?.ideaScore?.overallScore ||
+          (venture.ideaValidation.ideaScore.lastCalculatedAt &&
+            venture.updatedAt > venture.ideaValidation.ideaScore.lastCalculatedAt);
+
+        if (needsRescore) {
+          const { evaluateIdeaScore } = require('../services/aiService');
+          const computedScore = await evaluateIdeaScore({ venture });
+          venture.ideaValidation.ideaScore = computedScore;
+          await venture.save();
+        }
+      } catch (scoreErr) {
+        console.warn('Idea score evaluation before AI request warning:', scoreErr.message);
+      }
+    }
+
     // 4. Process Message via Unified 4-Layer AI Pipeline
     const { processAIRequest } = require('../services/aiOrchestrator');
     let agentResult;
@@ -193,20 +212,13 @@ const aiChat = async (req, res, next) => {
     let kanbanTasks = null;
     let pillarProgress = null;
     let growth = null;
-    let ideaScore = null;
     if (activeVentureId && venture) {
       try { kanbanTasks = await getTasksForVenture(activeVentureId); } catch (e) {}
       try { pillarProgress = await calculatePillarProgress(activeVentureId); } catch (e) {}
       try { growth = await getLatestGrowthData(activeVentureId); } catch (e) {}
-      try {
-        const { evaluateIdeaScore } = require('../services/aiService');
-        ideaScore = await evaluateIdeaScore({ venture });
-        venture.ideaValidation.ideaScore = ideaScore;
-        await venture.save();
-      } catch (scoreErr) {
-        console.warn('Idea score calculation warning:', scoreErr.message);
-      }
     }
+
+    const ideaScore = venture?.ideaValidation?.ideaScore || null;
 
     return res.status(200).json({
       success: true,
