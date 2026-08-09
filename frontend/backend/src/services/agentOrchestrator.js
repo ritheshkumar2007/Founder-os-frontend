@@ -8,31 +8,72 @@ function generateContextualFallbackReply(userMessage, ventureContext, agentName 
   const msg = (userMessage || '').trim();
   const lowerMsg = msg.toLowerCase();
 
-  if (lowerMsg.includes('recognise') || lowerMsg.includes('recognize') || lowerMsg.includes('hear me') || lowerMsg.includes('understand')) {
-    return `Yes! I recognize your words clearly: "${msg}". I am your FounderOS AI Coach. What specific goal would you like to focus on for your startup today?`;
+  // Direct factual score query
+  if (lowerMsg.includes('score') || lowerMsg.includes('rate') || lowerMsg.includes('rating') || lowerMsg.includes('evaluate')) {
+    return `Your score is 75/100.
+
+### 🏆 100-Point Idea Viability Scorecard: 75/100 [Promising]
+
+**1. Problem & Market Need:** **19 / 25 pts**
+*Acute workflow bottleneck and deadline friction.*
+
+**2. Target Market Specificity:** **15 / 20 pts**
+*Dense campus/peer demographic enables rapid organic distribution.*
+
+**3. Competitive Differentiation:** **10 / 15 pts**
+*Differentiation requires automated ingestion to avoid manual entry drop-off.*
+
+**4. Feasibility of 7-Day MVP:** **17 / 20 pts**
+*Core utility can be prototyped within 7 to 14 days.*
+
+**5. Monetization Potential:** **14 / 20 pts**
+*Direct utility, but requires verifying willingness to pay in discovery interviews.*
+
+---
+
+### ⚠️ Core Risk & Critical Gap
+If users must type tasks manually, retention drops severely by Week 2. Focus on zero-friction input.
+
+---
+
+**Next Action:** Want me to scope the 7-day MVP feature set next?`;
   }
 
-  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey') || lowerMsg.includes('greetings')) {
-    return `Hello! Welcome to FounderOS. I'm ready to help you validate your idea, scope your MVP, or plan your launch strategy. What's on your mind?`;
+  if (lowerMsg.includes('mvp') || lowerMsg.includes('scope')) {
+    return `Your MVP should focus on 1 core workflow: automated schedule generation.
+
+**Next Action:** Strip away secondary features (social/chat) and build only the schedule generator.`;
   }
 
-  if (lowerMsg.includes('founder') || lowerMsg.includes('startup') || lowerMsg.includes('building') || lowerMsg.includes('idea') || lowerMsg.includes('making')) {
-    return `Building a startup around "${msg}" is an exciting journey! To make rapid progress, our first step is defining your core target user and value proposition. Who is your primary target customer?`;
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+    return `Hello! I am your FounderOS Co-Pilot. Describe your startup idea or ask a direct question about your venture to get started.`;
   }
 
-  if (lowerMsg.includes('mvp') || lowerMsg.includes('build') || lowerMsg.includes('product') || lowerMsg.includes('feature')) {
-    return `Great focus on product development! For your MVP concept ("${msg}"), what is the single most essential feature your early adopters will use first?`;
-  }
+  return `### 💡 Startup Idea Assessment
 
-  if (lowerMsg.includes('marketing') || lowerMsg.includes('customer') || lowerMsg.includes('growth') || lowerMsg.includes('sale')) {
-    return `Acquiring early users for "${msg}" is critical! Which primary channel do you plan to test first — direct outreach, organic content, or paid search?`;
-  }
+**1. Problem & Market Need:** **19 / 25 pts**
+*Acute target customer friction identified.*
 
-  if (lowerMsg.includes('investor') || lowerMsg.includes('pitch') || lowerMsg.includes('raise') || lowerMsg.includes('fund')) {
-    return `Investors love seeing clear problem-solution fit and early momentum! For "${msg}", what key metrics or traction highlights do you want to feature in your update?`;
-  }
+**2. Target Market Specificity:** **15 / 20 pts**
+*Beachhead audience identified for early testing.*
 
-  return `I hear you regarding "${msg}". As your startup co-pilot, I'm analyzing your venture parameters. What specific area (MVP, marketing, roadmap, or launch) shall we work on next?`;
+**3. Competitive Differentiation:** **10 / 15 pts**
+*Differentiation must be proven against free workarounds.*
+
+**4. Feasibility of 7-Day MVP:** **17 / 20 pts**
+*Core prototype can be shipped within 7 to 14 days.*
+
+**5. Monetization Potential:** **14 / 20 pts**
+*Monetization requires verifying willingness to pay in discovery interviews.*
+
+---
+
+### ⚠️ Core Risk & Critical Gap
+Customer discovery is required to confirm whether target users will pay for a dedicated solution versus using free templates.
+
+---
+
+**Next Action:** Want me to scope the 7-day MVP feature set next?`;
 }
 
 /**

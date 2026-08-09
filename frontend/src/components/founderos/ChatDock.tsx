@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { uid, useActiveVenture } from "@/lib/founderos/store";
 import { api } from "@/lib/api";
 import { analyzeValidation, riskiestAssumption, sprintStats } from "@/lib/founderos/derive";
+import { generateMockAiResponse } from "./chat/mockAiEngine";
 
 const PAGE_LABELS: Record<string, string> = {
   "/workspace/venture-brief": "Idea Validation",
@@ -108,7 +109,7 @@ export function ChatDock() {
       }));
     } catch (err) {
       console.warn("AI Chat Dock request failed, using local contextual fallback:", err);
-      // Local fallback reply
+      const fallbackReply = generateMockAiResponse(messageText, v.chat, v);
       update((v) => ({
         ...v,
         chat: [
@@ -116,7 +117,7 @@ export function ChatDock() {
           {
             id: assistantMsgId,
             role: "assistant",
-            content: `I'm analyzing your request regarding "${messageText}". Focus on your next milestone: ${page}.`,
+            content: fallbackReply,
             createdAt: new Date().toISOString(),
           },
         ],
