@@ -62,7 +62,7 @@ Always optimize recommendations for an early-stage startup with limited budget.
 Do not recommend expensive enterprise software or large paid marketing campaigns.`,
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey.trim());

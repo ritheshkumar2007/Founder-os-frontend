@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in investor updates, pitch deck narratives, traction proof points, funding ask articulation, and milestone commits.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'Investor Advisor Agent',

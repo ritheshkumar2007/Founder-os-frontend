@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * without inventing fake metrics or funding numbers.
  */
 async function generateInvestorUpdateFromGemini({ ventureName, overview, progress, traction, challenges, goals, funding, isPreLaunch }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const prompt = isPreLaunch
     ? `You are an experienced startup founder and investor relations expert in FounderOS.

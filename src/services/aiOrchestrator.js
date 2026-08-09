@@ -327,7 +327,7 @@ CRITICAL RESPONSE RULES:
   let aiResponse = '';
   const apiKey = process.env.GEMINI_API_KEY;
   
-  if (apiKey && apiKey.trim() && apiKey.trim() !== 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ') {
+  if (apiKey && apiKey.trim()) {
     try {
       console.log(`[AI] Calling Gemini LLM | Agent: ${targetAgentId}`);
       const genAI = new GoogleGenerativeAI(apiKey.trim());

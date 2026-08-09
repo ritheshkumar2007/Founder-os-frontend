@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Strictly adheres to venture-specific context without inventing fake default features.
  */
 async function generateMvpScopeFromGemini({ ventureName, idea, targetUsers, problem }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const resolvedName = ventureName || 'Untitled Venture';
   const resolvedIdea = idea || 'Startup Concept';

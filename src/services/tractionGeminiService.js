@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Honestly evaluates actual startup metrics without fabricating fake numbers.
  */
 async function analyzeTractionWithGemini({ ventureName, metrics, feedback, goal, isPreTraction }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const prompt = isPreTraction
     ? `You are an expert startup growth advisor in FounderOS.

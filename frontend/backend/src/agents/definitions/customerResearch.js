@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in target customer identification, interview questions, pain point analysis, current workarounds, and buyer personas.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'Customer Research Agent',

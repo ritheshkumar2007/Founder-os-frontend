@@ -4,7 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to generate a structured software development roadmap via Gemini API using expert CTO prompt.
  */
 async function generateBuildRoadmapFromGemini({ ventureName, idea, mvpScope, users, stack }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const prompt = `You are an expert startup CTO and product manager.
 

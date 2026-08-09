@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in 2-week MVP feature scoping, product requirements, build vs cut decisions, and early product promises.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'MVP Planner Agent',

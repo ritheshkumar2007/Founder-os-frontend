@@ -4,7 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
  * Service to generate a 10-part Marketing Strategy JSON via Gemini API using expert CMO prompt.
  */
 async function generateMarketingPlanFromGemini({ ventureName, idea, mvpScope, audience, industry, pricing, goal }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const prompt = `You are an expert startup marketing strategist.
 

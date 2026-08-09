@@ -30,7 +30,7 @@ ${outputRules}
 `.trim(),
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
     try {
       const genAI = new GoogleGenerativeAI(apiKey.trim());
       const systemInstruction = `${this.systemPrompt}\n\nCURRENT FOUNDER MEMORY & CONTEXT:\n${ventureContext}`;

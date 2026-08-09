@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in direct/indirect competitive landscape mapping, differentiation, market moats, and positioning strategy.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'Competitor Intelligence Agent',

@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in sprint execution, daily task prioritization, conversion rate tracking, and traction momentum.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'Growth Coach Agent',

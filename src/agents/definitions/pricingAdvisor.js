@@ -7,7 +7,7 @@ const agent = {
   description: 'Specializes in monetization models, pricing structures, willingness-to-pay validation, and value metric selection.',
 
   async run({ userMessage, ventureContext, history = [] }) {
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     const systemPrompt = buildPrompt({
       role: 'Pricing Advisor Agent',

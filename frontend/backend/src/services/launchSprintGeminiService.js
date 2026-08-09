@@ -15,7 +15,7 @@ async function generateLaunchSprintFromGemini({
   customerEvidence,
   mvpReadiness,
 }) {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBMWvuVTWm40C-GMMRCy203fx2F6iAYghQ';
+  const apiKey = process.env.GEMINI_API_KEY;
 
   const hasRealLaunchDate = launchDate && launchDate.trim() && launchDate !== 'Not set' && !launchDate.toLowerCase().includes('7 days');
   const launchDateLabel = hasRealLaunchDate ? launchDate : 'Launch date: Not set';
