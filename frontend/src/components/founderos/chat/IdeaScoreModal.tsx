@@ -313,7 +313,7 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
             {/* Strengths / Green Flags */}
             <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.03] p-4">
               <h4 className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <CheckCircle2 className="h-4 w-4" />
                 Validated Strengths (Green Flags)
               </h4>
               <ul className="mt-2.5 space-y-2">
@@ -335,7 +335,7 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
             {/* Critical Blind Spots / Risks */}
             <div className="rounded-xl border border-rose-500/20 bg-rose-500/[0.03] p-4">
               <h4 className="text-xs font-semibold text-rose-400 flex items-center gap-1.5">
-                <AlertTriangle className="h-4 w-4 text-rose-400" />
+                <AlertTriangle className="h-4 w-4" />
                 Critical Risks & Blind Spots
               </h4>
               <ul className="mt-2.5 space-y-2">

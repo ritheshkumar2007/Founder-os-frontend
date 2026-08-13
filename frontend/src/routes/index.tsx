@@ -53,12 +53,12 @@ function Index() {
           </p>
 
           {/* Interactive Glass Card */}
-          <div className="glass-card rounded-xl p-8 md:p-12 w-full relative overflow-hidden mb-12 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+          <div className="glass-card rounded-xl p-8 md:p-12 w-full relative overflow-hidden mb-12 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
             {/* Inner Glow specific to card */}
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-zinc-800 opacity-20 rounded-full blur-[50px]" />
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-electric-violet opacity-20 rounded-full blur-[50px]" />
             <div className="relative z-10 flex flex-col items-center gap-8">
               <span
-                className="material-symbols-outlined text-zinc-300 text-6xl"
+                className="material-symbols-outlined text-electric-violet text-6xl"
                 style={{ fontVariationSettings: "'FILL' 0" }}
               >
                 rocket_launch
@@ -100,7 +100,7 @@ function Index() {
               </p>
             </div>
             <div className="glass-card rounded-lg p-6 flex flex-col gap-4">
-              <span className="material-symbols-outlined text-zinc-300">hub</span>
+              <span className="material-symbols-outlined text-electric-violet">hub</span>
               <h3 className="font-headline-md text-headline-md text-white text-lg">
                 System Integration
               </h3>

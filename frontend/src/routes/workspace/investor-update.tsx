@@ -166,10 +166,10 @@ function InvestorTelemetryPage() {
   return (
     <div className="space-y-8 select-none">
       {/* Page Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[rgba(139,92,246,0.3)] pb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-2.5 py-1 rounded-full bg-zinc-800/60 text-zinc-300 font-mono text-xs border border-white/10 font-semibold">
+            <span className="px-2.5 py-1 rounded-full bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-mono text-xs border border-[rgba(139,92,246,0.3)] font-semibold">
               CONFIDENTIAL
             </span>
             <span className="px-2.5 py-1 rounded-full bg-[#1c2023] text-[#cbc3d7] font-mono text-xs border border-white/5">
@@ -191,7 +191,7 @@ function InvestorTelemetryPage() {
               onClick={() => setViewMode("telemetry")}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
                 viewMode === "telemetry"
-                  ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
                   : "text-[#cbc3d7] hover:text-white"
               }`}
             >
@@ -201,7 +201,7 @@ function InvestorTelemetryPage() {
               onClick={() => setViewMode("memo-generator")}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
                 viewMode === "memo-generator"
-                  ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
                   : "text-[#cbc3d7] hover:text-white"
               }`}
             >
@@ -211,15 +211,15 @@ function InvestorTelemetryPage() {
 
           <button
             onClick={handleExportDeck}
-            className="px-5 py-2.5 rounded-lg border border-white/10 bg-[#181c1f] hover:bg-white/5 text-white font-mono text-xs font-semibold transition flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 rounded-lg border border-[rgba(139,92,246,0.3)] bg-[#181c1f] hover:bg-white/5 text-white font-mono text-xs font-semibold transition flex items-center gap-2 cursor-pointer"
           >
-            <Download className="size-3.5 text-zinc-300" />
+            <Download className="size-3.5 text-[#A78BFA]" />
             <span>Export Deck</span>
           </button>
 
           <button
             onClick={() => setDataRoomModalOpen(true)}
-            className="btn-system text-white font-mono font-bold text-xs px-5 py-2.5 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition flex items-center gap-2 cursor-pointer"
+            className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2.5 rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.4)] transition flex items-center gap-2 cursor-pointer"
           >
             <FolderOpen className="size-4" />
             <span>Open Data Room</span>
@@ -231,7 +231,7 @@ function InvestorTelemetryPage() {
         /* Main Bento Grid Layout */
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Key Metric: Annual Recurring Revenue / MRR (Span 8) */}
-          <div className="md:col-span-8 glass-card rounded-xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between border border-[#d4d4d8] shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+          <div className="md:col-span-8 glass-card rounded-xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between border border-[#A78BFA] shadow-[0_0_30px_rgba(139,92,246,0.1)]">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 z-10">
               <div>
                 <h2 className="text-[#cbc3d7] font-mono text-xs uppercase tracking-wider mb-1.5">
@@ -241,7 +241,7 @@ function InvestorTelemetryPage() {
                   <span className="text-4xl md:text-5xl font-bold font-display text-white tracking-tight">
                     {chartData.value}
                   </span>
-                  <span className="flex items-center text-zinc-300 font-mono text-xs bg-zinc-800/60 border border-white/10 px-2.5 py-1 rounded-full font-bold">
+                  <span className="flex items-center text-[#A78BFA] font-mono text-xs bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-full font-bold">
                     <span className="material-symbols-outlined text-sm mr-1">arrow_upward</span>
                     {chartData.yoy}
                   </span>
@@ -249,14 +249,14 @@ function InvestorTelemetryPage() {
               </div>
 
               {/* Timeframe Buttons */}
-              <div className="flex gap-1 bg-[#0b0f12] rounded-lg p-1 border border-white/10">
+              <div className="flex gap-1 bg-[#0b0f12] rounded-lg p-1 border border-[rgba(139,92,246,0.25)]">
                 {["1M", "1Q", "1Y", "ALL"].map((t) => (
                   <button
                     key={t}
                     onClick={() => setArrTimeframe(t)}
                     className={`px-3 py-1 rounded text-xs font-mono transition cursor-pointer ${
                       arrTimeframe === t
-                        ? "bg-zinc-800/60 text-zinc-300 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                        ? "bg-[rgba(139,92,246,0.2)] text-[#A78BFA] font-bold shadow-[0_0_8px_rgba(139,92,246,0.3)]"
                         : "text-[#958ea0] hover:text-white"
                     }`}
                   >
@@ -271,8 +271,8 @@ function InvestorTelemetryPage() {
               <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 200">
                 <defs>
                   <linearGradient id="violet-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
-                    <stop offset="0%" stopColor="#d4d4d8" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#d4d4d8" stopOpacity="0.0" />
+                    <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="#A78BFA" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
 
@@ -288,27 +288,27 @@ function InvestorTelemetryPage() {
                 <path
                   d={chartData.points}
                   fill="none"
-                  stroke="#d4d4d8"
+                  stroke="#A78BFA"
                   strokeWidth="3"
                   className="transition-all duration-700 ease-out"
                   style={{ filter: "drop-shadow(0px 4px 8px rgba(167, 139, 250, 0.5))" }}
                 />
 
                 {/* Interactive Points */}
-                <circle cx="700" cy="40" fill="#101417" r="4" stroke="#d4d4d8" strokeWidth="2" />
+                <circle cx="700" cy="40" fill="#101417" r="4" stroke="#A78BFA" strokeWidth="2" />
                 <circle
                   cx={chartData.lastPoint.cx}
                   cy={chartData.lastPoint.cy}
-                  fill="#d4d4d8"
+                  fill="#A78BFA"
                   r="6"
-                  className="animate-pulse shadow-[0_0_12px_#d4d4d8]"
+                  className="animate-pulse shadow-[0_0_12px_#A78BFA]"
                 />
               </svg>
             </div>
           </div>
 
           {/* Key Metric: Capital Raised & Runway (Span 4) */}
-          <div className="md:col-span-4 glass-card rounded-xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden border border-white/10">
+          <div className="md:col-span-4 glass-card rounded-xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden border border-[rgba(139,92,246,0.3)]">
             <div className="z-10">
               <h2 className="text-[#cbc3d7] font-mono text-xs uppercase tracking-wider mb-1.5">
                 Total Capital Raised
@@ -339,19 +339,19 @@ function InvestorTelemetryPage() {
 
             <div className="mt-8 z-10">
               <div className="w-full h-2.5 bg-[#1c2023] rounded-full overflow-hidden border border-white/5">
-                <div className="h-full bg-gradient-to-r from-[#d4d4d8] to-[#d4d4d8] rounded-full w-[85%] relative shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                <div className="h-full bg-gradient-to-r from-[#A78BFA] to-[#A78BFA] rounded-full w-[85%] relative shadow-[0_0_12px_rgba(139,92,246,0.6)]">
                   <div className="absolute right-0 top-0 h-full w-4 bg-white/50 blur-sm" />
                 </div>
               </div>
               <div className="flex justify-between items-center mt-2.5 font-mono text-xs">
                 <span className="text-[#958ea0]">Operating Runway:</span>
-                <span className="text-zinc-300 font-bold">34 Months</span>
+                <span className="text-[#A78BFA] font-bold">34 Months</span>
               </div>
             </div>
           </div>
 
           {/* Venture Partners Grid (Span 12) */}
-          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-white/10">
+          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
             <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
               <div>
                 <h2 className="text-xl font-bold font-display text-white">
@@ -361,7 +361,7 @@ function InvestorTelemetryPage() {
               </div>
               <button
                 onClick={() => setCapTableModalOpen(true)}
-                className="text-zinc-300 hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
+                className="text-[#A78BFA] hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
               >
                 <span>View Cap Table</span>
                 <ArrowRight className="size-3.5" />
@@ -372,9 +372,9 @@ function InvestorTelemetryPage() {
               {/* Partner 1: YC */}
               <div
                 onClick={() => setCapTableModalOpen(true)}
-                className="bg-[#0b0f12] border border-white/10 rounded-xl p-6 flex items-center justify-center h-28 hover:border-white/30 hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#d4d4d8]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="font-display text-3xl font-bold tracking-tighter text-white opacity-80 group-hover:opacity-100 transition-opacity">
                   YC
                 </span>
@@ -383,9 +383,9 @@ function InvestorTelemetryPage() {
               {/* Partner 2: Sequoia */}
               <div
                 onClick={() => setCapTableModalOpen(true)}
-                className="bg-[#0b0f12] border border-white/10 rounded-xl p-6 flex items-center justify-center h-28 hover:border-white/30 hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#d4d4d8]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="font-display text-xl font-bold tracking-wider text-white opacity-80 group-hover:opacity-100 transition-opacity">
                   SEQUOIA
                 </span>
@@ -394,9 +394,9 @@ function InvestorTelemetryPage() {
               {/* Partner 3: Founders Fund */}
               <div
                 onClick={() => setCapTableModalOpen(true)}
-                className="bg-[#0b0f12] border border-white/10 rounded-xl p-6 flex items-center justify-center h-28 hover:border-white/30 hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#d4d4d8]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="text-center">
                   <span className="block font-display text-lg font-bold text-white opacity-80 group-hover:opacity-100 transition-opacity leading-none">
                     FOUNDERS
@@ -410,9 +410,9 @@ function InvestorTelemetryPage() {
               {/* Partner 4: a16z */}
               <div
                 onClick={() => setCapTableModalOpen(true)}
-                className="bg-[#0b0f12] border border-white/10 rounded-xl p-6 flex items-center justify-center h-28 hover:border-white/30 hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#d4d4d8]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="font-display text-2xl font-bold tracking-tight text-white opacity-80 group-hover:opacity-100 transition-opacity">
                   a16z
                 </span>
@@ -421,7 +421,7 @@ function InvestorTelemetryPage() {
           </div>
 
           {/* Data Room Quick Access (Span 12) */}
-          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-white/10">
+          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
             <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
               <div>
                 <h2 className="text-xl font-bold font-display text-white">
@@ -431,7 +431,7 @@ function InvestorTelemetryPage() {
               </div>
               <button
                 onClick={() => setDataRoomModalOpen(true)}
-                className="text-zinc-300 hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
+                className="text-[#A78BFA] hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
               >
                 <span>Browse All 14 Documents</span>
                 <ArrowRight className="size-3.5" />
@@ -442,13 +442,13 @@ function InvestorTelemetryPage() {
               {/* Doc 1 */}
               <div
                 onClick={() => setDataRoomModalOpen(true)}
-                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-white/10 rounded-xl hover:border-white/30 hover:bg-[#101417] transition-all cursor-pointer group"
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
               >
-                <div className="size-10 rounded-lg bg-zinc-800/60 text-zinc-300 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
                   <FileText className="size-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-white transition-colors">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
                     Board_Deck_Q3.pdf
                   </h3>
                   <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 2 days ago</p>
@@ -458,13 +458,13 @@ function InvestorTelemetryPage() {
               {/* Doc 2 */}
               <div
                 onClick={() => setDataRoomModalOpen(true)}
-                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-white/10 rounded-xl hover:border-white/30 hover:bg-[#101417] transition-all cursor-pointer group"
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
               >
-                <div className="size-10 rounded-lg bg-zinc-800/60 text-zinc-300 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
                   <Table className="size-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-white transition-colors">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
                     Financial_Model_v4.xlsx
                   </h3>
                   <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 1 week ago</p>
@@ -474,13 +474,13 @@ function InvestorTelemetryPage() {
               {/* Doc 3 */}
               <div
                 onClick={() => setDataRoomModalOpen(true)}
-                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-white/10 rounded-xl hover:border-white/30 hover:bg-[#101417] transition-all cursor-pointer group"
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
               >
-                <div className="size-10 rounded-lg bg-zinc-800/60 text-zinc-300 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
                   <Gavel className="size-5" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-white transition-colors">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
                     Term_Sheet_Draft.pdf
                   </h3>
                   <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 2 weeks ago</p>
@@ -534,7 +534,7 @@ function InvestorTelemetryPage() {
                 <button
                   type="submit"
                   disabled={generating}
-                  className="btn-system text-white font-mono font-bold text-xs px-5 py-2.5 rounded-lg transition shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2.5 rounded-lg transition shadow-[0_0_15px_rgba(139,92,246,0.3)] flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <Sparkles className="size-4" />
                   <span>{generating ? "Drafting Executive Memo..." : "Generate Executive Memo"}</span>
@@ -551,7 +551,7 @@ function InvestorTelemetryPage() {
                   rows={12}
                   value={editableLetter}
                   onChange={(e) => setEditableLetter(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-[#0E131C] p-4 text-xs font-mono text-[#F5F8FC] focus:border-white/40 focus:outline-none leading-relaxed"
+                  className="w-full rounded-xl border border-white/10 bg-[#0E131C] p-4 text-xs font-mono text-[#F5F8FC] focus:border-[#A78BFA] focus:outline-none leading-relaxed"
                 />
                 <div className="flex justify-end gap-2">
                   <CopyButton content={editableLetter} />
@@ -563,7 +563,7 @@ function InvestorTelemetryPage() {
       )}
 
       {/* Footer Navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[rgba(139,92,246,0.25)]">
         <Button
           variant="outline"
           onClick={() => {

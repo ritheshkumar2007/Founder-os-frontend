@@ -28,7 +28,7 @@ const SAMPLE_SHAREHOLDERS: Shareholder[] = [
     ownershipPct: 45.0,
     shares: "4,500,000",
     invested: "$50,000",
-    color: "#d4d4d8",
+    color: "#A78BFA",
   },
   {
     id: "sh-2",
@@ -38,7 +38,7 @@ const SAMPLE_SHAREHOLDERS: Shareholder[] = [
     ownershipPct: 25.0,
     shares: "2,500,000",
     invested: "$15,000,000",
-    color: "#71717a",
+    color: "#8B5CF6",
   },
   {
     id: "sh-3",
@@ -108,17 +108,17 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
-      <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#101417]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
           <div className="flex items-center gap-3">
-            <div className="size-9 rounded-xl bg-zinc-800/60 border border-white/10 flex items-center justify-center text-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+            <div className="size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)]">
               <PieChart className="size-5" />
             </div>
             <div>
               <h3 className="font-display text-lg font-bold text-white tracking-tight flex items-center gap-2">
                 Fully Diluted Cap Table
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-300 border border-white/10">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
                   VERIFIED AUDIT
                 </span>
               </h3>
@@ -184,7 +184,7 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
                     </td>
                     <td className="p-3 text-[#cbc3d7]">{s.stockClass}</td>
                     <td className="p-3 text-right text-white font-bold">{s.shares}</td>
-                    <td className="p-3 text-right text-zinc-300 font-bold">{s.ownershipPct.toFixed(1)}%</td>
+                    <td className="p-3 text-right text-[#A78BFA] font-bold">{s.ownershipPct.toFixed(1)}%</td>
                     <td className="p-3 text-right text-[#cbc3d7]">{s.invested}</td>
                   </tr>
                 ))}
@@ -194,17 +194,17 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-white/10 bg-[#101417] flex justify-between items-center text-xs font-mono">
+        <div className="px-6 py-4 border-t border-[rgba(139,92,246,0.25)] bg-[#101417] flex justify-between items-center text-xs font-mono">
           <button
             onClick={handleExportCsv}
-            className="px-4 py-2 rounded-lg bg-[#181c1f] text-white hover:bg-white/10 transition border border-white/10 flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-[#181c1f] text-white hover:bg-white/10 transition border border-[rgba(139,92,246,0.3)] flex items-center gap-2 cursor-pointer"
           >
-            <Download className="size-3.5 text-zinc-300" />
+            <Download className="size-3.5 text-[#A78BFA]" />
             <span>Export CSV</span>
           </button>
           <button
             onClick={onClose}
-            className="btn-system text-white font-bold px-5 py-2 rounded-lg transition shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
+            className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-bold px-5 py-2 rounded-lg transition shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-pointer"
           >
             Close
           </button>

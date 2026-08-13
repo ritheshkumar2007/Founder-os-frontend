@@ -44,11 +44,11 @@ const MODULES = [
   },
   {
     id: "command-console",
-    title: "Traction & Investor Console",
+    title: "Mission Control Terminal",
     badge: "FOUNDER OS",
-    description: "One central command console to orchestrate your startup growth. Track MRR growth, user retention, sprint execution velocity, and cap table updates in real time.",
+    description: "One central command console to orchestrate your startup journey. Track burn rate, team velocity, launch countdowns, and investor signals in real time.",
     icon: Terminal,
-    highlights: ["Single pane for all venture traction", "Customizable metric widgets", "Real-time investor reporting"],
+    highlights: ["Single pane for all venture data", "Customizable dashboard widgets", "Real-time system health checks"],
   },
 ];
 
@@ -56,12 +56,12 @@ export const ModulesGrid: React.FC = () => {
   return (
     <section id="modules" className="relative py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Soft background glow */}
-      <div className="absolute top-1/3 right-10 w-96 h-96 bg-zinc-800/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-electric-violet/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-glass-border bg-surface-container-low text-xs font-mono text-zinc-300">
-          <Sparkles className="size-3.5 text-zinc-300" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-glass-border bg-surface-container-low text-xs font-mono text-electric-violet">
+          <Sparkles className="size-3.5 text-electric-violet" />
           <span>STARTUP OS APP MODULES</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-bold font-headline-lg text-white tracking-tight">
@@ -84,7 +84,7 @@ export const ModulesGrid: React.FC = () => {
             >
               <div className="space-y-6 relative z-10">
                 <div className="flex items-center justify-between">
-                  <div className="size-12 rounded-xl bg-surface-container border border-glass-border text-zinc-300 flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-all">
+                  <div className="size-12 rounded-xl bg-surface-container border border-glass-border text-electric-violet flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.25)] group-hover:scale-110 transition-all">
                     <Icon className="size-6" />
                   </div>
                   <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-surface-container border border-glass-border text-primary font-medium">
@@ -93,9 +93,9 @@ export const ModulesGrid: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold font-headline-md text-white group-hover:text-zinc-300 transition-colors flex items-center gap-2">
+                  <h3 className="text-xl font-bold font-headline-md text-white group-hover:text-electric-violet transition-colors flex items-center gap-2">
                     <span>{mod.title}</span>
-                    <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-300" />
+                    <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity text-electric-violet" />
                   </h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
                     {mod.description}

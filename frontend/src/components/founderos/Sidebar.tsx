@@ -63,15 +63,15 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <div className="flex h-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none border-r border-white/10">
+    <div className="flex h-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none border-r border-[rgba(139,92,246,0.2)]">
       {/* Brand Header */}
       <Link to="/" className="flex items-center gap-3 group">
-        <span className="grid size-9 place-items-center rounded-xl border border-[#d4d4d8]/40 bg-zinc-800/15 font-display text-zinc-300 text-base font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-          <Rocket className="size-4 text-zinc-300" />
+        <span className="grid size-9 place-items-center rounded-xl border border-[#A78BFA]/40 bg-[#A78BFA]/15 font-display text-[#A78BFA] text-base font-bold shadow-[0_0_15px_rgba(167,139,250,0.3)]">
+          <Rocket className="size-4 text-[#A78BFA]" />
         </span>
         <div className="flex flex-col">
           <span className="font-display text-base font-bold text-white tracking-tight">
-            Founder<span className="text-zinc-300">OS</span>
+            Founder<span className="text-[#A78BFA]">OS</span>
           </span>
           <span className="text-[10px] font-mono text-[#958ea0] uppercase tracking-widest -mt-0.5">
             Startup Workspace
@@ -83,7 +83,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <button
         type="button"
         onClick={handleCreateVenture}
-        className="btn-system inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition hover:brightness-110 active:scale-[0.98] cursor-pointer text-white"
+        className="btn-system inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_0_20px_rgba(167,139,250,0.25)] transition hover:brightness-110 active:scale-[0.98] cursor-pointer text-white"
       >
         <Plus className="size-4" /> New Venture
       </button>
@@ -96,17 +96,17 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         <button
           type="button"
           onClick={() => setOpenSelector((o) => !o)}
-          className="flex w-full items-center justify-between rounded-xl border border-white/5 bg-[#101417] px-3.5 py-2.5 text-left text-sm font-medium text-white transition hover:bg-white/5 hover:border-white/30/40"
+          className="flex w-full items-center justify-between rounded-xl border border-white/5 bg-[#101417] px-3.5 py-2.5 text-left text-sm font-medium text-white transition hover:bg-white/5 hover:border-[#A78BFA]/40"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <Layers className="size-3.5 text-zinc-300 shrink-0" />
+            <Layers className="size-3.5 text-[#A78BFA] shrink-0" />
             <span className="truncate">{venture?.name ?? "Select Venture"}</span>
           </div>
           <ChevronDown className={cn("size-4 text-[#958ea0] transition-transform duration-200", openSelector && "rotate-180")} />
         </button>
 
         {openSelector ? (
-          <ul className="absolute z-40 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-[#101417] p-1 shadow-[0_20px_45px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+          <ul className="absolute z-40 mt-2 w-full overflow-hidden rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-1 shadow-[0_20px_45px_rgba(0,0,0,0.8)] backdrop-blur-xl">
             {app.ventures.map((v) => (
               <li key={v.id}>
                 <button
@@ -118,11 +118,11 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   }}
                   className={cn(
                     "w-full truncate rounded-lg px-3 py-2 text-left text-sm transition hover:bg-white/5 flex items-center justify-between",
-                    v.id === venture?.id ? "text-zinc-300 font-semibold bg-zinc-800/10" : "text-white",
+                    v.id === venture?.id ? "text-[#A78BFA] font-semibold bg-[#A78BFA]/10" : "text-white",
                   )}
                 >
                   <span className="truncate">{v.name}</span>
-                  {v.id === venture?.id ? <span className="size-1.5 rounded-full bg-zinc-800 shadow-[0_0_8px_#d4d4d8] shrink-0" /> : null}
+                  {v.id === venture?.id ? <span className="size-1.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] shrink-0" /> : null}
                 </button>
               </li>
             ))}
@@ -150,14 +150,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   className={cn(
                     "group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative",
                     active
-                      ? "bg-zinc-800/60 text-zinc-300 font-semibold shadow-[0_4px_20px_rgba(0,0,0,0.5)] border border-white/10"
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold shadow-[0_0_20px_rgba(167,139,250,0.2)] border border-[rgba(139,92,246,0.3)]"
                       : "text-[#cbc3d7] hover:bg-white/5 hover:text-white",
                   )}
                 >
                   <span
                     className={cn(
                       "size-1.5 rounded-full transition-all",
-                      active ? "bg-zinc-800 shadow-[0_0_8px_#d4d4d8] scale-110" : "bg-white/20 group-hover:bg-zinc-800/50",
+                      active ? "bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] scale-110" : "bg-white/20 group-hover:bg-[#A78BFA]/50",
                     )}
                   />
                   <span className="truncate">{item.label}</span>
@@ -171,7 +171,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* User Footer Profile & Settings */}
       <div className="border-t border-white/5 pt-3">
         <div className="flex items-center gap-2.5">
-          <span className="grid size-9 place-items-center rounded-full border border-[#d4d4d8]/40 bg-zinc-800/15 text-zinc-300 font-bold text-sm">
+          <span className="grid size-9 place-items-center rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/15 text-[#A78BFA] font-bold text-sm">
             {(app.user?.name ?? "F").slice(0, 1).toUpperCase()}
           </span>
           <div className="min-w-0 flex-1">
@@ -206,10 +206,10 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* Account Settings Modal */}
       {showSettings ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-md os-window-open">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#101417] p-6 shadow-[0_20px_45px_rgba(0,0,0,0.8)] space-y-5">
+          <div className="w-full max-w-md rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 shadow-[0_20px_45px_rgba(0,0,0,0.8)] space-y-5">
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
               <div className="flex items-center gap-2">
-                <Shield className="size-5 text-zinc-300" />
+                <Shield className="size-5 text-[#A78BFA]" />
                 <h2 className="text-lg font-bold text-white">Account Settings</h2>
               </div>
               <button
@@ -235,11 +235,11 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#958ea0]">Current Active Venture:</span>
-                  <span className="font-semibold text-zinc-300 truncate max-w-[180px]">{venture?.name ?? "None"}</span>
+                  <span className="font-semibold text-[#A78BFA] truncate max-w-[180px]">{venture?.name ?? "None"}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#958ea0]">Data Isolation:</span>
-                  <span className="text-zinc-300">100% Encrypted & Isolated</span>
+                  <span className="text-[#A78BFA]">100% Encrypted & Isolated</span>
                 </div>
               </div>
 

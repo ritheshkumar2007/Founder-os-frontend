@@ -16,7 +16,7 @@ const PARTNERS = [
 
 export const TechMarquee: React.FC = () => {
   return (
-    <section className="relative py-12 border-y border-white/10 bg-[#020408] overflow-hidden z-10">
+    <section className="relative py-12 border-y border-[rgba(139,92,246,0.2)] bg-[#020408] overflow-hidden z-10">
       {/* Title */}
       <div className="text-center mb-6">
         <p className="text-[11px] font-mono text-[#958ea0] uppercase tracking-[0.25em]">
@@ -33,9 +33,9 @@ export const TechMarquee: React.FC = () => {
             return (
               <div
                 key={`${partner.name}-${index}`}
-                className="flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/[0.08] bg-[#0b0f12] backdrop-blur-md text-xs font-mono transition-all hover:border-white/10 hover:bg-[#101417]"
+                className="flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/[0.08] bg-[#0b0f12] backdrop-blur-md text-xs font-mono transition-all hover:border-[rgba(139,92,246,0.4)] hover:bg-[#101417]"
               >
-                <Icon className="size-4 text-zinc-300" />
+                <Icon className="size-4 text-[#A78BFA]" />
                 <span className="font-bold text-white tracking-wider">{partner.name}</span>
                 <span className="text-white/20">•</span>
                 <span className="text-[#cbc3d7] text-[11px]">{partner.role}</span>

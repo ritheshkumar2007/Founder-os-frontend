@@ -133,17 +133,17 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="flex h-full w-full max-w-4xl flex-col border-l border-white/10 bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
+      <div className="flex h-full w-full max-w-4xl flex-col border-l border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#101417] px-6 py-4 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[rgba(139,92,246,0.25)] bg-[#101417] px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xl bg-zinc-800/60 border border-white/10 text-zinc-300">
+            <span className="grid size-9 place-items-center rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA]">
               <FileText className="size-5" />
             </span>
             <div>
               <h2 className="text-base font-bold font-display text-white flex items-center gap-2">
                 Executive Startup Reports
-                <Sparkles className="size-4 text-zinc-300" />
+                <Sparkles className="size-4 text-[#A78BFA]" />
               </h2>
               <p className="text-xs text-[#cbc3d7]">
                 Real-time consulting documents generated from your venture memory.
@@ -155,9 +155,9 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
             <button
               onClick={() => void handleManualGenerate()}
               disabled={refreshing}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-white/30 hover:text-white disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-[#A78BFA] hover:text-white disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw className={`size-3.5 ${refreshing ? "animate-spin text-zinc-300" : ""}`} />
+              <RefreshCw className={`size-3.5 ${refreshing ? "animate-spin text-[#A78BFA]" : ""}`} />
               {refreshing ? "Updating..." : "Refresh Reports"}
             </button>
 
@@ -173,7 +173,7 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
         {/* Content Body: Sidebar Navigation & Main Report Viewer */}
         <div className="flex flex-1 overflow-hidden">
           {/* Report Type Selector Tabs */}
-          <div className="w-64 border-r border-white/10 bg-[#020408] p-3 space-y-1.5 overflow-y-auto">
+          <div className="w-64 border-r border-[rgba(139,92,246,0.25)] bg-[#020408] p-3 space-y-1.5 overflow-y-auto">
             <p className="px-3 py-1 text-[11px] font-mono text-[#958ea0] uppercase tracking-wider">
               Report Suite (7)
             </p>
@@ -189,7 +189,7 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                   }}
                   className={`w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium transition cursor-pointer ${
                     active
-                      ? "bg-zinc-800/60 text-zinc-300 border border-white/10 shadow-sm font-bold"
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.4)] shadow-sm font-bold"
                       : "text-[#cbc3d7] hover:bg-white/5 hover:text-white"
                   }`}
                 >
@@ -198,7 +198,7 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     <span className="truncate">{r.label}</span>
                   </span>
                   {hasDoc ? (
-                    <span className="size-1.5 rounded-full bg-zinc-800" />
+                    <span className="size-1.5 rounded-full bg-[#A78BFA]" />
                   ) : (
                     <span className="size-1.5 rounded-full bg-white/20" />
                   )}
@@ -211,18 +211,18 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
           <div className="flex-1 flex flex-col overflow-y-auto p-6 space-y-5 bg-[#0b0f12]">
             {loading ? (
               <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
-                <RefreshCw className="size-6 animate-spin text-zinc-300" />
+                <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />
                 <p className="text-xs font-mono">Compiling Executive Consulting Reports…</p>
               </div>
             ) : activeReport ? (
               <>
                 {/* Meta Bar: Title, Version, Confidence, Change Explanation */}
-                <div className="space-y-3 rounded-2xl border border-white/10 bg-[#101417] p-4 shadow-lg">
+                <div className="space-y-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 shadow-lg">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
                     <div>
                       <h3 className="text-lg font-bold text-white">{activeReport.title}</h3>
                       <p className="text-xs text-[#cbc3d7] mt-0.5">
-                        Type: <span className="font-mono text-zinc-300">{activeReport.type}</span> • Last Updated:{" "}
+                        Type: <span className="font-mono text-[#A78BFA]">{activeReport.type}</span> • Last Updated:{" "}
                         {new Date(activeReport.lastUpdated || Date.now()).toLocaleString()}
                       </p>
                     </div>
@@ -230,8 +230,8 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     <div className="flex items-center gap-3">
                       {/* Version Selector */}
                       {historyList.length > 0 ? (
-                        <div className="flex items-center gap-1.5 bg-[#0b0f12] px-2.5 py-1 rounded-xl border border-white/10 text-xs text-[#cbc3d7]">
-                          <History className="size-3.5 text-zinc-300" />
+                        <div className="flex items-center gap-1.5 bg-[#0b0f12] px-2.5 py-1 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+                          <History className="size-3.5 text-[#A78BFA]" />
                           <select
                             value={selectedVersion ?? activeReport.version}
                             onChange={(e) => setSelectedVersion(Number(e.target.value))}
@@ -247,8 +247,8 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                       ) : null}
 
                       {/* Confidence Score Pill */}
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-white/10 bg-zinc-800/60 text-xs font-mono font-bold text-zinc-300">
-                        <CheckCircle className="size-3.5 text-emerald-400" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-xs font-mono font-bold text-[#A78BFA]">
+                        <CheckCircle className="size-3.5 text-[#A78BFA]" />
                         {activeReport.confidenceScore}% Confidence
                       </span>
                     </div>
@@ -256,10 +256,10 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
 
                   {/* Why Content Changed Banner */}
                   {activeReport.changeExplanation ? (
-                    <div className="flex items-start gap-2.5 rounded-xl border border-white/10 bg-zinc-800/60 p-3 text-xs text-white">
-                      <ShieldAlert className="size-4 shrink-0 text-rose-400 mt-0.5" />
+                    <div className="flex items-start gap-2.5 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-3 text-xs text-white">
+                      <ShieldAlert className="size-4 shrink-0 text-[#A78BFA] mt-0.5" />
                       <div>
-                        <span className="font-bold text-zinc-300">Why Report Changed: </span>
+                        <span className="font-bold text-[#A78BFA]">Why Report Changed: </span>
                         {activeReport.changeExplanation}
                       </div>
                     </div>
@@ -267,13 +267,13 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                 </div>
 
                 {/* Main Rendered Document Content */}
-                <div className="prose prose-invert max-w-none rounded-2xl border border-white/5 bg-[#020408] p-6 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap selection:bg-zinc-800/60 font-sans shadow-inner text-[#cbc3d7]">
+                <div className="prose prose-invert max-w-none rounded-2xl border border-white/5 bg-[#020408] p-6 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap selection:bg-[rgba(139,92,246,0.3)] font-sans shadow-inner text-[#cbc3d7]">
                   {activeReport.content}
                 </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 gap-3 text-center text-[#958ea0]">
-                <FileText className="size-8 text-zinc-300/50" />
+                <FileText className="size-8 text-[#A78BFA]/50" />
                 <p className="text-sm font-semibold text-white">No report generated for this module yet.</p>
                 <p className="text-xs max-w-md text-[#cbc3d7]">
                   Chat with the FounderOS AI Co-pilot to share your venture details, or click "Refresh Reports" to compile your baseline executive document.

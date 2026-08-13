@@ -116,17 +116,17 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
-      <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#101417]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
           <div className="flex items-center gap-3">
-            <div className="size-9 rounded-xl bg-zinc-800/60 border border-white/10 flex items-center justify-center text-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+            <div className="size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)]">
               <FolderLock className="size-5" />
             </div>
             <div>
               <h3 className="font-display text-lg font-bold text-white tracking-tight flex items-center gap-2">
                 Virtual Data Room
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-300 border border-white/10">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
                   ENCRYPTED AES-256
                 </span>
               </h3>
@@ -152,7 +152,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
                 onClick={() => setSelectedCategory(c)}
                 className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                   selectedCategory === c
-                    ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                    ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
                     : "bg-[#181c1f] text-[#cbc3d7] hover:text-white border border-white/5"
                 }`}
               >
@@ -168,7 +168,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search data room..."
-              className="bg-[#020408] border border-white/10 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-white placeholder-[#958ea0] focus:outline-none focus:border-white/40 w-full sm:w-56"
+              className="bg-[#020408] border border-[rgba(139,92,246,0.3)] rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] w-full sm:w-56"
             />
           </div>
         </div>
@@ -178,15 +178,15 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
           {filteredDocs.map((doc) => (
             <div
               key={doc.id}
-              className="glass-card rounded-xl p-4 border border-white/10 hover:border-white/10 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="glass-card rounded-xl p-4 border border-[rgba(139,92,246,0.25)] hover:border-[rgba(139,92,246,0.6)] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <div
                   className={`size-10 rounded-lg flex items-center justify-center shrink-0 ${
                     doc.format === "pdf"
-                      ? "bg-zinc-800/60 text-zinc-300"
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA]"
                       : doc.format === "xlsx" || doc.format === "csv"
-                      ? "bg-zinc-800/60 text-zinc-300"
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA]"
                       : "bg-[#262a2e] text-[#cbc3d7]"
                   }`}
                 >
@@ -214,7 +214,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-center">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181c1f] text-zinc-300 border border-white/10">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181c1f] text-[#A78BFA] border border-[rgba(139,92,246,0.2)]">
                   {doc.accessLevel}
                 </span>
                 <button
@@ -226,7 +226,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
                 </button>
                 <button
                   onClick={() => handleDownload(doc)}
-                  className="px-3 py-1.5 rounded-lg bg-zinc-800 text-white border border-white/10 font-bold font-mono text-xs hover:bg-[#bfa8ff] transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-[#A78BFA] text-black font-bold font-mono text-xs hover:bg-[#bfa8ff] transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <Download className="size-3.5" />
                   <span>Download</span>
@@ -239,10 +239,10 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
         {/* Quick Preview Sub-Modal / Drawer */}
         {previewDoc && (
           <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#020408]/90 backdrop-blur-md animate-fade-in">
-            <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0b0f12] p-6 shadow-2xl space-y-4">
+            <div className="w-full max-w-lg rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] p-6 shadow-2xl space-y-4">
               <div className="flex justify-between items-start border-b border-white/5 pb-3">
                 <div>
-                  <span className="text-[10px] font-mono text-zinc-300 uppercase">Document Preview</span>
+                  <span className="text-[10px] font-mono text-[#A78BFA] uppercase">Document Preview</span>
                   <h3 className="text-base font-bold font-mono text-white">{previewDoc.name}</h3>
                 </div>
                 <button onClick={() => setPreviewDoc(null)} className="p-1 text-[#958ea0] hover:text-white">
@@ -253,7 +253,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 text-4xl font-bold font-mono uppercase text-white rotate-[-25deg]">
                   CONFIDENTIAL
                 </div>
-                <Lock className="size-8 text-zinc-300 mx-auto" />
+                <Lock className="size-8 text-[#A78BFA] mx-auto" />
                 <h4 className="font-mono text-sm text-white font-bold">{previewDoc.name}</h4>
                 <p className="text-xs text-[#958ea0] max-w-xs mx-auto">
                   Watermarked document encrypted for verified institutional investors.
@@ -271,7 +271,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
                     handleDownload(previewDoc);
                     setPreviewDoc(null);
                   }}
-                  className="px-4 py-2 rounded-lg bg-zinc-800 text-white border border-white/10 font-bold hover:bg-[#bfa8ff]"
+                  className="px-4 py-2 rounded-lg bg-[#A78BFA] text-black font-bold hover:bg-[#bfa8ff]"
                 >
                   Download Full File
                 </button>
@@ -281,7 +281,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
         )}
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-white/10 bg-[#101417] flex justify-between items-center text-xs font-mono text-[#958ea0]">
+        <div className="px-6 py-4 border-t border-[rgba(139,92,246,0.25)] bg-[#101417] flex justify-between items-center text-xs font-mono text-[#958ea0]">
           <span>Audit Trail: All file access is logged with cryptographic hash signatures.</span>
           <button
             onClick={onClose}
