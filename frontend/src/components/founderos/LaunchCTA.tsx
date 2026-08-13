@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Rocket, Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 
 export const LaunchCTA: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -14,30 +13,30 @@ export const LaunchCTA: React.FC = () => {
   };
 
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      {/* Soft Ambient Glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#4F8CFF]/20 via-[#121924]/40 to-[#64D8FF]/20 rounded-[40px] blur-3xl opacity-80 pointer-events-none" />
+    <section className="relative py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      {/* Ambient Glow */}
+      <div className="absolute inset-0 bg-radial-aurora rounded-3xl blur-3xl opacity-80 pointer-events-none" />
 
       {/* Main Container */}
-      <div className="relative rounded-[32px] border border-white/10 bg-[#161F2D] backdrop-blur-3xl p-8 sm:p-16 text-center space-y-8 shadow-[0_25px_60px_rgba(0,0,0,0.6)] overflow-hidden">
+      <div className="glass-card relative rounded-2xl p-8 sm:p-14 text-center space-y-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Top Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-[#0E131C] text-xs font-mono text-[#64D8FF]">
-          <span className="size-2 rounded-full bg-[#46E3A3] shadow-[0_0_8px_#46E3A3]" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-glass-border bg-surface-container text-xs font-mono text-electric-violet">
+          <span className="size-2 rounded-full bg-tertiary shadow-[0_0_8px_#41dfa0]" />
           <span className="font-bold">STARTUP OPERATING SYSTEM READY</span>
         </div>
 
         {/* Headline */}
         <div className="max-w-3xl mx-auto space-y-4">
-          <h2 className="text-4xl sm:text-6xl font-bold font-display text-[#F5F8FC] tracking-tight leading-tight">
+          <h2 className="text-4xl sm:text-5xl font-bold font-headline-lg text-white tracking-tight leading-tight">
             Ready to Build Something <br />
             <span className="text-gradient-neural">Extraordinary?</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#A8B3C7] max-w-xl mx-auto">
-            FounderOS isn't just another SaaS app — it is the operating system for building high-velocity, high-growth startups.
+          <p className="text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto">
+            FounderOS is the operating system for building high-velocity, high-growth startups on an obsidian canvas.
           </p>
         </div>
 
-        {/* Action Form or Submitted Banner */}
+        {/* Action Form */}
         <div className="max-w-md mx-auto">
           {!submitted ? (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-3">
@@ -47,27 +46,27 @@ export const LaunchCTA: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter founder email..."
-                className="w-full sm:flex-1 px-4 py-3.5 rounded-xl border border-white/10 bg-[#0E131C] text-[#F5F8FC] placeholder-[#74839B] focus:outline-none focus:border-[#4F8CFF] focus:ring-1 focus:ring-[#4F8CFF]/40 font-mono text-sm"
+                className="w-full sm:flex-1 px-4 py-3 rounded-lg border border-glass-border bg-surface-container text-on-surface placeholder-on-secondary-container focus:outline-none focus:border-electric-violet font-label-mono text-sm"
               />
               <button
                 type="submit"
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl btn-system text-sm font-bold flex items-center justify-center gap-2 shrink-0 group shadow-[0_0_20px_rgba(79,140,255,0.3)]"
+                className="btn-primary w-full sm:w-auto px-6 py-3 rounded-lg font-label-mono text-sm font-bold flex items-center justify-center gap-2 shrink-0 group active:scale-95 duration-200 cursor-pointer"
               >
-                <Sparkles className="size-4 text-[#64D8FF]" />
+                <Sparkles className="size-4 text-white" />
                 <span>Enter FounderOS</span>
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </button>
             </form>
           ) : (
-            <div className="p-4 rounded-xl border border-[#46E3A3]/40 bg-[#46E3A3]/15 text-[#46E3A3] font-mono text-sm flex items-center justify-center gap-2">
-              <CheckCircle2 className="size-5 text-[#46E3A3]" />
+            <div className="p-4 rounded-lg border border-tertiary/40 bg-tertiary/15 text-tertiary font-mono text-sm flex items-center justify-center gap-2">
+              <CheckCircle2 className="size-5 text-tertiary" />
               <span className="font-bold">FOUNDEROS WORKSPACE READY. CHECK YOUR INBOX.</span>
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-[#A8B3C7]">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-on-surface-variant">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="size-3.5 text-[#46E3A3]" /> No Credit Card Required
+              <ShieldCheck className="size-3.5 text-tertiary" /> No Credit Card Required
             </span>
             <span>•</span>
             <span>Instant Workspace Access</span>
@@ -77,3 +76,4 @@ export const LaunchCTA: React.FC = () => {
     </section>
   );
 };
+

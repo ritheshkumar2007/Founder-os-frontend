@@ -98,16 +98,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "FounderOS - The Operating System for Building Startups" },
+      { name: "description", content: "The Operating System for Building Startups. Deploy systems, manage assets, and scale operations with high-velocity precision." },
+      { name: "author", content: "FounderOS" },
+      { property: "og:title", content: "FounderOS - The Operating System for Building Startups" },
+      { property: "og:description", content: "Deploy systems, manage assets, and scale operations with high-velocity precision. The crystal black dashboard designed for elite founders." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      {
+        rel: "preconnect",
+        href: "https://fonts.googleapis.com",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Geist:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -123,11 +139,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html className="dark" lang="en">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="bg-crystal-obsidian text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden relative">
         {children}
         <Scripts />
       </body>

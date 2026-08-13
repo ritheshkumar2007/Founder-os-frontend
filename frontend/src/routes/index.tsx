@@ -1,25 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, Terminal, CheckCircle2, LayoutGrid } from "lucide-react";
 import { useAppState } from "@/lib/founderos/store";
-
-import { StarfieldBackground } from "@/components/founderos/StarfieldBackground";
-import { MouseSpotlight } from "@/components/founderos/MouseSpotlight";
-import { MagneticButton } from "@/components/founderos/MagneticButton";
 import { Navbar } from "@/components/founderos/Navbar";
+import { Footer } from "@/components/founderos/Footer";
 import { InteractiveHeroDashboard } from "@/components/founderos/InteractiveHeroDashboard";
 import { TechMarquee } from "@/components/founderos/TechMarquee";
-import { TrajectoryStoryline } from "@/components/founderos/TrajectoryStoryline";
 import { ModulesGrid } from "@/components/founderos/ModulesGrid";
+import { TrajectoryStoryline } from "@/components/founderos/TrajectoryStoryline";
 import { TelemetryPlayground } from "@/components/founderos/TelemetryPlayground";
 import { GlobalOrbitalCanvas } from "@/components/founderos/GlobalOrbitalCanvas";
 import { TestimonialsAndMetrics } from "@/components/founderos/TestimonialsAndMetrics";
 import { FAQSection } from "@/components/founderos/FAQSection";
 import { LaunchCTA } from "@/components/founderos/LaunchCTA";
-import { Footer } from "@/components/founderos/Footer";
 
-const TITLE = "FounderOS — The AI Startup Operating System";
+const TITLE = "FounderOS - The Operating System for Building Startups";
 const DESCRIPTION =
-  "Purpose-built operating system for building startups. Turn raw vision into validated customer pain scores, 7-day sprint MVPs, and investor data rooms in a unified workspace.";
+  "Deploy systems, manage assets, and scale operations with high-velocity precision. The crystal black dashboard designed for elite founders.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,122 +33,170 @@ function Index() {
   const targetPath = app.user ? "/workspace/idea-validation" : "/signin";
 
   return (
-    <main className="relative min-h-screen bg-[#080A0F] text-[#F5F8FC] overflow-x-hidden selection:bg-[#4F8CFF]/30 selection:text-[#F5F8FC]">
-      {/* Interactive Mouse Spotlight Radial Light Layer */}
-      <MouseSpotlight />
+    <div className="bg-crystal-obsidian text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden relative">
+      {/* Ambient Glow */}
+      <div className="glow-bg" />
 
-      {/* OS Ambient Structural Grid Layer */}
-      <StarfieldBackground />
-
-      {/* Navigation Header */}
+      {/* Top Navigation (Shell) */}
       <Navbar />
 
-      {/* HERO SECTION */}
-      <section id="hero" className="relative pt-32 pb-20 sm:pt-40 sm:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 space-y-16">
-        {/* Anti-Gravity Floating Ambient Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[480px] bg-gradient-to-r from-[#4F8CFF]/15 via-[#121924]/30 to-[#64D8FF]/15 rounded-full blur-[160px] pointer-events-none" />
-
-        {/* Top Hero Text Content */}
-        <div className="text-center max-w-4xl mx-auto space-y-8 relative z-10">
-          {/* Status Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-[#0E131C] text-xs font-mono text-[#A9D6FF] shadow-sm">
-            <span className="size-2 rounded-full bg-[#46E3A3] shadow-[0_0_8px_#46E3A3]" />
-            <span className="text-[#64D8FF] font-bold">FOUNDEROS v2.5</span>
-            <span>AI STARTUP OPERATING SYSTEM</span>
-          </div>
-
-          {/* Main Headline */}
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold font-display tracking-tight text-[#F5F8FC] leading-[1.02]">
-            The Operating System <br />
-            <span className="text-gradient-system">For Building Startups</span>
+      {/* Main Content Canvas */}
+      <main className="flex-grow flex flex-col items-center justify-center pt-32 pb-24 px-margin-mobile md:px-margin-desktop relative z-10 w-full max-w-[theme(spacing.max-width)] mx-auto space-y-24">
+        {/* Hero Section */}
+        <section className="text-center flex flex-col items-center max-w-4xl w-full">
+          <h1 className="font-display-lg text-display-lg md:text-[80px] md:leading-[88px] text-white mb-6 tracking-tighter text-glow">
+            The Operating System<br />
+            for Building Startups
           </h1>
-
-          {/* Subtitle */}
-          <p className="max-w-2xl mx-auto text-base sm:text-xl text-[#A8B3C7] font-normal leading-relaxed">
-            Stop juggling fragmented tools. Step into <strong className="text-[#F5F8FC] font-semibold">FounderOS</strong> — move seamlessly from idea validation and 7-day MVP scoping to marketing execution and investor growth.
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-12">
+            Deploy systems, manage assets, and scale operations with high-velocity precision. The crystal black dashboard designed for elite founders.
           </p>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <MagneticButton>
-              {app.user ? (
-                <Link
-                  to="/workspace/idea-validation"
-                  className="btn-system w-full sm:w-auto px-8 py-4 rounded-2xl text-base flex items-center justify-center gap-3 group shadow-[0_0_25px_rgba(79,140,255,0.3)]"
-                >
-                  <Sparkles className="size-5 text-[#64D8FF]" />
-                  <span>Open Operating System</span>
-                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              ) : (
-                <Link
-                  to="/signin"
-                  className="btn-system w-full sm:w-auto px-8 py-4 rounded-2xl text-base flex items-center justify-center gap-3 group shadow-[0_0_25px_rgba(79,140,255,0.3)]"
-                >
-                  <Sparkles className="size-5 text-[#64D8FF]" />
-                  <span>Enter Operating System</span>
-                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              )}
-            </MagneticButton>
-
-            <MagneticButton>
-              <a
-                href="#modules"
-                className="btn-frosted w-full sm:w-auto px-7 py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2"
+          {/* Interactive Glass Card */}
+          <div className="glass-card rounded-xl p-8 md:p-12 w-full relative overflow-hidden mb-12 shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+            {/* Inner Glow specific to card */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-electric-violet opacity-20 rounded-full blur-[50px]" />
+            <div className="relative z-10 flex flex-col items-center gap-8">
+              <span
+                className="material-symbols-outlined text-electric-violet text-6xl"
+                style={{ fontVariationSettings: "'FILL' 0" }}
               >
-                <LayoutGrid className="size-5 text-[#4F8CFF]" />
-                <span>Explore App Modules</span>
-              </a>
-            </MagneticButton>
+                rocket_launch
+              </span>
+              <h2 className="font-headline-lg text-headline-lg text-white">
+                Initialize Your Startup Engine
+              </h2>
+              <p className="font-label-mono text-label-mono text-on-secondary-container bg-surface-container/50 py-2 px-4 rounded border border-outline-variant">
+                &gt; root@founder-os:~# ./deploy_startup --scale=hyper
+              </p>
+              <Link
+                to={targetPath}
+                className="btn-primary px-8 py-4 rounded-lg font-headline-md text-[18px] font-semibold flex items-center gap-3 active:scale-95 duration-200 mt-4 cursor-pointer"
+              >
+                <span>Enter Operating System</span>
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </Link>
+            </div>
           </div>
 
-          {/* Trust Metrics Pill */}
-          <div className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-[#A8B3C7]">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="size-4 text-[#46E3A3]" /> 1,240+ Active Founders
-            </span>
-            <span className="hidden sm:inline text-white/20">•</span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="size-4 text-[#46E3A3]" /> $420M+ Capital Raised
-            </span>
-            <span className="hidden sm:inline text-white/20">•</span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="size-4 text-[#46E3A3]" /> 100% Data Isolated
-            </span>
+          {/* Features Grid (Bento Style hint) */}
+          <div id="features" className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+            <div className="glass-card rounded-lg p-6 flex flex-col gap-4">
+              <span className="material-symbols-outlined text-tertiary">speed</span>
+              <h3 className="font-headline-md text-headline-md text-white text-lg">
+                High-Velocity Operations
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Streamline your daily workflows with zero latency tools.
+              </p>
+            </div>
+            <div className="glass-card rounded-lg p-6 flex flex-col gap-4">
+              <span className="material-symbols-outlined text-primary">monitoring</span>
+              <h3 className="font-headline-md text-headline-md text-white text-lg">
+                Real-time Analytics
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Monitor crucial growth metrics on an obsidian canvas.
+              </p>
+            </div>
+            <div className="glass-card rounded-lg p-6 flex flex-col gap-4">
+              <span className="material-symbols-outlined text-electric-violet">hub</span>
+              <h3 className="font-headline-md text-headline-md text-white text-lg">
+                System Integration
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Connect all your vital startup assets in one unified terminal.
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Operating System Interactive Desktop Hero Container */}
-        <InteractiveHeroDashboard />
-      </section>
+        {/* Interactive OS Dashboard Container */}
+        <section className="w-full">
+          <InteractiveHeroDashboard />
+        </section>
 
-      {/* INFINITE TECH ECOSYSTEM MARQUEE */}
-      <TechMarquee />
+        {/* Tech Ecosystem Marquee */}
+        <section className="w-full">
+          <TechMarquee />
+        </section>
 
-      {/* STORYLINE TRAJECTORY SECTION */}
-      <TrajectoryStoryline />
+        {/* Application Modules Grid */}
+        <section id="pricing" className="w-full">
+          <ModulesGrid />
+        </section>
 
-      {/* MODULES SHOWCASE SECTION */}
-      <ModulesGrid />
+        {/* Trajectory Storyline */}
+        <section id="growth" className="w-full">
+          <TrajectoryStoryline />
+        </section>
 
-      {/* LIVE COMMAND SIMULATOR SECTION */}
-      <TelemetryPlayground />
+        {/* Simulator & Telemetry Playground */}
+        <section id="docs" className="w-full">
+          <TelemetryPlayground />
+        </section>
 
-      {/* GLOBAL ECOSYSTEM NETWORK SECTION */}
-      <GlobalOrbitalCanvas />
+        {/* Global Ecosystem Orbital Canvas */}
+        <section className="w-full">
+          <GlobalOrbitalCanvas />
+        </section>
 
-      {/* TESTIMONIALS & METRICS */}
-      <TestimonialsAndMetrics />
+        {/* Testimonials and Metrics */}
+        <section className="w-full">
+          <TestimonialsAndMetrics />
+        </section>
 
-      {/* FAQ SECTION */}
-      <FAQSection />
+        {/* FAQ Section */}
+        <section className="w-full">
+          <FAQSection />
+        </section>
 
-      {/* LAUNCH CTA */}
-      <LaunchCTA />
+        {/* Launch CTA */}
+        <section className="w-full">
+          <LaunchCTA />
+        </section>
+      </main>
 
-      {/* FOOTER */}
+      {/* Bottom Navigation (Mobile Only) */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-xl border-t border-glass-border shadow-[0_-5px_15px_rgba(0,0,0,0.5)] rounded-t-xl">
+        <Link
+          to="/"
+          className="flex flex-col items-center justify-center text-primary font-bold bg-surface-glow rounded-xl px-3 py-1 active:scale-90 duration-300"
+        >
+          <span
+            className="material-symbols-outlined mb-1"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            dashboard
+          </span>
+          <span className="font-caption text-caption">Terminal</span>
+        </Link>
+        <a
+          href="#features"
+          className="flex flex-col items-center justify-center text-on-secondary-container hover:bg-surface-container-high transition-all rounded-xl px-3 py-1 active:scale-90 duration-300"
+        >
+          <span className="material-symbols-outlined mb-1">account_balance_wallet</span>
+          <span className="font-caption text-caption">Assets</span>
+        </a>
+        <a
+          href="#growth"
+          className="flex flex-col items-center justify-center text-on-secondary-container hover:bg-surface-container-high transition-all rounded-xl px-3 py-1 active:scale-90 duration-300"
+        >
+          <span className="material-symbols-outlined mb-1">trending_up</span>
+          <span className="font-caption text-caption">Growth</span>
+        </a>
+        <Link
+          to={targetPath}
+          className="flex flex-col items-center justify-center text-on-secondary-container hover:bg-surface-container-high transition-all rounded-xl px-3 py-1 active:scale-90 duration-300"
+        >
+          <span className="material-symbols-outlined mb-1">settings</span>
+          <span className="font-caption text-caption">Settings</span>
+        </Link>
+      </nav>
+
+      {/* Footer */}
       <Footer />
-    </main>
+    </div>
   );
 }
+
