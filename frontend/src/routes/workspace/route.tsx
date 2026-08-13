@@ -37,15 +37,15 @@ function WorkspaceLayout() {
   if (!app.user) return null;
 
   return (
-    <div className="bg-[#020408] min-h-screen flex selection:bg-[#A78BFA]/30 selection:text-white">
-      <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-[rgba(139,92,246,0.2)] bg-[#0b0f12] lg:block">
+    <div className="bg-[#020408] min-h-screen flex selection:bg-zinc-800/30 selection:text-white">
+      <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-white/10 bg-[#0b0f12] lg:block">
         <Sidebar />
       </aside>
       <MobileSidebar open={menu} onClose={() => setMenu(false)} />
 
       <div className="min-w-0 flex-1 flex flex-col bg-[#020408]">
         {/* Desktop OS Title Bar & Window Controls */}
-        <header className="flex items-center justify-between border-b border-[rgba(139,92,246,0.2)] bg-[#0b0f12]/95 backdrop-blur-xl px-5 py-3 select-none">
+        <header className="flex items-center justify-between border-b border-white/10 bg-[#0b0f12]/95 backdrop-blur-xl px-5 py-3 select-none">
           <div className="flex items-center gap-3">
             {/* Mobile Menu Trigger */}
             <button
@@ -58,14 +58,14 @@ function WorkspaceLayout() {
 
             {/* Window Controls */}
             <div className="hidden sm:flex items-center gap-2 mr-2">
-              <span className="size-2.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
-              <span className="size-2.5 rounded-full bg-[#8B5CF6]/60 border border-[rgba(139,92,246,0.4)]" />
+              <span className="size-2.5 rounded-full bg-zinc-800 shadow-[0_0_8px_#d4d4d8]" />
+              <span className="size-2.5 rounded-full bg-[#71717a]/60 border border-white/10" />
               <span className="size-2.5 rounded-full bg-[#1c2023] border border-white/10" />
             </div>
 
             {/* Window Title */}
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-medium text-white bg-[#101417] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-md shadow-inner">
+              <span className="font-mono text-xs font-medium text-white bg-[#101417] border border-white/10 px-2.5 py-1 rounded-md shadow-inner">
                 {activeAppName}
               </span>
               <span className="hidden md:inline text-[11px] font-mono text-[#958ea0]">
@@ -76,21 +76,21 @@ function WorkspaceLayout() {
 
           <div className="flex items-center gap-4">
             {/* User Session Badge */}
-            <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#cbc3d7] bg-[#101417] border border-[rgba(139,92,246,0.2)] px-3 py-1 rounded-full">
-              <ShieldCheck className="size-3.5 text-[#A78BFA]" />
+            <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#cbc3d7] bg-[#101417] border border-white/10 px-3 py-1 rounded-full">
+              <ShieldCheck className="size-3.5 text-zinc-300" />
               <span className="text-white font-semibold">{app.user.name}</span>
             </div>
 
             {/* Auto-Save Status Badge */}
-            <div className="flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] shadow-sm">
+            <div className="flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-[#101417] shadow-sm">
               {app.saveStatus === "saving" ? (
                 <>
-                  <Loader2 className="size-3.5 animate-spin text-[#A78BFA]" />
-                  <span className="text-[#A78BFA] font-medium">Saving...</span>
+                  <Loader2 className="size-3.5 animate-spin text-zinc-300" />
+                  <span className="text-zinc-300 font-medium">Saving...</span>
                 </>
               ) : (
                 <>
-                  <span className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] animate-pulse" />
+                  <span className="size-2 rounded-full bg-zinc-800 shadow-[0_0_8px_#d4d4d8] animate-pulse" />
                   <span className="text-white font-medium">Auto-Saved</span>
                 </>
               )}

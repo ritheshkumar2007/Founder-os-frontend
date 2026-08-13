@@ -9,10 +9,10 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-glass-border shadow-[0_0_15px_rgba(139,92,246,0.1)] flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
+      <header className="fixed top-0 left-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-glass-border shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
         <Link to="/" className="flex items-center gap-3">
           <span
-            className="material-symbols-outlined text-electric-violet text-2xl"
+            className="material-symbols-outlined text-zinc-300 text-2xl"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             terminal

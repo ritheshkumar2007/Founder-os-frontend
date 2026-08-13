@@ -64,12 +64,12 @@ export const TelemetryPlayground: React.FC = () => {
   return (
     <section id="simulator" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Background Neon Laser Grid & Radar */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] bg-[rgba(139,92,246,0.15)] rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] bg-zinc-800/60 rounded-full blur-[150px] pointer-events-none" />
 
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.1)] text-xs font-mono text-[#A78BFA]">
-          <Terminal className="size-3.5 text-[#A78BFA]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-zinc-800/60 text-xs font-mono text-zinc-300">
+          <Terminal className="size-3.5 text-zinc-300" />
           <span>INTERACTIVE AI SIMULATOR</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
@@ -82,7 +82,7 @@ export const TelemetryPlayground: React.FC = () => {
       </div>
 
       {/* Playground Console Container */}
-      <div className="glass-card p-6 sm:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl relative z-10 space-y-8 shadow-[0_0_60px_rgba(139,92,246,0.15)] rounded-3xl">
+      <div className="glass-card p-6 sm:p-10 border border-white/10 bg-[#0b0f12]/95 backdrop-blur-2xl relative z-10 space-y-8 shadow-[0_4px_20px_rgba(0,0,0,0.5)] rounded-3xl">
         {/* Preset Chips */}
         <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
           <span className="text-[#958ea0] mr-2">Try sample ideas:</span>
@@ -93,7 +93,7 @@ export const TelemetryPlayground: React.FC = () => {
                 setIdeaText(preset.prompt);
                 handleSimulate(preset.prompt);
               }}
-              className="px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[#A78BFA] hover:border-[#A78BFA] hover:bg-[rgba(139,92,246,0.15)] transition-all font-semibold shadow-[0_0_10px_rgba(139,92,246,0.15)] cursor-pointer"
+              className="px-3.5 py-2 rounded-xl border border-white/10 bg-[#101417] text-zinc-300 hover:border-white/30 hover:bg-zinc-800/60 transition-all font-semibold shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
             >
               {preset.label}
             </button>
@@ -107,13 +107,13 @@ export const TelemetryPlayground: React.FC = () => {
             onChange={(e) => setIdeaText(e.target.value)}
             rows={3}
             placeholder="Describe your venture idea (e.g., 'An AI agent platform that automates customer support for Shopify stores')..."
-            className="w-full p-4 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-mono text-sm resize-none shadow-[inset_0_0_20px_rgba(139,92,246,0.1)]"
+            className="w-full p-4 rounded-2xl border border-white/10 bg-[#020408] text-white placeholder-[#958ea0] focus:outline-none focus:border-white/40 font-mono text-sm resize-none shadow-[inset_0_0_20px_rgba(139,92,246,0.1)]"
           />
           <div className="mt-3 flex justify-end">
             <button
               onClick={() => handleSimulate()}
               disabled={isGenerating || !ideaText.trim()}
-              className="px-6 py-3.5 rounded-xl text-sm font-extrabold disabled:opacity-50 flex items-center gap-2 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black shadow-[0_0_30px_rgba(139,92,246,0.4)] transition cursor-pointer"
+              className="px-6 py-3.5 rounded-xl text-sm font-extrabold disabled:opacity-50 flex items-center gap-2 btn-system text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition cursor-pointer"
             >
               {isGenerating ? (
                 <>
@@ -132,30 +132,30 @@ export const TelemetryPlayground: React.FC = () => {
 
         {/* Live Output Simulation Window */}
         {result && (
-          <div className="p-6 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408]/95 space-y-6 animate-fade-in font-mono shadow-[0_0_40px_rgba(139,92,246,0.2)]">
+          <div className="p-6 rounded-2xl border border-white/10 bg-[#020408]/95 space-y-6 animate-fade-in font-mono shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
             <div className="flex flex-wrap items-center justify-between border-b border-white/[0.08] pb-4">
               <div className="flex items-center gap-3">
-                <span className="size-3 rounded-full bg-[#A78BFA] animate-ping shadow-[0_0_10px_#A78BFA]" />
+                <span className="size-3 rounded-full bg-zinc-800 animate-ping shadow-[0_0_10px_#d4d4d8]" />
                 <span className="text-white font-bold text-lg">{result.ventureName}</span>
-                <span className="text-xs px-2.5 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
+                <span className="text-xs px-2.5 py-0.5 rounded bg-zinc-800/60 text-zinc-300 border border-white/10 font-bold">
                   {result.category}
                 </span>
               </div>
-              <div className="text-xs text-[#A78BFA] font-bold">
+              <div className="text-xs text-zinc-300 font-bold">
                 VALIDATION CONFIDENCE: <strong className="text-white text-sm">{result.validationScore} / 100</strong>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               {/* Box 1 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-4 rounded-xl border border-white/10 bg-[#101417] space-y-2">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Market Velocity & TAM</p>
                 <p className="text-xl font-bold text-white">{result.tam}</p>
-                <p className="text-[11px] text-[#A78BFA]">High buyer willingness-to-pay index</p>
+                <p className="text-[11px] text-zinc-300">High buyer willingness-to-pay index</p>
               </div>
 
               {/* Box 2 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-4 rounded-xl border border-white/10 bg-[#101417] space-y-2">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Competitor Whitespace</p>
                 <div className="flex flex-wrap gap-1">
                   {result.targetCompetitors.map((comp) => (
@@ -168,9 +168,9 @@ export const TelemetryPlayground: React.FC = () => {
               </div>
 
               {/* Box 3 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-4 rounded-xl border border-white/10 bg-[#101417] space-y-2">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Recommended Sprint</p>
-                <p className="text-base font-bold text-[#A78BFA]">{result.launchTimeline}</p>
+                <p className="text-base font-bold text-zinc-300">{result.launchTimeline}</p>
                 <p className="text-[11px] text-[#cbc3d7]">3 Core Features max to ship</p>
               </div>
             </div>
@@ -181,7 +181,7 @@ export const TelemetryPlayground: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {result.mvpScope.map((item, idx) => (
                   <div key={idx} className="p-3 rounded-xl border border-white/[0.08] bg-[#101417] flex items-center gap-2 text-xs text-white">
-                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
+                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -191,7 +191,7 @@ export const TelemetryPlayground: React.FC = () => {
             <div className="pt-2 flex justify-end">
               <a
                 href="/signin"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold bg-[#A78BFA] hover:bg-[#bfa8ff] text-black transition cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold btn-system text-white transition cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
               >
                 <span>Launch This Venture in FounderOS</span>
                 <ArrowRight className="size-3.5 text-black" />

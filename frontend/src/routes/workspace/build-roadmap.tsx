@@ -249,8 +249,8 @@ function RoadmapPage() {
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
-                <History className="size-3.5 text-[#A78BFA]" />
+              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#cbc3d7]">
+                <History className="size-3.5 text-zinc-300" />
                 <span className="font-mono text-xs text-white">{history.length} Versions Saved</span>
               </div>
             )}
@@ -258,7 +258,7 @@ function RoadmapPage() {
             <button
               onClick={() => void handleGenerateRoadmap()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl btn-system px-4 py-2 text-xs font-bold text-white transition shadow-[0_4px_20px_rgba(0,0,0,0.5)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
               {generating ? "AI CTO Is Designing Roadmap..." : "Generate Technical Roadmap"}
@@ -269,18 +269,18 @@ function RoadmapPage() {
 
       {/* Banner */}
       {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-800/60 p-4 text-xs text-white shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-zinc-300" />
           <div>
-            <span className="font-bold text-[#A78BFA]">Venture Memory Connected: </span>
+            <span className="font-bold text-zinc-300">Venture Memory Connected: </span>
             Auto-inherited your MVP feature scope from Step 2. Adjust your tech stack preferences below to generate your 4-phase engineering roadmap.
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-[#A78BFA]" />
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-rose-400" />
           <div>
-            <span className="font-bold text-[#A78BFA]">No Upstream MVP Memory: </span>
+            <span className="font-bold text-zinc-300">No Upstream MVP Memory: </span>
             Input your startup idea and scope in the form below or complete Step 2 (MVP Scope) to auto-populate parameters.
           </div>
         </div>
@@ -327,7 +327,7 @@ function RoadmapPage() {
             <button
               type="submit"
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-5 py-2.5 text-xs font-extrabold text-black transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl btn-system px-5 py-2.5 text-xs font-extrabold text-white transition disabled:opacity-50 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
             >
               <Sparkles className="size-4" /> {generating ? "AI CTO Is Designing Roadmap..." : "Generate Technical Roadmap"}
             </button>
@@ -337,8 +337,8 @@ function RoadmapPage() {
 
       {/* Loading State */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#A78BFA]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-white/10 bg-[#0b0f12] p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-zinc-300" />
           <div className="text-center space-y-1">
             <h3 className="text-sm font-bold text-white">AI CTO Is Designing Technical Roadmap...</h3>
             <p className="text-xs font-mono text-[#958ea0]">Structuring 4-phase development timeline, deliverables, architecture stack, and risks</p>
@@ -350,8 +350,8 @@ function RoadmapPage() {
       {roadmapData && !generating && (
         <div className="space-y-6">
           {/* Executive Overview Banner */}
-          <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl space-y-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
+          <div className="rounded-2xl border border-white/10 bg-[#0b0f12] p-6 shadow-2xl space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 bg-zinc-800/60 px-2.5 py-1 rounded-lg border border-white/10">
               CTO Strategy Overview
             </span>
             <p className="text-sm text-white leading-relaxed pt-1">{roadmapData.overview}</p>
@@ -364,12 +364,12 @@ function RoadmapPage() {
                 <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-5 space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
+                      <span className="font-mono text-xs font-bold text-zinc-300 bg-zinc-800/60 px-2.5 py-1 rounded-lg border border-white/10">
                         Phase {i + 1}
                       </span>
                       <h4 className="text-sm font-bold text-white">{p.phaseName}</h4>
                     </div>
-                    <span className="font-mono text-xs text-white bg-[rgba(139,92,246,0.15)] px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)]">
+                    <span className="font-mono text-xs text-white bg-zinc-800/60 px-3 py-1 rounded-full border border-white/10">
                       {p.duration}
                     </span>
                   </div>
@@ -378,11 +378,11 @@ function RoadmapPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2 pt-2">
                     <div>
-                      <span className="text-[11px] font-mono font-semibold text-[#A78BFA]">Key Engineering Tasks:</span>
+                      <span className="text-[11px] font-mono font-semibold text-zinc-300">Key Engineering Tasks:</span>
                       <ul className="mt-1 space-y-1 text-xs text-white">
                         {p.tasks?.map((t, ti) => (
                           <li key={ti} className="flex items-center gap-2">
-                            <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
+                            <CheckCircle2 className="size-3.5 text-emerald-400 shrink-0" />
                             <span>{t}</span>
                           </li>
                         ))}
@@ -394,7 +394,7 @@ function RoadmapPage() {
                       <ul className="mt-1 space-y-1 text-xs text-[#cbc3d7]">
                         {p.deliverables?.map((d, di) => (
                           <li key={di} className="flex items-center gap-2">
-                            <Code className="size-3.5 text-[#A78BFA] shrink-0" />
+                            <Code className="size-3.5 text-zinc-300 shrink-0" />
                             <span>{d}</span>
                           </li>
                         ))}
@@ -404,7 +404,7 @@ function RoadmapPage() {
 
                   <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
                     {p.technologies?.map((tech, tei) => (
-                      <span key={tei} className="rounded-lg bg-white/5 px-2.5 py-1 text-[10px] font-mono text-[#A78BFA] border border-[rgba(139,92,246,0.2)]">
+                      <span key={tei} className="rounded-lg bg-white/5 px-2.5 py-1 text-[10px] font-mono text-zinc-300 border border-white/10">
                         {tech}
                       </span>
                     ))}
@@ -420,7 +420,7 @@ function RoadmapPage() {
               <ul className="space-y-2">
                 {roadmapData.teamRequirements?.map((role, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-white bg-[#101417] p-3 rounded-xl border border-white/5">
-                    <Cpu className="size-4 text-[#A78BFA]" />
+                    <Cpu className="size-4 text-zinc-300" />
                     <span>{role}</span>
                   </li>
                 ))}
@@ -431,7 +431,7 @@ function RoadmapPage() {
               <ul className="space-y-2">
                 {roadmapData.risks?.map((risk, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-[#cbc3d7] bg-[#101417] p-3 rounded-xl border border-white/10">
-                    <ShieldAlert className="size-4 text-[#A78BFA] shrink-0" />
+                    <ShieldAlert className="size-4 text-rose-400 shrink-0" />
                     <span>{risk}</span>
                   </li>
                 ))}
@@ -445,7 +445,7 @@ function RoadmapPage() {
               <ul className="space-y-2">
                 {roadmapData.milestones?.map((m, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs font-semibold text-white bg-[#101417] p-3 rounded-xl border border-white/5">
-                    <Flag className="size-4 text-[#A78BFA]" />
+                    <Flag className="size-4 text-zinc-300" />
                     <span>{m}</span>
                   </li>
                 ))}
@@ -455,8 +455,8 @@ function RoadmapPage() {
             <Panel title="Pre-Launch Security & QA Checklist">
               <ul className="space-y-2">
                 {roadmapData.launchChecklist?.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-white bg-[#101417] p-3 rounded-xl border border-[rgba(139,92,246,0.3)]">
-                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-white bg-[#101417] p-3 rounded-xl border border-white/10">
+                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -469,7 +469,7 @@ function RoadmapPage() {
       {/* Empty State Banner when no roadmap has been generated yet */}
       {!roadmapData && !generating && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b0f12] p-12 text-center space-y-3">
-          <Cpu className="size-10 text-[#A78BFA]/60" />
+          <Cpu className="size-10 text-zinc-300/60" />
           <h3 className="text-base font-bold text-white">No Technical Roadmap Generated Yet</h3>
           <p className="max-w-md text-xs text-[#cbc3d7] font-sans">
             Review your startup parameters and tech stack preferences above, then click <strong>Generate Technical Roadmap</strong> to construct your 4-phase development timeline and deliverables.

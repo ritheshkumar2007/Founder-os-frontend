@@ -31,7 +31,7 @@ export const FAQSection: React.FC = () => {
     <section className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-xs font-mono text-[#A78BFA]">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-[#0b0f12] text-xs font-mono text-zinc-300">
           <HelpCircle className="size-3.5" />
           <span>FOUNDEROS FAQ</span>
         </div>
@@ -50,19 +50,19 @@ export const FAQSection: React.FC = () => {
           return (
             <div
               key={idx}
-              className="panel border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] overflow-hidden transition-all rounded-2xl"
+              className="panel border border-white/10 bg-[#0b0f12] overflow-hidden transition-all rounded-2xl"
             >
               <button
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
                 className="w-full p-6 text-left flex items-center justify-between gap-4 focus:outline-none cursor-pointer"
               >
                 <span className="text-base font-bold font-display text-white flex items-center gap-3">
-                  <span className="text-xs font-mono text-[#A78BFA]">0{idx + 1}.</span>
+                  <span className="text-xs font-mono text-zinc-300">0{idx + 1}.</span>
                   {faq.q}
                 </span>
                 <ChevronDown
                   className={`size-5 text-[#958ea0] transition-transform duration-200 shrink-0 ${
-                    isOpen ? "rotate-180 text-[#A78BFA]" : ""
+                    isOpen ? "rotate-180 text-zinc-300" : ""
                   }`}
                 />
               </button>

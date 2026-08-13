@@ -35,9 +35,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
   };
 
   return (
-    <div className="sticky bottom-0 z-20 border-t border-[rgba(139,92,246,0.25)] bg-[#0b0f12]/95 backdrop-blur-2xl px-4 sm:px-6 py-4">
+    <div className="sticky bottom-0 z-20 border-t border-white/10 bg-[#0b0f12]/95 backdrop-blur-2xl px-4 sm:px-6 py-4">
       <div className="max-w-4xl mx-auto">
-        <div className="relative flex items-end gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417]/90 p-2 sm:p-3 shadow-[0_15px_40px_rgba(0,0,0,0.6)] focus-within:border-[#A78BFA] focus-within:shadow-[0_0_25px_rgba(139,92,246,0.25)] transition-all">
+        <div className="relative flex items-end gap-3 rounded-2xl border border-white/10 bg-[#101417]/90 p-2 sm:p-3 shadow-[0_15px_40px_rgba(0,0,0,0.6)] focus-within:border-[#d4d4d8] focus-within:shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all">
           <textarea
             ref={textareaRef}
             rows={1}
@@ -53,7 +53,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
             type="button"
             onClick={handleSend}
             disabled={disabled || !input.trim()}
-            className="flex items-center justify-center size-10 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] text-black shadow-[0_0_15px_rgba(139,92,246,0.4)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none transition-all shrink-0 cursor-pointer"
+            className="flex items-center justify-center size-10 rounded-xl btn-system text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none transition-all shrink-0 cursor-pointer"
           >
             <Send className="size-4 text-black" />
           </button>
@@ -62,7 +62,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
         {/* Footer Hint */}
         <div className="flex items-center justify-between text-[11px] font-mono text-[#958ea0] mt-2 px-1">
           <span className="flex items-center gap-1.5">
-            <CornerDownLeft className="size-3 text-[#A78BFA]" /> Press <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Shift + Enter</kbd> for new line
+            <CornerDownLeft className="size-3 text-zinc-300" /> Press <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Shift + Enter</kbd> for new line
           </span>
           <span className="hidden sm:inline text-[#cbc3d7]">FounderOS AI Assistant v2.5</span>
         </div>

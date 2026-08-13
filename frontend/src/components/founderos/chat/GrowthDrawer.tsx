@@ -160,17 +160,17 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="flex h-full w-full max-w-5xl flex-col border-l border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
+      <div className="flex h-full w-full max-w-5xl flex-col border-l border-white/10 bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[rgba(139,92,246,0.25)] bg-[#101417] px-6 py-4 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-white/10 bg-[#101417] px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA]">
+            <span className="grid size-9 place-items-center rounded-xl bg-zinc-800/60 border border-white/10 text-zinc-300">
               <TrendingUp className="size-5" />
             </span>
             <div>
               <h2 className="text-base font-bold font-display text-white flex items-center gap-2">
                 FounderOS Growth OS
-                <Sparkles className="size-4 text-[#A78BFA]" />
+                <Sparkles className="size-4 text-zinc-300" />
               </h2>
               <p className="text-xs text-[#cbc3d7]">
                 Track startup funnel metrics, bottleneck analysis, feedback themes, and AI content studio.
@@ -182,9 +182,9 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
             <button
               onClick={() => void fetchGrowthData()}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-[#A78BFA] hover:text-white cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-white/30 hover:text-white cursor-pointer"
             >
-              <RefreshCw className={`size-3.5 ${loading ? "animate-spin text-[#A78BFA]" : ""}`} />
+              <RefreshCw className={`size-3.5 ${loading ? "animate-spin text-zinc-300" : ""}`} />
               Refresh Data
             </button>
             <button
@@ -197,7 +197,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-[rgba(139,92,246,0.25)] bg-[#020408] px-6 gap-2 pt-2">
+        <div className="flex border-b border-white/10 bg-[#020408] px-6 gap-2 pt-2">
           {[
             { id: "metrics", label: "Metrics & Funnel", icon: TrendingUp },
             { id: "recommendations", label: "Growth Recommendations", icon: Sparkles },
@@ -212,7 +212,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-t-xl border-t border-x transition cursor-pointer ${
                   active
-                    ? "bg-[#0b0f12] text-[#A78BFA] border-[rgba(139,92,246,0.3)] border-b-[#0b0f12] shadow-sm font-bold"
+                    ? "bg-[#0b0f12] text-zinc-300 border-white/10 border-b-[#0b0f12] shadow-sm font-bold"
                     : "text-[#cbc3d7] border-transparent hover:text-white hover:bg-white/5"
                 }`}
               >
@@ -227,7 +227,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
         <div className="flex-1 overflow-y-auto p-6 bg-[#0b0f12]">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
-              <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />
+              <RefreshCw className="size-6 animate-spin text-zinc-300" />
               <p className="text-xs font-mono">Analyzing Growth Metrics…</p>
             </div>
           ) : (
@@ -237,17 +237,17 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                 <div className="space-y-6 max-w-4xl mx-auto">
                   {/* Growth Score & Bottleneck Banner */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-5 flex flex-col justify-between shadow-xl">
+                    <div className="rounded-2xl border border-white/10 bg-[#101417] p-5 flex flex-col justify-between shadow-xl">
                       <span className="text-xs font-mono text-[#958ea0] uppercase">Growth Health Score</span>
-                      <div className="text-4xl font-extrabold font-display text-[#A78BFA] my-2">
+                      <div className="text-4xl font-extrabold font-display text-zinc-300 my-2">
                         {metrics.growthScore}<span className="text-base text-[#958ea0]">/100</span>
                       </div>
                       <p className="text-[11px] text-[#cbc3d7]">Calculated from active funnel conversion rates.</p>
                     </div>
 
-                    <div className="md:col-span-2 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-5 flex flex-col justify-between shadow-xl">
-                      <div className="flex items-center gap-2 text-xs font-bold text-[#A78BFA]">
-                        <AlertCircle className="size-4 text-[#A78BFA]" />
+                    <div className="md:col-span-2 rounded-2xl border border-white/10 bg-[#101417] p-5 flex flex-col justify-between shadow-xl">
+                      <div className="flex items-center gap-2 text-xs font-bold text-zinc-300">
+                        <AlertCircle className="size-4 text-rose-400" />
                         <span>Growth Bottleneck Analysis</span>
                       </div>
                       <p className="text-xs font-medium text-white my-2 leading-relaxed">
@@ -260,7 +260,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                   </div>
 
                   {/* Funnel Metrics Form */}
-                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
+                  <div className="rounded-2xl border border-white/10 bg-[#101417] p-6 space-y-4 shadow-xl">
                     <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
                       Startup Funnel Metrics
                     </h3>
@@ -287,7 +287,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                                 [field.key]: Number(e.target.value),
                               })
                             }
-                            className="w-full rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white font-mono outline-none focus:border-[#A78BFA]"
+                            className="w-full rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white font-mono outline-none focus:border-white/40"
                           />
                         </div>
                       ))}
@@ -296,9 +296,9 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                         <button
                           type="submit"
                           disabled={updatingMetrics}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition disabled:opacity-50 cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                          className="inline-flex items-center gap-2 rounded-xl btn-system px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                         >
-                          <CheckCircle2 className="size-4" />
+                          <CheckCircle2 className="size-4 text-emerald-400" />
                           {updatingMetrics ? "Recalculating..." : "Update Funnel & Recalculate Score"}
                         </button>
                       </div>
@@ -310,8 +310,8 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
               {/* TAB 2: GROWTH RECOMMENDATIONS & REASONING */}
               {activeTab === "recommendations" && (
                 <div className="space-y-6 max-w-4xl mx-auto">
-                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
-                    <h3 className="text-sm font-bold font-mono text-[#A78BFA] uppercase tracking-wider flex items-center gap-2">
+                  <div className="rounded-2xl border border-white/10 bg-[#101417] p-6 space-y-4 shadow-xl">
+                    <h3 className="text-sm font-bold font-mono text-zinc-300 uppercase tracking-wider flex items-center gap-2">
                       AI Growth Recommendations & Reasoning ({recommendations.length})
                     </h3>
 
@@ -330,7 +330,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                                 <span
                                   className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                                     rec.priority === "HIGH"
-                                      ? "bg-[rgba(139,92,246,0.25)] text-[#A78BFA] border border-[rgba(139,92,246,0.4)]"
+                                      ? "bg-zinc-800/60 text-zinc-300 border border-white/10"
                                       : "bg-white/10 text-[#cbc3d7]"
                                   }`}
                                 >
@@ -339,11 +339,11 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                               </div>
                             </div>
 
-                            <p className="text-xs text-white"><span className="font-semibold text-[#A78BFA]">Action: </span>{rec.action}</p>
+                            <p className="text-xs text-white"><span className="font-semibold text-zinc-300">Action: </span>{rec.action}</p>
 
                             {/* Reasoning Box */}
-                            <div className="rounded-lg border border-[rgba(139,92,246,0.25)] bg-[rgba(139,92,246,0.08)] p-2.5 text-[11px] text-[#cbc3d7] leading-relaxed">
-                              <span className="font-bold text-[#A78BFA]">Why this matters (Reasoning): </span>
+                            <div className="rounded-lg border border-white/10 bg-zinc-800/60 p-2.5 text-[11px] text-[#cbc3d7] leading-relaxed">
+                              <span className="font-bold text-zinc-300">Why this matters (Reasoning): </span>
                               {rec.reasoning}
                             </div>
                           </div>
@@ -358,7 +358,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
               {activeTab === "feedback" && (
                 <div className="space-y-6 max-w-4xl mx-auto">
                   {/* Feedback Input Form */}
-                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
+                  <div className="rounded-2xl border border-white/10 bg-[#101417] p-6 space-y-4 shadow-xl">
                     <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
                       Submit Customer Feedback to Analyze
                     </h3>
@@ -370,14 +370,14 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                           placeholder="Customer Segment (e.g. Early SaaS Founder, Designer)"
                           value={segmentInput}
                           onChange={(e) => setSegmentInput(e.target.value)}
-                          className="w-full sm:w-1/3 rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white outline-none focus:border-[#A78BFA]"
+                          className="w-full sm:w-1/3 rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white outline-none focus:border-white/40"
                         />
                         <textarea
                           placeholder="Paste raw customer feedback, interview quote, or survey response..."
                           value={feedbackInput}
                           onChange={(e) => setFeedbackInput(e.target.value)}
                           rows={2}
-                          className="w-full sm:w-2/3 rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white outline-none focus:border-[#A78BFA]"
+                          className="w-full sm:w-2/3 rounded-xl border border-white/10 bg-[#0b0f12] px-3 py-2 text-xs text-white outline-none focus:border-white/40"
                         />
                       </div>
 
@@ -385,7 +385,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                         <button
                           type="submit"
                           disabled={submittingFeedback || !feedbackInput.trim()}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition disabled:opacity-50 cursor-pointer"
+                          className="inline-flex items-center gap-2 rounded-xl btn-system px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50 cursor-pointer"
                         >
                           <Send className="size-3.5" />
                           {submittingFeedback ? "Grouping Theme..." : "Analyze & Group Theme"}
@@ -395,7 +395,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                   </div>
 
                   {/* Feedback Entries List */}
-                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-3 shadow-xl">
+                  <div className="rounded-2xl border border-white/10 bg-[#101417] p-6 space-y-3 shadow-xl">
                     <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
                       Grouped Feedback Themes ({feedbackList.length})
                     </h3>
@@ -406,7 +406,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                       feedbackList.map((f) => (
                         <div key={f._id} className="rounded-xl border border-white/10 bg-[#0b0f12] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                           <div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800/60 text-zinc-300 border border-white/10 font-bold">
                               Theme: {f.theme}
                             </span>
                             <p className="text-xs text-white mt-2">"{f.rawText}"</p>
@@ -417,7 +417,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                             <span
                               className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                                 f.sentiment === "POSITIVE"
-                                  ? "bg-[rgba(139,92,246,0.2)] text-[#A78BFA]"
+                                  ? "bg-zinc-800/60 text-zinc-300"
                                   : f.sentiment === "NEGATIVE"
                                   ? "bg-white/10 text-white"
                                   : "bg-white/5 text-[#958ea0]"
@@ -439,8 +439,8 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
               {/* TAB 4: AI CONTENT STUDIO */}
               {activeTab === "studio" && (
                 <div className="space-y-6 max-w-4xl mx-auto">
-                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
-                    <h3 className="text-sm font-bold font-mono text-[#A78BFA] uppercase tracking-wider flex items-center gap-2">
+                  <div className="rounded-2xl border border-white/10 bg-[#101417] p-6 space-y-4 shadow-xl">
+                    <h3 className="text-sm font-bold font-mono text-zinc-300 uppercase tracking-wider flex items-center gap-2">
                       AI Content Studio
                     </h3>
 
@@ -458,7 +458,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                           onClick={() => setContentType(c.id as any)}
                           className={`px-3 py-2 text-xs font-semibold rounded-xl border transition cursor-pointer ${
                             contentType === c.id
-                              ? "bg-[rgba(139,92,246,0.2)] border-[#A78BFA] text-white"
+                              ? "bg-zinc-800/60 border-[#d4d4d8] text-white"
                               : "border-white/10 bg-[#0b0f12] text-[#cbc3d7] hover:text-white"
                           }`}
                         >
@@ -471,7 +471,7 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
                       <button
                         onClick={() => void handleGenerateContent()}
                         disabled={generatingContent}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition disabled:opacity-50 cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)]"
+                        className="inline-flex items-center gap-2 rounded-xl btn-system px-4 py-2 text-xs font-bold text-white transition disabled:opacity-50 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                       >
                         <Sparkles className={`size-4 ${generatingContent ? "animate-spin" : ""}`} />
                         {generatingContent ? "Generating Copy..." : `Generate ${contentType.replace("_", " ").toUpperCase()} Copy`}
@@ -480,12 +480,12 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
 
                     {/* Generated Copy Viewer */}
                     {generatedContent ? (
-                      <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-[#020408] p-6 text-xs sm:text-sm leading-relaxed font-sans whitespace-pre-wrap selection:bg-[rgba(139,92,246,0.3)] text-white">
+                      <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-[#020408] p-6 text-xs sm:text-sm leading-relaxed font-sans whitespace-pre-wrap selection:bg-zinc-800/60 text-white">
                         {generatedContent}
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center h-48 border border-dashed border-white/10 rounded-2xl text-[#958ea0] gap-2">
-                        <FileText className="size-6 text-[#A78BFA]" />
+                        <FileText className="size-6 text-zinc-300" />
                         <p className="text-xs">Click generate to produce tailored marketing copy based on venture memory.</p>
                       </div>
                     )}

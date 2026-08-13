@@ -122,9 +122,9 @@ function AIFounderPage() {
           <button
             onClick={() => loadHistory()}
             disabled={loadingHistory}
-            className="inline-flex items-center gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-3 py-1.5 text-xs text-[#cbc3d7] hover:text-white transition cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#101417] px-3 py-1.5 text-xs text-[#cbc3d7] hover:text-white transition cursor-pointer"
           >
-            <RefreshCw className={`size-3.5 text-[#A78BFA] ${loadingHistory ? "animate-spin" : ""}`} />
+            <RefreshCw className={`size-3.5 text-zinc-300 ${loadingHistory ? "animate-spin" : ""}`} />
             Sync Context
           </button>
         }
@@ -135,7 +135,7 @@ function AIFounderPage() {
         <div className="lg:col-span-2 space-y-4 flex flex-col h-[750px]">
           {/* Component 3: Suggested Questions */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-mono text-[#A78BFA] flex items-center gap-1">
+            <span className="text-[11px] font-mono text-zinc-300 flex items-center gap-1">
               <HelpCircle className="size-3.5" /> Suggested Prompts:
             </span>
             {SUGGESTED_QUESTIONS.map((q, i) => (
@@ -143,7 +143,7 @@ function AIFounderPage() {
                 key={i}
                 onClick={() => void handleSendMessage(q)}
                 disabled={sending}
-                className="text-[11px] text-[#cbc3d7] bg-[#101417] hover:bg-[rgba(139,92,246,0.15)] hover:text-[#A78BFA] hover:border-[rgba(139,92,246,0.4)] px-3 py-1 rounded-xl border border-white/5 transition text-left disabled:opacity-50 cursor-pointer"
+                className="text-[11px] text-[#cbc3d7] bg-[#101417] hover:bg-zinc-800/60 hover:text-white hover:border-white/10 px-3 py-1 rounded-xl border border-white/5 transition text-left disabled:opacity-50 cursor-pointer"
               >
                 {q}
               </button>
@@ -151,10 +151,10 @@ function AIFounderPage() {
           </div>
 
           {/* Component 1: AI Chat Window */}
-          <div className="flex-1 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-4 overflow-y-auto space-y-4 shadow-2xl">
+          <div className="flex-1 rounded-2xl border border-white/10 bg-[#0b0f12] p-4 overflow-y-auto space-y-4 shadow-2xl">
             {messages.length === 0 && !loadingHistory && (
               <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-                <Bot className="size-10 text-[#A78BFA]" />
+                <Bot className="size-10 text-zinc-300" />
                 <h3 className="text-sm font-bold text-white">I am your FounderOS AI Co-Founder</h3>
                 <p className="text-xs text-[#cbc3d7] max-w-md">
                   I have analyzed your 7 active startup workspaces. Ask me strategic questions about your MVP, marketing strategy, user retention, or investor readiness.
@@ -170,7 +170,7 @@ function AIFounderPage() {
                 }`}
               >
                 {msg.role === "assistant" && (
-                  <div className="size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(139,92,246,0.4)]">
+                  <div className="size-8 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                     <Bot className="size-4 text-black" />
                   </div>
                 )}
@@ -178,7 +178,7 @@ function AIFounderPage() {
                 <div
                   className={`max-w-[85%] rounded-2xl p-4 whitespace-pre-wrap leading-relaxed shadow-sm ${
                     msg.role === "user"
-                      ? "bg-[#A78BFA] text-black font-semibold"
+                      ? "bg-zinc-800 text-white border border-white/10 font-semibold"
                       : "bg-[#101417] border border-white/5 text-white"
                   }`}
                 >
@@ -196,11 +196,11 @@ function AIFounderPage() {
             {/* AI Thinking Animation */}
             {sending && (
               <div className="flex gap-3 text-xs justify-start">
-                <div className="size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 animate-pulse">
+                <div className="size-8 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0 animate-pulse">
                   <Bot className="size-4 text-black" />
                 </div>
-                <div className="bg-[#101417] border border-[rgba(139,92,246,0.3)] p-4 rounded-2xl text-[#A78BFA] flex items-center gap-2 shadow-lg">
-                  <RefreshCw className="size-4 animate-spin text-[#A78BFA]" />
+                <div className="bg-[#101417] border border-white/10 p-4 rounded-2xl text-zinc-300 flex items-center gap-2 shadow-lg">
+                  <RefreshCw className="size-4 animate-spin text-zinc-300" />
                   <span className="font-mono text-xs text-white">AI Co-Founder is analyzing 7 workspace models...</span>
                 </div>
               </div>
@@ -222,12 +222,12 @@ function AIFounderPage() {
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Ask your AI Co-Founder strategic advice..."
               disabled={sending}
-              className="flex-1 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] px-4 py-3 text-xs text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] transition shadow-inner disabled:opacity-50"
+              className="flex-1 rounded-xl border border-white/10 bg-[#0b0f12] px-4 py-3 text-xs text-white placeholder-[#958ea0] focus:outline-none focus:border-white/40 transition shadow-inner disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={sending || !inputMessage.trim()}
-              className="rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] p-3 text-black font-bold transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
+              className="rounded-xl btn-system p-3 text-white font-bold transition disabled:opacity-50 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
             >
               <Send className="size-4" />
             </button>
@@ -240,22 +240,22 @@ function AIFounderPage() {
           <Panel title="Startup Context Memory">
             <div className="space-y-2 text-xs">
               <div className="rounded-xl border border-white/5 bg-[#101417] p-3">
-                <span className="font-mono font-bold text-[#A78BFA] text-[10px] uppercase">Idea Validation</span>
+                <span className="font-mono font-bold text-zinc-300 text-[10px] uppercase">Idea Validation</span>
                 <p className="text-white mt-0.5">{contextData?.validation || "Validation score synced"}</p>
               </div>
 
               <div className="rounded-xl border border-white/5 bg-[#101417] p-3">
-                <span className="font-mono font-bold text-[#A78BFA] text-[10px] uppercase">MVP Scope</span>
+                <span className="font-mono font-bold text-zinc-300 text-[10px] uppercase">MVP Scope</span>
                 <p className="text-white mt-0.5">{contextData?.mvp || "2-week scope defined"}</p>
               </div>
 
               <div className="rounded-xl border border-white/5 bg-[#101417] p-3">
-                <span className="font-mono font-bold text-[#A78BFA] text-[10px] uppercase">Build Roadmap</span>
+                <span className="font-mono font-bold text-zinc-300 text-[10px] uppercase">Build Roadmap</span>
                 <p className="text-white mt-0.5">{contextData?.roadmap || "4-phase execution plan"}</p>
               </div>
 
               <div className="rounded-xl border border-white/5 bg-[#101417] p-3">
-                <span className="font-mono font-bold text-[#A78BFA] text-[10px] uppercase">Traction Metrics</span>
+                <span className="font-mono font-bold text-zinc-300 text-[10px] uppercase">Traction Metrics</span>
                 <p className="text-white mt-0.5">{contextData?.traction || "Active metrics tracked"}</p>
               </div>
             </div>
@@ -264,15 +264,15 @@ function AIFounderPage() {
           {/* Component 5: Action Recommendations Panel */}
           <Panel title="Action Recommendations">
             <div className="space-y-2 text-xs">
-              <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-3 space-y-1">
-                <span className="font-bold text-[#A78BFA] flex items-center gap-1.5">
-                  <CheckCircle2 className="size-3.5" /> High Priority Action
+              <div className="rounded-xl border border-white/10 bg-zinc-800/60 p-3 space-y-1">
+                <span className="font-bold text-zinc-300 flex items-center gap-1.5">
+                  <CheckCircle2 className="size-3.5 text-emerald-400" /> High Priority Action
                 </span>
                 <p className="text-white text-[11px]">Conduct 5 direct customer interviews before adding secondary MVP features.</p>
               </div>
 
-              <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-3 space-y-1">
-                <span className="font-bold text-[#A78BFA] flex items-center gap-1.5">
+              <div className="rounded-xl border border-white/10 bg-zinc-800/60 p-3 space-y-1">
+                <span className="font-bold text-zinc-300 flex items-center gap-1.5">
                   <ArrowRight className="size-3.5" /> Growth Loop Next Step
                 </span>
                 <p className="text-white text-[11px]">Enable 1-click founder referral incentives to scale MAU organically.</p>

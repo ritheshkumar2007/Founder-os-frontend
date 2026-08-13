@@ -250,10 +250,10 @@ function SprintFlightDeckPage() {
   return (
     <div className="space-y-8 select-none">
       {/* Header Section */}
-      <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-[rgba(139,92,246,0.3)] pb-8">
+      <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8">
         <div className="flex flex-col gap-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.3)] w-fit">
-            <div className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_rgba(167,139,250,0.8)] animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800/60 border border-white/10 w-fit">
+            <div className="size-2 rounded-full bg-zinc-800 shadow-[0_4px_20px_rgba(0,0,0,0.5)] animate-pulse" />
             <span className="font-mono text-xs font-semibold text-[#d0bcff]">
               SPRINT ACTIVE // DAY {activeDay} OF 7
             </span>
@@ -273,7 +273,7 @@ function SprintFlightDeckPage() {
               onClick={() => setViewMode("flight-deck")}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition ${
                 viewMode === "flight-deck"
-                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                   : "text-[#cbc3d7] hover:text-white"
               }`}
             >
@@ -283,7 +283,7 @@ function SprintFlightDeckPage() {
               onClick={() => setViewMode("launch-matrix")}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition ${
                 viewMode === "launch-matrix"
-                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                   : "text-[#cbc3d7] hover:text-white"
               }`}
             >
@@ -294,7 +294,7 @@ function SprintFlightDeckPage() {
           {/* Primary Action Button */}
           <button
             onClick={() => setAnalysisModalOpen(true)}
-            className="shrink-0 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-bold text-sm px-6 py-3 rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+            className="shrink-0 btn-system text-white font-bold text-sm px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
             <span>Run Mission Analysis</span>
@@ -303,7 +303,7 @@ function SprintFlightDeckPage() {
       </section>
 
       {/* Day Progress Switcher Pill Row */}
-      <div className="flex items-center justify-between bg-[#101417]/80 p-3 rounded-2xl border border-[rgba(139,92,246,0.25)] overflow-x-auto gap-2">
+      <div className="flex items-center justify-between bg-[#101417]/80 p-3 rounded-2xl border border-white/10 overflow-x-auto gap-2">
         <div className="flex items-center gap-1.5">
           <span className="text-xs font-mono text-[#958ea0] uppercase mr-2 hidden sm:inline">Active Sprint Day:</span>
           {[1, 2, 3, 4, 5, 6, 7].map((d) => {
@@ -318,20 +318,20 @@ function SprintFlightDeckPage() {
                 }}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
                   isCurrent
-                    ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]"
+                    ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                     : isPast
-                    ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]"
+                    ? "bg-zinc-800/60 text-zinc-300 border border-white/10"
                     : "bg-[#181c1f] text-[#cbc3d7] hover:bg-white/5 border border-white/5"
                 }`}
               >
-                {isPast && <Check className="size-3" />}
+                {isPast && <Check className="size-3 text-emerald-400" />}
                 <span>Day {d}</span>
               </button>
             );
           })}
         </div>
 
-        <span className="text-xs font-mono text-[#A78BFA] shrink-0 bg-[#181c1f] px-3 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
+        <span className="text-xs font-mono text-zinc-300 shrink-0 bg-[#181c1f] px-3 py-1 rounded-lg border border-white/10">
           T-MINUS {Math.max(0, 7 - activeDay)} DAYS
         </span>
       </div>
@@ -342,39 +342,39 @@ function SprintFlightDeckPage() {
           {/* Left Column: Metrics & Stats (4 cols) */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Velocity Card */}
-            <div className="glass-card rounded-xl p-6 relative overflow-hidden group border border-[rgba(139,92,246,0.3)]">
-              <div className="absolute -right-4 -top-4 size-24 bg-[rgba(139,92,246,0.1)] rounded-full blur-2xl group-hover:bg-[rgba(139,92,246,0.2)] transition-all duration-500" />
+            <div className="glass-card rounded-xl p-6 relative overflow-hidden group border border-white/10">
+              <div className="absolute -right-4 -top-4 size-24 bg-zinc-800/60 rounded-full blur-2xl group-hover:bg-zinc-800/60 transition-all duration-500" />
               <div className="flex justify-between items-start mb-4 relative z-10">
                 <h3 className="font-mono text-xs text-[#cbc3d7] uppercase tracking-wider">
                   Current Velocity
                 </h3>
-                <span className="material-symbols-outlined text-[#A78BFA]">speed</span>
+                <span className="material-symbols-outlined text-zinc-300">speed</span>
               </div>
               <div className="flex items-baseline gap-2 relative z-10">
                 <span className="text-5xl font-bold font-display text-white">
                   {velocityScore}
                 </span>
-                <span className="text-sm font-semibold text-[#A78BFA] flex items-center gap-0.5">
+                <span className="text-sm font-semibold text-zinc-300 flex items-center gap-0.5">
                   <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
                   +12%
                 </span>
               </div>
-              <div className="w-full bg-[#1c2023] rounded-full h-2 mt-6 overflow-hidden border border-[rgba(139,92,246,0.2)] relative z-10">
+              <div className="w-full bg-[#1c2023] rounded-full h-2 mt-6 overflow-hidden border border-white/10 relative z-10">
                 <div
-                  className="bg-[#A78BFA] h-full rounded-full shadow-[0_0_10px_rgba(139,92,246,0.8)] transition-all duration-500 ease-out"
+                  className="bg-zinc-800 h-full rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out"
                   style={{ width: `${velocityScore}%` }}
                 />
               </div>
             </div>
 
             {/* Core Objectives Bento / Sprint Directives */}
-            <div className="glass-card rounded-xl p-6 flex-1 flex flex-col border border-[rgba(139,92,246,0.3)]">
+            <div className="glass-card rounded-xl p-6 flex-1 flex flex-col border border-white/10">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-mono text-xs text-[#cbc3d7] uppercase tracking-wider flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px] text-[#A78BFA]">target</span>
+                  <span className="material-symbols-outlined text-[18px] text-zinc-300">target</span>
                   Sprint Directives
                 </h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181c1f] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181c1f] text-zinc-300 border border-white/10">
                   {completedDirectives}/{totalDirectives} DONE
                 </span>
               </div>
@@ -387,18 +387,18 @@ function SprintFlightDeckPage() {
                       onClick={() => handleToggleDirective(dir.id)}
                       className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
                         dir.done
-                          ? "bg-[rgba(139,92,246,0.08)] border-[#A78BFA]/50"
-                          : "bg-[#181c1f]/60 border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[#181c1f]"
+                          ? "bg-zinc-800/60 border-[#d4d4d8]/50"
+                          : "bg-[#181c1f]/60 border-white/10 hover:border-white/10 hover:bg-[#181c1f]"
                       }`}
                     >
                       <div
                         className={`size-5 mt-0.5 rounded flex items-center justify-center transition-all ${
                           dir.done
-                            ? "bg-[#A78BFA] border border-[#A78BFA] text-black shadow-[0_0_8px_rgba(139,92,246,0.6)]"
-                            : "border border-[#958ea0] bg-transparent hover:border-[#A78BFA]"
+                            ? "bg-zinc-800 border border-[#d4d4d8] text-black shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                            : "border border-[#958ea0] bg-transparent hover:border-white/30"
                         }`}
                       >
-                        {dir.done && <Check className="size-3.5 stroke-[3]" />}
+                        {dir.done && <Check className="size-3.5 stroke-[3] text-emerald-400" />}
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -426,7 +426,7 @@ function SprintFlightDeckPage() {
                       value={newDirectiveText}
                       onChange={(e) => setNewDirectiveText(e.target.value)}
                       placeholder="Enter directive title..."
-                      className="w-full bg-[#020408] border border-[#A78BFA] rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#74839A] focus:outline-none"
+                      className="w-full bg-[#020408] border border-[#d4d4d8] rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#74839A] focus:outline-none"
                     />
                     <div className="flex justify-end gap-2 text-xs font-mono">
                       <button
@@ -438,7 +438,7 @@ function SprintFlightDeckPage() {
                       </button>
                       <button
                         type="submit"
-                        className="px-3 py-1 bg-[#A78BFA] text-black font-bold rounded-lg hover:bg-[#bfa8ff]"
+                        className="px-3 py-1 bg-zinc-800 text-white border border-white/10 font-bold rounded-lg hover:bg-[#bfa8ff]"
                       >
                         Add
                       </button>
@@ -447,7 +447,7 @@ function SprintFlightDeckPage() {
                 ) : (
                   <button
                     onClick={() => setIsAddingDirective(true)}
-                    className="mt-2 w-full py-2.5 rounded-xl border border-dashed border-[rgba(139,92,246,0.3)] hover:border-[#A78BFA] text-[#cbc3d7] hover:text-[#A78BFA] font-mono text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="mt-2 w-full py-2.5 rounded-xl border border-dashed border-white/10 hover:border-white/30 text-[#cbc3d7] hover:text-white font-mono text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
                     <Plus className="size-3.5" />
                     <span>Add Sprint Directive</span>
@@ -458,13 +458,13 @@ function SprintFlightDeckPage() {
           </div>
 
           {/* Right Column: 7-Day Roadmap (8 cols) */}
-          <div className="lg:col-span-8 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
+          <div className="lg:col-span-8 glass-card rounded-xl p-6 md:p-8 border border-white/10">
             <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
               <h2 className="text-xl font-bold font-display text-white flex items-center gap-3">
-                <span className="material-symbols-outlined text-[#A78BFA]">route</span>
+                <span className="material-symbols-outlined text-zinc-300">route</span>
                 Tactical Roadmap
               </h2>
-              <span className="font-mono text-xs text-[#cbc3d7] bg-[#181c1f] px-3 py-1 rounded-md border border-[rgba(139,92,246,0.3)]">
+              <span className="font-mono text-xs text-[#cbc3d7] bg-[#181c1f] px-3 py-1 rounded-md border border-white/10">
                 T-MINUS {Math.max(0, 7 - activeDay)} DAYS
               </span>
             </div>
@@ -480,12 +480,12 @@ function SprintFlightDeckPage() {
                   <div key={phase.id} className="relative z-10 group">
                     {/* Node Dot Icon */}
                     {isCompleted ? (
-                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#A78BFA] flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
-                        <Check className="size-3 text-[#A78BFA] stroke-[3]" />
+                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#d4d4d8] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                        <Check className="size-3 text-emerald-400 stroke-[3]" />
                       </div>
                     ) : isActive ? (
-                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#A78BFA] flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.8)] animate-pulse">
-                        <div className="size-2 bg-[#A78BFA] rounded-full" />
+                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#d4d4d8] flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.5)] animate-pulse">
+                        <div className="size-2 bg-zinc-800 rounded-full" />
                       </div>
                     ) : (
                       <div className="absolute -left-[35px] md:-left-[43px] size-4 rounded-full bg-[#020408] border-2 border-[#958ea0] flex items-center justify-center mt-1" />
@@ -493,14 +493,14 @@ function SprintFlightDeckPage() {
 
                     {/* Phase Content Box */}
                     {isActive ? (
-                      <div className="bg-[#0b0f12] border border-[#A78BFA] rounded-xl p-6 shadow-[0_0_30px_rgba(139,92,246,0.15)] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 size-32 bg-[rgba(139,92,246,0.06)] blur-3xl rounded-full pointer-events-none" />
+                      <div className="bg-[#0b0f12] border border-[#d4d4d8] rounded-xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                        <div className="absolute top-0 right-0 size-32 bg-zinc-800/60 blur-3xl rounded-full pointer-events-none" />
 
                         <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2 relative z-10">
                           <h3 className="text-lg font-bold font-display text-white text-glow">
                             {phase.dayRange}: {phase.title}
                           </h3>
-                          <span className="font-mono text-xs text-[#d0bcff] bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] px-2.5 py-0.5 rounded flex items-center gap-1.5 w-fit">
+                          <span className="font-mono text-xs text-[#d0bcff] bg-zinc-800/60 border border-white/10 px-2.5 py-0.5 rounded flex items-center gap-1.5 w-fit">
                             <span className="material-symbols-outlined text-[14px]">sync</span>
                             IN PROGRESS
                           </span>
@@ -518,17 +518,17 @@ function SprintFlightDeckPage() {
                               onClick={() => handleToggleRoadmapTask(phase.id, task.id)}
                               className={`p-3.5 rounded-lg border transition-all cursor-pointer flex flex-col gap-1 ${
                                 task.done
-                                  ? "bg-[#000000] border-[#A78BFA]/50 text-white shadow-[0_0_8px_rgba(139,92,246,0.2)]"
-                                  : "bg-[#000000] border-[rgba(139,92,246,0.3)] hover:border-[#A78BFA] focus-within:shadow-[0_0_8px_rgba(139,92,246,0.4)]"
+                                  ? "bg-[#000000] border-[#d4d4d8]/50 text-white shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                                  : "bg-[#000000] border-white/10 hover:border-white/30 focus-within:shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="font-mono text-[10px] text-[#A78BFA] font-bold uppercase">
+                                <span className="font-mono text-[10px] text-zinc-300 font-bold uppercase">
                                   {task.code}
                                 </span>
                                 {task.done && (
-                                  <span className="text-[10px] font-mono text-[#A78BFA] flex items-center gap-1">
-                                    <Check className="size-3" /> Done
+                                  <span className="text-[10px] font-mono text-zinc-300 flex items-center gap-1">
+                                    <Check className="size-3 text-emerald-400" /> Done
                                   </span>
                                 )}
                               </div>
@@ -543,8 +543,8 @@ function SprintFlightDeckPage() {
                       <div
                         className={`border rounded-xl p-5 transition-all duration-300 ${
                           isCompleted
-                            ? "bg-[#0a0c10] border-[rgba(139,92,246,0.3)] opacity-80 hover:opacity-100"
-                            : "bg-[#0a0c10] border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)]"
+                            ? "bg-[#0a0c10] border-white/10 opacity-80 hover:opacity-100"
+                            : "bg-[#0a0c10] border-white/10 hover:border-white/10"
                         }`}
                       >
                         <div className="flex flex-col md:flex-row justify-between md:items-center mb-2 gap-2">
@@ -560,7 +560,7 @@ function SprintFlightDeckPage() {
                           <span
                             className={`font-mono text-[11px] px-2.5 py-0.5 rounded w-fit ${
                               isCompleted
-                                ? "text-[#A78BFA] bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] font-bold"
+                                ? "text-zinc-300 bg-zinc-800/60 border border-white/10 font-bold"
                                 : "text-[#958ea0] bg-[#181c1f] border border-white/5"
                             }`}
                           >
@@ -609,7 +609,7 @@ function SprintFlightDeckPage() {
               <button
                 onClick={handleGenerateDetailedPlan}
                 disabled={generating}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] text-black font-bold px-5 py-2.5 text-xs hover:bg-[#bfa8ff] transition cursor-pointer disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-zinc-800 text-white border border-white/10 font-bold px-5 py-2.5 text-xs hover:bg-[#bfa8ff] transition cursor-pointer disabled:opacity-50"
               >
                 <Sparkles className="size-4" />
                 {generating ? "AI Is Planning Sprint..." : "Generate Full Matrix"}
@@ -625,15 +625,15 @@ function SprintFlightDeckPage() {
                   {sprintPlan.preLaunch?.map((item, i) => (
                     <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
                       <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                        <span className="font-bold text-[#A78BFA] font-mono text-sm">{item.day}</span>
-                        <span className="text-[10px] font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2 py-0.5 rounded-md border border-[rgba(139,92,246,0.3)]">
+                        <span className="font-bold text-zinc-300 font-mono text-sm">{item.day}</span>
+                        <span className="text-[10px] font-mono text-zinc-300 bg-zinc-800/60 px-2 py-0.5 rounded-md border border-white/10">
                           Owner: {item.owner}
                         </span>
                       </div>
                       <ul className="space-y-1 text-white">
                         {item.tasks?.map((t, ti) => (
                           <li key={ti} className="flex items-center gap-2">
-                            <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
+                            <CheckCircle2 className="size-3.5 text-emerald-400 shrink-0" />
                             <span>{t}</span>
                           </li>
                         ))}
@@ -648,7 +648,7 @@ function SprintFlightDeckPage() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   {sprintPlan.launchDay?.map((item, i) => (
                     <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-1.5">
-                      <span className="font-mono text-[10px] font-bold text-[#A78BFA] uppercase">{item.time}</span>
+                      <span className="font-mono text-[10px] font-bold text-zinc-300 uppercase">{item.time}</span>
                       <p className="font-semibold text-[#F5F8FC]">{item.activity}</p>
                     </div>
                   ))}
@@ -660,7 +660,7 @@ function SprintFlightDeckPage() {
       )}
 
       {/* Footer Navigation CTAs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[rgba(139,92,246,0.25)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10">
         <div className="flex items-center gap-3">
           <Button
             variant="outline"

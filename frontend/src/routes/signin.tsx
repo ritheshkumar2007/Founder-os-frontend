@@ -173,22 +173,22 @@ function SignIn() {
       {/* Back to Landing Page Button */}
       <Link
         to="/"
-        className="absolute top-6 left-6 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/80 text-xs font-mono text-[#cbc3d7] hover:text-white hover:border-[#A78BFA] transition"
+        className="absolute top-6 left-6 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-white/10 bg-[#0b0f12]/80 text-xs font-mono text-[#cbc3d7] hover:text-white hover:border-white/30 transition"
       >
-        <ArrowLeft className="size-3.5 text-[#A78BFA]" /> Back to Landing Page
+        <ArrowLeft className="size-3.5 text-zinc-300" /> Back to Landing Page
       </Link>
 
       <form
         onSubmit={handleSubmit}
-        className="panel os-window-open w-full max-w-md rounded-2xl p-8 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] relative z-10"
+        className="panel os-window-open w-full max-w-md rounded-2xl p-8 border border-white/10 bg-[#0b0f12] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] relative z-10"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="grid size-8 place-items-center rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA]">
-              <Rocket className="size-4 text-[#A78BFA]" />
+            <div className="grid size-8 place-items-center rounded-xl border border-white/10 bg-zinc-800/60 text-zinc-300">
+              <Rocket className="size-4 text-zinc-300" />
             </div>
             <span className="font-display font-bold text-sm tracking-tight text-white">
-              FOUNDER<span className="text-[#A78BFA]">OS</span>
+              FOUNDER<span className="text-zinc-300">OS</span>
             </span>
           </div>
 
@@ -202,7 +202,7 @@ function SignIn() {
                 setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
-                !isSignUp ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "text-[#cbc3d7] hover:text-white"
+                !isSignUp ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]" : "text-[#cbc3d7] hover:text-white"
               }`}
             >
               Sign In
@@ -215,7 +215,7 @@ function SignIn() {
                 setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
-                isSignUp ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "text-[#cbc3d7] hover:text-white"
+                isSignUp ? "bg-zinc-800 text-white border border-white/10 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.5)]" : "text-[#cbc3d7] hover:text-white"
               }`}
             >
               Sign Up
@@ -233,15 +233,15 @@ function SignIn() {
         </p>
 
         {statusNotice ? (
-          <div className="mt-4 p-3 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] text-xs text-white flex items-center gap-2">
-            <RefreshCw className="size-4 animate-spin text-[#A78BFA] shrink-0" />
-            <div className="flex-1 font-mono text-[11px] text-[#A78BFA]">{statusNotice}</div>
+          <div className="mt-4 p-3 rounded-xl border border-white/10 bg-zinc-800/60 text-xs text-white flex items-center gap-2">
+            <RefreshCw className="size-4 animate-spin text-zinc-300 shrink-0" />
+            <div className="flex-1 font-mono text-[11px] text-zinc-300">{statusNotice}</div>
           </div>
         ) : null}
 
         {errorMsg ? (
-          <div className="mt-4 p-3 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs text-[#cbc3d7] flex items-start gap-2">
-            <div className="size-2 rounded-full bg-[#A78BFA] mt-1 shrink-0" />
+          <div className="mt-4 p-3 rounded-xl border border-white/10 bg-[#101417] text-xs text-[#cbc3d7] flex items-start gap-2">
+            <div className="size-2 rounded-full bg-zinc-800 mt-1 shrink-0" />
             <div className="flex-1">{errorMsg}</div>
           </div>
         ) : null}
@@ -282,7 +282,7 @@ function SignIn() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-3 text-xs font-bold text-black transition disabled:opacity-50 shadow-[0_0_20px_rgba(139,92,246,0.4)] cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl btn-system px-4 py-3 text-xs font-bold text-white transition disabled:opacity-50 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
             >
               {loading ? (
                 <>
@@ -313,7 +313,7 @@ function SignIn() {
                 setPassword("founderos123");
                 setIsSignUp(false);
               }}
-              className="text-xs font-mono text-[#A78BFA] hover:underline cursor-pointer"
+              className="text-xs font-mono text-zinc-300 hover:underline cursor-pointer"
             >
               Fill Demo Founder Credentials
             </button>
@@ -328,7 +328,7 @@ function SignIn() {
                 setErrorMsg("");
                 setStatusNotice("");
               }}
-              className="text-xs text-[#cbc3d7] hover:text-[#A78BFA] transition"
+              className="text-xs text-[#cbc3d7] hover:text-white transition"
             >
               {isSignUp
                 ? "Already have an account? Click to Sign In"

@@ -266,8 +266,8 @@ function MarketingPage() {
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
-                <History className="size-3.5 text-[#A78BFA]" />
+              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#cbc3d7]">
+                <History className="size-3.5 text-zinc-300" />
                 <span className="font-mono text-xs text-white">{history.length} Plans Saved</span>
               </div>
             )}
@@ -275,7 +275,7 @@ function MarketingPage() {
             <button
               onClick={() => void handleGenerateMarketingPlan()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl btn-system px-4 py-2 text-xs font-bold text-white transition shadow-[0_4px_20px_rgba(0,0,0,0.5)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
               {generating ? "AI CMO Is Crafting Strategy..." : "Generate Marketing Plan"}
@@ -286,18 +286,18 @@ function MarketingPage() {
 
       {/* Banner */}
       {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-zinc-800/60 p-4 text-xs text-white shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-zinc-300" />
           <div>
-            <span className="font-bold text-[#A78BFA]">Venture Memory Connected: </span>
+            <span className="font-bold text-zinc-300">Venture Memory Connected: </span>
             Auto-inherited your target audience & MVP scope from Steps 1 & 2. Review parameters below to generate your 90-day GTM roadmap.
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-[#A78BFA]" />
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-rose-400" />
           <div>
-            <span className="font-bold text-[#A78BFA]">No Target Customer Memory: </span>
+            <span className="font-bold text-zinc-300">No Target Customer Memory: </span>
             Input your target audience in the form below or complete Step 1 (Idea Validation) to auto-populate parameters.
           </div>
         </div>
@@ -351,7 +351,7 @@ function MarketingPage() {
             <button
               type="submit"
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-5 py-2.5 text-xs font-extrabold text-black transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl btn-system px-5 py-2.5 text-xs font-extrabold text-white transition disabled:opacity-50 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
             >
               <Sparkles className="size-4" /> {generating ? "AI CMO Is Crafting Strategy..." : "Generate Marketing Plan"}
             </button>
@@ -361,8 +361,8 @@ function MarketingPage() {
 
       {/* Loading State */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#A78BFA]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-white/10 bg-[#0b0f12] p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-zinc-300" />
           <div className="text-center space-y-1">
             <h3 className="text-sm font-bold text-white">AI CMO Is Crafting Your GTM Strategy...</h3>
             <p className="text-xs font-mono text-[#958ea0]">Analyzing customer personas, acquisition channel matrix, brand positioning, and 90-day roadmap</p>
@@ -374,15 +374,15 @@ function MarketingPage() {
       {strategy && !generating && (
         <div className="space-y-6">
           {/* Brand Positioning & Value Prop Header */}
-          <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl space-y-3">
+          <div className="rounded-2xl border border-white/10 bg-[#0b0f12] p-6 shadow-2xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 bg-zinc-800/60 px-2.5 py-1 rounded-lg border border-white/10">
                 Brand Positioning & Value Prop
               </span>
               <CopyButton content={`${strategy.brandPositioning}\n\nHero Headline: ${strategy.valueProposition}`} />
             </div>
             <p className="text-sm font-semibold text-white leading-relaxed">{strategy.brandPositioning}</p>
-            <div className="rounded-xl border border-[rgba(139,92,246,0.2)] bg-[#101417] p-4 text-xs font-mono text-[#A78BFA] italic">
+            <div className="rounded-xl border border-white/10 bg-[#101417] p-4 text-xs font-mono text-zinc-300 italic">
               Hero Headline: {strategy.valueProposition}
             </div>
           </div>
@@ -394,7 +394,7 @@ function MarketingPage() {
                 <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-5 space-y-3">
                   <div className="flex items-center justify-between border-b border-white/10 pb-2">
                     <div className="flex items-center gap-2">
-                      <UserCheck className="size-4 text-[#A78BFA]" />
+                      <UserCheck className="size-4 text-emerald-400" />
                       <h4 className="text-sm font-bold text-white">{p.name}</h4>
                     </div>
                     <span className="text-[11px] font-mono text-[#cbc3d7] bg-white/5 px-2 py-0.5 rounded-md">
@@ -408,11 +408,11 @@ function MarketingPage() {
                       <p className="text-[#958ea0]">{p.painPoints}</p>
                     </div>
                     <div>
-                      <span className="font-mono text-[10px] uppercase text-[#A78BFA] block">Core Needs:</span>
+                      <span className="font-mono text-[10px] uppercase text-zinc-300 block">Core Needs:</span>
                       <p className="text-white">{p.needs}</p>
                     </div>
                     <div>
-                      <span className="font-mono text-[10px] uppercase text-[#A78BFA] block">Online Behavior:</span>
+                      <span className="font-mono text-[10px] uppercase text-zinc-300 block">Online Behavior:</span>
                       <p className="text-[#958ea0]">{p.behavior}</p>
                     </div>
                   </div>
@@ -428,7 +428,7 @@ function MarketingPage() {
                 <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white text-sm">{ch.channel}</span>
-                    <span className="text-[10px] font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2 py-0.5 rounded-md border border-[rgba(139,92,246,0.3)]">
+                    <span className="text-[10px] font-mono text-zinc-300 bg-zinc-800/60 px-2 py-0.5 rounded-md border border-white/10">
                       {ch.purpose}
                     </span>
                   </div>
@@ -443,9 +443,9 @@ function MarketingPage() {
             <div className="grid gap-3 sm:grid-cols-3">
               {strategy.contentStrategy?.map((c, i) => (
                 <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-4 text-xs space-y-1.5">
-                  <span className="font-mono text-[10px] text-[#A78BFA] font-bold uppercase">{c.platform}</span>
+                  <span className="font-mono text-[10px] text-zinc-300 font-bold uppercase">{c.platform}</span>
                   <p className="font-semibold text-white">{c.contentType}</p>
-                  <span className="inline-block text-[11px] font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2 py-0.5 rounded-md border border-[rgba(139,92,246,0.3)]">
+                  <span className="inline-block text-[11px] font-mono text-zinc-300 bg-zinc-800/60 px-2 py-0.5 rounded-md border border-white/10">
                     {c.frequency}
                   </span>
                 </div>
@@ -457,12 +457,12 @@ function MarketingPage() {
           <Panel title="3-Stage Product Launch Campaign">
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-xl border border-white/5 bg-[#101417] p-4 space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-[#A78BFA]">Stage 1: Pre-Launch Teaser</span>
+                <span className="text-[10px] font-mono font-bold uppercase text-zinc-300">Stage 1: Pre-Launch Teaser</span>
                 <p className="text-xs text-white leading-relaxed">{strategy.launchCampaign?.preLaunch}</p>
               </div>
 
-              <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-[#A78BFA]">Stage 2: Launch Day Push</span>
+              <div className="rounded-xl border border-white/10 bg-zinc-800/60 p-4 space-y-2">
+                <span className="text-[10px] font-mono font-bold uppercase text-zinc-300">Stage 2: Launch Day Push</span>
                 <p className="text-xs text-white leading-relaxed font-semibold">{strategy.launchCampaign?.launchDay}</p>
               </div>
 
@@ -480,14 +480,14 @@ function MarketingPage() {
                 <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-5 space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
                     <h4 className="text-sm font-bold text-white">{m.month}</h4>
-                    <span className="text-xs font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)]">
+                    <span className="text-xs font-mono text-zinc-300 bg-zinc-800/60 px-3 py-1 rounded-full border border-white/10">
                       Goal: {m.goals}
                     </span>
                   </div>
                   <ul className="space-y-1.5 text-xs text-[#cbc3d7]">
                     {m.actions?.map((act, ai) => (
                       <li key={ai} className="flex items-center gap-2">
-                        <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
+                        <CheckCircle2 className="size-3.5 text-emerald-400 shrink-0" />
                         <span>{act}</span>
                       </li>
                     ))}
@@ -502,7 +502,7 @@ function MarketingPage() {
       {/* Empty State Banner when no marketing plan has been generated yet */}
       {!strategy && !generating && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b0f12] p-12 text-center space-y-3">
-          <Megaphone className="size-10 text-[#A78BFA]/60" />
+          <Megaphone className="size-10 text-zinc-300/60" />
           <h3 className="text-base font-bold text-white">No Marketing Strategy Generated Yet</h3>
           <p className="max-w-md text-xs text-[#cbc3d7] font-sans">
             Review your target audience and growth goals in the form above, then click <strong>Generate Marketing Plan</strong> to craft your Go-To-Market positioning and 90-day execution roadmap.
