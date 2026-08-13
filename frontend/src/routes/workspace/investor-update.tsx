@@ -574,8 +574,8 @@ function InvestorTelemetryPage() {
           Save Telemetry State
         </Button>
 
-        <LinkButton to="/workspace/telemetry" variant="primary">
-          <span>Return to Mission Control</span>
+        <LinkButton to="/workspace/idea-validation" variant="primary">
+          <span>Return to Workspace Overview</span>
           <ArrowRight className="size-4 ml-1" />
         </LinkButton>
       </div>

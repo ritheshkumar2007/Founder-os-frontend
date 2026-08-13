@@ -28,7 +28,6 @@ const tractionModuleRoutes = require('./routes/tractionRoutes');
 const investorRoutes = require('./routes/investor');
 const investorUpdateModuleRoutes = require('./routes/investorUpdateRoutes');
 const founderAIRoutes = require('./routes/founderAIRoutes');
-const intelligenceModuleRoutes = require('./routes/intelligenceRoutes');
 const testAIRoutes = require('./routes/testAI');
 const errorHandler = require('./middleware/errorHandler');
 const { apiLimiter, authLimiter } = require('./middleware/rateLimiter');
@@ -108,7 +107,6 @@ app.use('/api/launch-sprint', launchSprintModuleRoutes);
 app.use('/api/traction', tractionModuleRoutes);
 app.use('/api/investor-update', investorUpdateModuleRoutes);
 app.use('/api/founder-ai', founderAIRoutes);
-app.use('/api/intelligence', intelligenceModuleRoutes);
 app.use('/api/test-ai', testAIRoutes);
 
 // Module route aliases for workspace endpoints

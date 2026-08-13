@@ -44,11 +44,11 @@ const MODULES = [
   },
   {
     id: "command-console",
-    title: "Mission Telemetry Terminal",
+    title: "Traction & Investor Console",
     badge: "FOUNDER OS",
-    description: "One central command console to orchestrate your startup journey. Track burn rate, team velocity, launch countdowns, and investor signals in real time.",
+    description: "One central command console to orchestrate your startup growth. Track MRR growth, user retention, sprint execution velocity, and cap table updates in real time.",
     icon: Terminal,
-    highlights: ["Single pane for all venture data", "Customizable telemetry widgets", "Real-time system health checks"],
+    highlights: ["Single pane for all venture traction", "Customizable metric widgets", "Real-time investor reporting"],
   },
 ];
 

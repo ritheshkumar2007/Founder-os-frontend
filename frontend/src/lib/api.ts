@@ -550,16 +550,6 @@ export const api = {
 
   getFounderAIHistoryModule: (ventureId?: string) =>
     requestWithFallback(`founder-ai/history${ventureId ? `?ventureId=${ventureId}` : ""}`, []),
-
-  // Venture Intelligence Command Center
-  analyzeVentureIntelligenceModule: (payload: { ventureId?: string; ventureName?: string }) =>
-    requestWithFallback("intelligence-command/analyze", ["intelligence/analyze"], {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
-
-  getIntelligenceHistoryModule: (ventureId: string) =>
-    requestWithFallback(`intelligence-command/${ventureId}`, [`intelligence/${ventureId}`]),
 };
 
 export default api;

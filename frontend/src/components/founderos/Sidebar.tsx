@@ -12,13 +12,6 @@ export interface NavSection {
 
 export const STAGED_NAV: NavSection[] = [
   {
-    category: "Mission Control",
-    items: [
-      { to: "/workspace/telemetry", label: "Mission Telemetry" },
-      { to: "/workspace/intelligence", label: "Venture Intelligence" },
-    ],
-  },
-  {
     category: "Idea Validation",
     items: [
       { to: "/workspace/idea-validation", label: "Idea Validation" },
