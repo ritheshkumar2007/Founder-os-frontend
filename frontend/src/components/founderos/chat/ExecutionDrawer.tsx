@@ -124,20 +124,20 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="flex h-full w-full max-w-5xl flex-col border-l border-white/10 bg-[#0E131C] text-[#F5F8FC] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="flex h-full w-full max-w-5xl flex-col border-l border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#141C28]/80 px-6 py-4 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[rgba(139,92,246,0.25)] bg-[#101417] px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-[#46E3A3]/20 to-[#64D8FF]/10 border border-[#46E3A3]/30 text-[#46E3A3]">
+            <span className="grid size-9 place-items-center rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA]">
               <Kanban className="size-5" />
             </span>
             <div>
-              <h2 className="text-base font-bold font-display text-[#F5F8FC] flex items-center gap-2">
+              <h2 className="text-base font-bold font-display text-white flex items-center gap-2">
                 AI Execution Operating System
-                <Sparkles className="size-4 text-[#46E3A3]" />
+                <Sparkles className="size-4 text-[#A78BFA]" />
               </h2>
-              <p className="text-xs text-[#A8B3C7]">
+              <p className="text-xs text-[#cbc3d7]">
                 Turn AI insights into 7-day sprints, Kanban tasks, and 5-pillar milestones.
               </p>
             </div>
@@ -147,14 +147,14 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
             <button
               onClick={() => void fetchExecutionData()}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#161F2D] px-3 py-1.5 text-xs font-medium text-[#A8B3C7] transition hover:border-[#46E3A3]/40 hover:text-[#F5F8FC]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-[#A78BFA] hover:text-white cursor-pointer"
             >
-              <RefreshCw className={`size-3.5 ${loading ? "animate-spin text-[#46E3A3]" : ""}`} />
+              <RefreshCw className={`size-3.5 ${loading ? "animate-spin text-[#A78BFA]" : ""}`} />
               Refresh
             </button>
             <button
               onClick={onClose}
-              className="rounded-xl p-1.5 text-[#A8B3C7] transition hover:bg-white/5 hover:text-[#F5F8FC]"
+              className="rounded-xl p-1.5 text-[#958ea0] transition hover:bg-white/5 hover:text-white cursor-pointer"
             >
               <X className="size-5" />
             </button>
@@ -162,7 +162,7 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-white/10 bg-[#0A0D14] px-6 gap-2 pt-2">
+        <div className="flex border-b border-[rgba(139,92,246,0.25)] bg-[#020408] px-6 gap-2 pt-2">
           {[
             { id: "kanban", label: "Kanban Board", icon: Kanban },
             { id: "sprint", label: "7-Day Sprint", icon: Calendar },
@@ -175,10 +175,10 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-t-xl border-t border-x transition ${
+                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-t-xl border-t border-x transition cursor-pointer ${
                   active
-                    ? "bg-[#080A0F] text-[#46E3A3] border-white/10 border-b-[#080A0F] shadow-sm"
-                    : "text-[#A8B3C7] border-transparent hover:text-[#F5F8FC] hover:bg-white/5"
+                    ? "bg-[#0b0f12] text-[#A78BFA] border-[rgba(139,92,246,0.3)] border-b-[#0b0f12] shadow-sm font-bold"
+                    : "text-[#cbc3d7] border-transparent hover:text-white hover:bg-white/5"
                 }`}
               >
                 <Icon className="size-4" />
@@ -189,10 +189,10 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 bg-[#080A0F]">
+        <div className="flex-1 overflow-y-auto p-6 bg-[#0b0f12]">
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#A8B3C7]">
-              <RefreshCw className="size-6 animate-spin text-[#46E3A3]" />
+            <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
+              <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />
               <p className="text-xs font-mono">Syncing Execution Engine…</p>
             </div>
           ) : (
@@ -203,30 +203,30 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                   {["To Do", "In Progress", "Review", "Done"].map((column) => {
                     const tasksInCol = kanban[column] || [];
                     return (
-                      <div key={column} className="flex flex-col rounded-2xl border border-white/10 bg-[#0E131C] p-3 space-y-3">
+                      <div key={column} className="flex flex-col rounded-2xl border border-[rgba(139,92,246,0.25)] bg-[#101417] p-3 space-y-3">
                         <div className="flex items-center justify-between px-2 py-1 border-b border-white/5">
-                          <span className="text-xs font-bold font-mono text-[#F5F8FC]">{column}</span>
-                          <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-[#A8B3C7]">
+                          <span className="text-xs font-bold font-mono text-white">{column}</span>
+                          <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-[#cbc3d7]">
                             {tasksInCol.length}
                           </span>
                         </div>
 
                         <div className="space-y-2.5 min-h-[300px]">
                           {tasksInCol.length === 0 ? (
-                            <p className="text-[11px] text-[#A8B3C7] italic text-center py-6">No tasks</p>
+                            <p className="text-[11px] text-[#958ea0] italic text-center py-6">No tasks</p>
                           ) : (
                             tasksInCol.map((task) => (
                               <div
                                 key={task._id}
-                                className="group flex flex-col gap-2 rounded-xl border border-white/10 bg-[#141C28] p-3 shadow-md transition hover:border-[#46E3A3]/40"
+                                className="group flex flex-col gap-2 rounded-xl border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] p-3 shadow-md transition hover:border-[#A78BFA]"
                               >
                                 <div className="flex items-start justify-between gap-2">
-                                  <h4 className="text-xs font-bold text-[#F5F8FC] leading-snug">{task.title}</h4>
+                                  <h4 className="text-xs font-bold text-white leading-snug">{task.title}</h4>
                                   <span
                                     className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase ${
                                       task.priority === "HIGH"
-                                        ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                                        : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                                        ? "bg-[rgba(139,92,246,0.25)] text-[#A78BFA] border border-[rgba(139,92,246,0.4)]"
+                                        : "bg-white/10 text-[#cbc3d7] border border-white/10"
                                     }`}
                                   >
                                     {task.priority}
@@ -234,10 +234,10 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                                 </div>
 
                                 {task.description ? (
-                                  <p className="text-[11px] text-[#A8B3C7] line-clamp-2">{task.description}</p>
+                                  <p className="text-[11px] text-[#cbc3d7] line-clamp-2">{task.description}</p>
                                 ) : null}
 
-                                <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[10px] font-mono text-[#A8B3C7]">
+                                <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[10px] font-mono text-[#958ea0]">
                                   <span>{task.category}</span>
 
                                   {/* Quick Column Shift Selector */}
@@ -245,7 +245,7 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                                     disabled={updatingTaskId === task._id}
                                     value={task.status}
                                     onChange={(e) => void handleStatusChange(task._id, e.target.value)}
-                                    className="bg-[#0E131C] text-[10px] text-[#46E3A3] font-mono rounded px-1.5 py-0.5 border border-white/10 outline-none cursor-pointer"
+                                    className="bg-[#101417] text-[10px] text-[#A78BFA] font-mono rounded px-1.5 py-0.5 border border-[rgba(139,92,246,0.3)] outline-none cursor-pointer"
                                   >
                                     <option value="To Do">To Do</option>
                                     <option value="In Progress">In Progress</option>
@@ -266,39 +266,39 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
               {/* TAB 2: 7-DAY SPRINT */}
               {activeTab === "sprint" && (
                 <div className="space-y-6 max-w-3xl mx-auto">
-                  <div className="rounded-2xl border border-white/10 bg-[#0E131C] p-6 space-y-4 shadow-xl">
+                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
-                        <span className="px-2.5 py-0.5 rounded-full border border-[#46E3A3]/30 bg-[#46E3A3]/10 text-xs font-mono font-bold text-[#46E3A3]">
+                        <span className="px-2.5 py-0.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-xs font-mono font-bold text-[#A78BFA]">
                           Active Sprint • Week {sprint?.weekNumber || 1}
                         </span>
-                        <h3 className="text-lg font-bold text-[#F5F8FC] mt-2">
+                        <h3 className="text-lg font-bold text-white mt-2">
                           Goal: {sprint?.weeklyGoal || "Validate core customer problem"}
                         </h3>
                       </div>
-                      <div className="text-right text-xs font-mono text-[#A8B3C7]">
+                      <div className="text-right text-xs font-mono text-[#cbc3d7]">
                         <p>Start: {new Date(sprint?.startDate || Date.now()).toLocaleDateString()}</p>
                         <p>End: {new Date(sprint?.endDate || Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
                       </div>
                     </div>
 
-                    <h4 className="text-xs font-mono font-bold text-[#A8B3C7] uppercase tracking-wider">
+                    <h4 className="text-xs font-mono font-bold text-[#958ea0] uppercase tracking-wider">
                       Sprint Commitments & Tasks ({sprint?.taskIds?.length || 0})
                     </h4>
 
                     <div className="space-y-2">
                       {sprint?.taskIds && sprint.taskIds.length > 0 ? (
                         sprint.taskIds.map((t) => (
-                          <div key={t._id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#141C28] p-3 text-xs">
-                            <span className="font-semibold text-[#F5F8FC]">{t.title}</span>
+                          <div key={t._id} className="flex items-center justify-between rounded-xl border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] p-3 text-xs">
+                            <span className="font-semibold text-white">{t.title}</span>
                             <div className="flex items-center gap-3">
-                              <span className="font-mono text-[11px] text-[#64D8FF]">Effort: {t.estimatedEffort || "Medium"}</span>
-                              <span className="font-mono text-[11px] text-[#46E3A3]">{t.status}</span>
+                              <span className="font-mono text-[11px] text-[#A78BFA]">Effort: {t.estimatedEffort || "Medium"}</span>
+                              <span className="font-mono text-[11px] text-white">{t.status}</span>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <p className="text-xs text-[#A8B3C7] italic">No specific tasks linked to active sprint.</p>
+                        <p className="text-xs text-[#cbc3d7] italic">No specific tasks linked to active sprint.</p>
                       )}
                     </div>
                   </div>
@@ -309,8 +309,8 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
               {activeTab === "milestones" && (
                 <div className="space-y-6 max-w-4xl mx-auto">
                   {/* 5 Pillar Progress Bars */}
-                  <div className="rounded-2xl border border-white/10 bg-[#0E131C] p-6 space-y-4 shadow-xl">
-                    <h3 className="text-sm font-bold font-mono text-[#46E3A3] uppercase tracking-wider">
+                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
+                    <h3 className="text-sm font-bold font-mono text-[#A78BFA] uppercase tracking-wider">
                       5 Startup Execution Pillars
                     </h3>
 
@@ -322,14 +322,14 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                         { key: "growth", label: "4. Growth", val: pillars.growth },
                         { key: "fundraising", label: "5. Fundraising", val: pillars.fundraising },
                       ].map((p) => (
-                        <div key={p.key} className="rounded-xl border border-white/10 bg-[#141C28] p-3 space-y-2">
-                          <div className="flex justify-between text-xs font-bold">
+                        <div key={p.key} className="rounded-xl border border-white/5 bg-[#0b0f12] p-3 space-y-2">
+                          <div className="flex justify-between text-xs font-bold text-white">
                             <span>{p.label}</span>
-                            <span className="font-mono text-[#46E3A3]">{p.val}%</span>
+                            <span className="font-mono text-[#A78BFA]">{p.val}%</span>
                           </div>
                           <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-[#4F8CFF] to-[#46E3A3] transition-all duration-500"
+                              className="h-full bg-[#A78BFA] transition-all duration-500"
                               style={{ width: `${p.val}%` }}
                             />
                           </div>
@@ -339,21 +339,21 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                   </div>
 
                   {/* Startup Phase Milestones */}
-                  <div className="rounded-2xl border border-white/10 bg-[#0E131C] p-6 space-y-4 shadow-xl">
-                    <h3 className="text-sm font-bold font-mono text-[#F5F8FC] uppercase tracking-wider">
+                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-4 shadow-xl">
+                    <h3 className="text-sm font-bold font-mono text-white uppercase tracking-wider">
                       Startup Roadmap Milestones ({milestones.length})
                     </h3>
 
                     <div className="space-y-3">
                       {milestones.map((m) => (
-                        <div key={m._id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#141C28] p-4">
+                        <div key={m._id} className="flex items-center justify-between rounded-xl border border-white/5 bg-[#0b0f12] p-4">
                           <div>
-                            <h4 className="text-xs font-bold text-[#F5F8FC]">{m.title}</h4>
-                            <p className="text-[11px] text-[#A8B3C7] mt-0.5">Category: {m.category}</p>
+                            <h4 className="text-xs font-bold text-white">{m.title}</h4>
+                            <p className="text-[11px] text-[#cbc3d7] mt-0.5">Category: {m.category}</p>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="text-xs font-mono font-bold text-[#46E3A3]">{m.progressPercentage}% Complete</span>
-                            <span className="px-2.5 py-0.5 rounded-full border border-white/10 text-[10px] font-mono text-[#A8B3C7]">
+                            <span className="text-xs font-mono font-bold text-[#A78BFA]">{m.progressPercentage}% Complete</span>
+                            <span className="px-2.5 py-0.5 rounded-full border border-white/10 text-[10px] font-mono text-[#cbc3d7]">
                               {m.status}
                             </span>
                           </div>
@@ -367,32 +367,32 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
               {/* TAB 4: WEEKLY REVIEW */}
               {activeTab === "review" && (
                 <div className="space-y-6 max-w-3xl mx-auto">
-                  <div className="rounded-2xl border border-white/10 bg-[#0E131C] p-6 space-y-5 shadow-xl">
+                  <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 space-y-5 shadow-xl">
                     <div className="flex items-center justify-between border-b border-white/10 pb-4">
                       <div>
-                        <span className="px-2.5 py-0.5 rounded-full border border-[#64D8FF]/30 bg-[#64D8FF]/10 text-xs font-mono font-bold text-[#64D8FF]">
+                        <span className="px-2.5 py-0.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-xs font-mono font-bold text-[#A78BFA]">
                           Executive Weekly Review • Week {weeklyReview?.weekNumber || 1}
                         </span>
-                        <h3 className="text-base font-bold text-[#F5F8FC] mt-2">Executive Progress & Action Directive</h3>
+                        <h3 className="text-base font-bold text-white mt-2">Executive Progress & Action Directive</h3>
                       </div>
                     </div>
 
                     {/* Completed Work Summary */}
-                    <div className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-2">
-                      <h4 className="text-xs font-bold text-[#46E3A3] flex items-center gap-2">
-                        <CheckCircle2 className="size-4 text-[#46E3A3]" /> Completed Achievements
+                    <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-4 space-y-2">
+                      <h4 className="text-xs font-bold text-[#A78BFA] flex items-center gap-2">
+                        <CheckCircle2 className="size-4 text-[#A78BFA]" /> Completed Achievements
                       </h4>
-                      <p className="text-xs text-[#E1F4FF] leading-relaxed">
+                      <p className="text-xs text-white leading-relaxed">
                         {weeklyReview?.completedSummary || "No work summarized yet."}
                       </p>
                     </div>
 
                     {/* Outstanding Risks */}
-                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 space-y-2">
-                      <h4 className="text-xs font-bold text-red-400 flex items-center gap-2">
-                        <AlertTriangle className="size-4 text-red-400" /> Outstanding Risks
+                    <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-4 space-y-2">
+                      <h4 className="text-xs font-bold text-[#A78BFA] flex items-center gap-2">
+                        <AlertTriangle className="size-4 text-[#A78BFA]" /> Outstanding Risks
                       </h4>
-                      <ul className="space-y-1 text-xs text-red-200">
+                      <ul className="space-y-1 text-xs text-[#cbc3d7]">
                         {weeklyReview?.outstandingRisks && weeklyReview.outstandingRisks.length > 0 ? (
                           weeklyReview.outstandingRisks.map((r, idx) => <li key={idx}>• {r}</li>)
                         ) : (
@@ -402,11 +402,11 @@ export const ExecutionDrawer: React.FC<ExecutionDrawerProps> = ({ open, onClose 
                     </div>
 
                     {/* Next Priorities */}
-                    <div className="rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 space-y-2">
-                      <h4 className="text-xs font-bold text-[#64D8FF] flex items-center gap-2">
-                        <ArrowRight className="size-4 text-[#64D8FF]" /> Top Next Priorities
+                    <div className="rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-4 space-y-2">
+                      <h4 className="text-xs font-bold text-[#A78BFA] flex items-center gap-2">
+                        <ArrowRight className="size-4 text-[#A78BFA]" /> Top Next Priorities
                       </h4>
-                      <ul className="space-y-1 text-xs text-[#E1F4FF]">
+                      <ul className="space-y-1 text-xs text-white">
                         {weeklyReview?.nextPriorities && weeklyReview.nextPriorities.length > 0 ? (
                           weeklyReview.nextPriorities.map((p, idx) => <li key={idx}>• {p}</li>)
                         ) : (

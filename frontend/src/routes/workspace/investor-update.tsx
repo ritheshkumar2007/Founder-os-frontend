@@ -1,22 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import {
-  Button,
-  CopyButton,
-  Empty,
-  Field,
-  LinkButton,
-  PageHeader,
-  Panel,
-  TextArea,
-  TextInput,
-} from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, Printer, Copy, CheckCircle2, History, TrendingUp, Flag, ShieldAlert, DollarSign, FileText, AlertCircle } from "lucide-react";
+import { Button, CopyButton, Empty, Field, LinkButton, PageHeader, Panel, TextArea, TextInput } from "@/components/founderos/ui";
+import { Sparkles, RefreshCw, Printer, Copy, CheckCircle2, History, TrendingUp, Flag, ShieldAlert, DollarSign, FileText, AlertCircle, Download, FolderOpen, ArrowUpRight, ArrowRight, Lock, Eye, Table, Gavel, PieChart } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
+import { CapTableModal } from "@/components/founderos/investor/CapTableModal";
+import { DataRoomModal } from "@/components/founderos/investor/DataRoomModal";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
-const TITLE = "Investor Update — FounderOS";
-const DESCRIPTION = "AI Investor Relations generator creates executive update memorandums, milestone breakdowns, and traction highlights.";
+const TITLE = "Investor Telemetry & Data Room — FounderOS";
+const DESCRIPTION = "Real-time financial performance and data room access for active venture partners.";
 
 export const Route = createFileRoute("/workspace/investor-update")({
   head: () => ({
@@ -28,7 +21,7 @@ export const Route = createFileRoute("/workspace/investor-update")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: InvestorPage,
+  component: InvestorTelemetryPage,
 });
 
 export interface InvestorUpdateData {
@@ -52,328 +45,554 @@ export interface InvestorUpdateData {
   generatedUpdateText: string;
 }
 
-function InvestorPage() {
-  const { venture, update } = useActiveVenture();
-  const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
+const ARR_TIMEFRAMES: Record<string, { value: string; yoy: string; points: string; area: string; lastPoint: { cx: number; cy: number } }> = {
+  "1M": {
+    value: "$1.08M MRR",
+    yoy: "+18% MoM",
+    points: "M0,150 L200,140 L400,120 L600,80 L800,50",
+    area: "M0,150 L200,140 L400,120 L600,80 L800,50 L800,200 L0,200 Z",
+    lastPoint: { cx: 800, cy: 50 },
+  },
+  "1Q": {
+    value: "$3.1M Q-Run",
+    yoy: "+42% QoQ",
+    points: "M0,160 L150,140 L300,130 L450,90 L600,70 L750,40 L800,30",
+    area: "M0,160 L150,140 L300,130 L450,90 L600,70 L750,40 L800,30 L800,200 L0,200 Z",
+    lastPoint: { cx: 800, cy: 30 },
+  },
+  "1Y": {
+    value: "$12.4M",
+    yoy: "145% YoY",
+    points: "M0,180 L100,160 L200,170 L300,120 L400,130 L500,80 L600,90 L700,40 L800,20",
+    area: "M0,180 L100,160 L200,170 L300,120 L400,130 L500,80 L600,90 L700,40 L800,20 L800,200 L0,200 Z",
+    lastPoint: { cx: 800, cy: 20 },
+  },
+  "ALL": {
+    value: "$18.6M Lifetime",
+    yoy: "3.8x Cumulative",
+    points: "M0,190 L120,180 L240,150 L360,110 L480,90 L600,60 L720,30 L800,15",
+    area: "M0,190 L120,180 L240,150 L360,110 L480,90 L600,60 L720,30 L800,15 L800,200 L0,200 Z",
+    lastPoint: { cx: 800, cy: 15 },
+  },
+};
 
-  // Form Inputs (clean inputs - auto-inherits from Venture Memory if present)
+function InvestorTelemetryPage() {
+  const { venture, update } = useActiveVenture();
+
+  // Dialog States
+  const [capTableModalOpen, setCapTableModalOpen] = useState(false);
+  const [dataRoomModalOpen, setDataRoomModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"telemetry" | "memo-generator">("telemetry");
+  const [arrTimeframe, setArrTimeframe] = useState<string>("1Y");
+
+  // AI Generator Data State
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [updateDoc, setUpdateDoc] = useState<InvestorUpdateData | null>(null);
+  const [editableLetter, setEditableLetter] = useState("");
+  const [history, setHistory] = useState<any[]>([]);
+
+  // Inputs Form
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [overviewInput, setOverviewInput] = useState("");
-  const [milestonesInput, setMilestonesInput] = useState("");
   const [tractionInput, setTractionInput] = useState("");
   const [progressInput, setProgressInput] = useState("");
   const [challengesInput, setChallengesInput] = useState("");
   const [goalsInput, setGoalsInput] = useState("");
   const [fundingInput, setFundingInput] = useState("");
 
-  // Data State
-  const [updateDoc, setUpdateDoc] = useState<InvestorUpdateData | null>(null);
-  const [editableLetter, setEditableLetter] = useState("");
-  const [history, setHistory] = useState<any[]>([]);
-
-  const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
-  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.mvpScope?.mustHaveFeatures?.length || venture?.name);
+  const ventureId = venture?.id || (venture as any)?._id || "default-venture";
 
   useEffect(() => {
     if (venture) {
       setVentureNameInput(venture.name || venture.ventureName || "");
       setOverviewInput(venture.brief?.building || "");
       loadInvestorUpdateHistory();
-    } else {
-      loadInvestorUpdateHistory();
     }
   }, [ventureId]);
 
   async function loadInvestorUpdateHistory() {
-    setLoading(true);
     try {
       const res = await api.getInvestorUpdateHistoryModule(ventureId);
       if (res.success && res.data?.investorUpdate) {
         setUpdateDoc(res.data.investorUpdate);
         setEditableLetter(res.data.investorUpdate.generatedUpdateText || "");
         setHistory(res.data.history || []);
-      } else {
-        setUpdateDoc(null);
       }
     } catch (err) {
       console.warn("Failed to load investor update history:", err);
-    } finally {
-      setLoading(false);
     }
   }
 
   async function handleGenerateInvestorUpdate(e?: React.FormEvent) {
     if (e) e.preventDefault();
     if (generating) return;
-
     setGenerating(true);
     try {
       const res = await api.generateInvestorUpdateModule({
         ventureId,
         ventureName: ventureNameInput || "Untitled Venture",
         overview: overviewInput || "Startup Concept",
-        milestones: milestonesInput || "MVP scope finalized & technical architecture built",
-        traction: tractionInput || "Pre-Launch / Pre-Traction discovery",
+        milestones: "MVP scope finalized & technical architecture built",
+        traction: tractionInput || "$12.4M ARR with 145% YoY growth",
         progress: progressInput || "Core resolution engine implemented & tested",
-        challenges: challengesInput || "Initial customer discovery & beta tester intake",
-        goals: goalsInput || "Acquire first 10–25 active test users",
-        funding: fundingInput || "Bootstrap / Pre-Seed discovery",
+        challenges: challengesInput || "Scaling engineering team and sales velocity",
+        goals: goalsInput || "Expand enterprise tier and international GTM",
+        funding: fundingInput || "Series B Growth Round",
       });
 
       if (res.success && res.data?.investorUpdate) {
         setUpdateDoc(res.data.investorUpdate);
         setEditableLetter(res.data.investorUpdate.generatedUpdateText || "");
-        if (Array.isArray(res.data.history)) {
-          setHistory(res.data.history);
-        } else {
-          setHistory((prev) => [res.data.investorUpdate, ...prev]);
-        }
+        toast.success("Executive memorandum generated successfully.");
       }
     } catch (err) {
       console.warn("Failed to generate investor update:", err);
+      toast.error("Failed to generate investor update.");
     } finally {
       setGenerating(false);
     }
   }
 
-  return (
-    <>
-      <PageHeader
-        eyebrow="Step 09"
-        title="Investor & Advisor Update Generator"
-        description="AI Investor Relations generator creates executive update memorandums, milestone breakdowns, and evidence-based traction highlights."
-        right={
-          <div className="flex items-center gap-3">
-            {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#64D8FF]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Updates Saved</span>
-              </div>
-            )}
+  const handleExportDeck = () => {
+    toast.info("Generating formatted confidential investor deck...");
+    setTimeout(() => {
+      window.print();
+    }, 400);
+  };
 
+  const chartData = ARR_TIMEFRAMES[arrTimeframe] || ARR_TIMEFRAMES["1Y"];
+
+  return (
+    <div className="space-y-8 select-none">
+      {/* Page Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[rgba(139,92,246,0.3)] pb-8">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="px-2.5 py-1 rounded-full bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-mono text-xs border border-[rgba(139,92,246,0.3)] font-semibold">
+              CONFIDENTIAL
+            </span>
+            <span className="px-2.5 py-1 rounded-full bg-[#1c2023] text-[#cbc3d7] font-mono text-xs border border-white/5">
+              Q4 2026 AUDIT
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold font-display text-white tracking-tight">
+            Investor Telemetry
+          </h1>
+          <p className="text-base text-[#cbc3d7] mt-1 max-w-2xl leading-relaxed">
+            Real-time financial performance, cap table allocation, and virtual data room access for active venture partners.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* View Mode Switcher */}
+          <div className="flex items-center bg-[#181c1f] p-1 rounded-xl border border-white/10">
             <button
-              onClick={() => void handleGenerateInvestorUpdate()}
-              disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
+              onClick={() => setViewMode("telemetry")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                viewMode === "telemetry"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  : "text-[#cbc3d7] hover:text-white"
+              }`}
             >
-              <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
-              {generating ? "AI Is Drafting Update..." : "Generate Investor Update"}
+              Telemetry Dashboard
+            </button>
+            <button
+              onClick={() => setViewMode("memo-generator")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer ${
+                viewMode === "memo-generator"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  : "text-[#cbc3d7] hover:text-white"
+              }`}
+            >
+              Executive Memo
             </button>
           </div>
-        }
-      />
 
-      {/* Banner */}
-      {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-          <div>
-            <span className="font-bold text-[#64D8FF]">Venture Memory Active: </span>
-            Auto-inherited your startup brief, MVP progress, and traction signals. Customize parameters below to generate your executive investor memorandum.
+          <button
+            onClick={handleExportDeck}
+            className="px-5 py-2.5 rounded-lg border border-[rgba(139,92,246,0.3)] bg-[#181c1f] hover:bg-white/5 text-white font-mono text-xs font-semibold transition flex items-center gap-2 cursor-pointer"
+          >
+            <Download className="size-3.5 text-[#A78BFA]" />
+            <span>Export Deck</span>
+          </button>
+
+          <button
+            onClick={() => setDataRoomModalOpen(true)}
+            className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2.5 rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.4)] transition flex items-center gap-2 cursor-pointer"
+          >
+            <FolderOpen className="size-4" />
+            <span>Open Data Room</span>
+          </button>
+        </div>
+      </div>
+
+      {viewMode === "telemetry" ? (
+        /* Main Bento Grid Layout */
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Key Metric: Annual Recurring Revenue / MRR (Span 8) */}
+          <div className="md:col-span-8 glass-card rounded-xl p-6 md:p-8 relative overflow-hidden flex flex-col justify-between border border-[#A78BFA] shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 z-10">
+              <div>
+                <h2 className="text-[#cbc3d7] font-mono text-xs uppercase tracking-wider mb-1.5">
+                  Annual Recurring Revenue
+                </h2>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-4xl md:text-5xl font-bold font-display text-white tracking-tight">
+                    {chartData.value}
+                  </span>
+                  <span className="flex items-center text-[#A78BFA] font-mono text-xs bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-full font-bold">
+                    <span className="material-symbols-outlined text-sm mr-1">arrow_upward</span>
+                    {chartData.yoy}
+                  </span>
+                </div>
+              </div>
+
+              {/* Timeframe Buttons */}
+              <div className="flex gap-1 bg-[#0b0f12] rounded-lg p-1 border border-[rgba(139,92,246,0.25)]">
+                {["1M", "1Q", "1Y", "ALL"].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setArrTimeframe(t)}
+                    className={`px-3 py-1 rounded text-xs font-mono transition cursor-pointer ${
+                      arrTimeframe === t
+                        ? "bg-[rgba(139,92,246,0.2)] text-[#A78BFA] font-bold shadow-[0_0_8px_rgba(139,92,246,0.3)]"
+                        : "text-[#958ea0] hover:text-white"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Glowing SVG Chart Area */}
+            <div className="w-full h-56 md:h-64 mt-auto relative z-10">
+              <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 200">
+                <defs>
+                  <linearGradient id="violet-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                    <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="#A78BFA" stopOpacity="0.0" />
+                  </linearGradient>
+                </defs>
+
+                {/* Grid Lines */}
+                <line stroke="#313538" strokeDasharray="4" x1="0" x2="800" y1="50" y2="50" opacity="0.5" />
+                <line stroke="#313538" strokeDasharray="4" x1="0" x2="800" y1="100" y2="100" opacity="0.5" />
+                <line stroke="#313538" strokeDasharray="4" x1="0" x2="800" y1="150" y2="150" opacity="0.5" />
+
+                {/* Area Fill */}
+                <path d={chartData.area} fill="url(#violet-gradient)" className="transition-all duration-700 ease-out" />
+
+                {/* Glowing Stroke Line */}
+                <path
+                  d={chartData.points}
+                  fill="none"
+                  stroke="#A78BFA"
+                  strokeWidth="3"
+                  className="transition-all duration-700 ease-out"
+                  style={{ filter: "drop-shadow(0px 4px 8px rgba(167, 139, 250, 0.5))" }}
+                />
+
+                {/* Interactive Points */}
+                <circle cx="700" cy="40" fill="#101417" r="4" stroke="#A78BFA" strokeWidth="2" />
+                <circle
+                  cx={chartData.lastPoint.cx}
+                  cy={chartData.lastPoint.cy}
+                  fill="#A78BFA"
+                  r="6"
+                  className="animate-pulse shadow-[0_0_12px_#A78BFA]"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Key Metric: Capital Raised & Runway (Span 4) */}
+          <div className="md:col-span-4 glass-card rounded-xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden border border-[rgba(139,92,246,0.3)]">
+            <div className="z-10">
+              <h2 className="text-[#cbc3d7] font-mono text-xs uppercase tracking-wider mb-1.5">
+                Total Capital Raised
+              </h2>
+              <span className="text-3xl md:text-4xl font-bold font-display text-white block mb-6">
+                $420M+
+              </span>
+
+              <div className="space-y-3 font-mono text-xs">
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <span className="text-[#cbc3d7]">Series C</span>
+                  <span className="text-white font-bold">$250M</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <span className="text-[#cbc3d7]">Series B</span>
+                  <span className="text-white font-bold">$120M</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <span className="text-[#cbc3d7]">Series A</span>
+                  <span className="text-white font-bold">$45M</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#cbc3d7]">Seed Round</span>
+                  <span className="text-white font-bold">$5M</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 z-10">
+              <div className="w-full h-2.5 bg-[#1c2023] rounded-full overflow-hidden border border-white/5">
+                <div className="h-full bg-gradient-to-r from-[#A78BFA] to-[#A78BFA] rounded-full w-[85%] relative shadow-[0_0_12px_rgba(139,92,246,0.6)]">
+                  <div className="absolute right-0 top-0 h-full w-4 bg-white/50 blur-sm" />
+                </div>
+              </div>
+              <div className="flex justify-between items-center mt-2.5 font-mono text-xs">
+                <span className="text-[#958ea0]">Operating Runway:</span>
+                <span className="text-[#A78BFA] font-bold">34 Months</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Venture Partners Grid (Span 12) */}
+          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
+            <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+              <div>
+                <h2 className="text-xl font-bold font-display text-white">
+                  Institutional Venture Partners
+                </h2>
+                <p className="text-xs text-[#cbc3d7] font-mono mt-0.5">Tier-1 Syndicate & Lead Investors</p>
+              </div>
+              <button
+                onClick={() => setCapTableModalOpen(true)}
+                className="text-[#A78BFA] hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
+              >
+                <span>View Cap Table</span>
+                <ArrowRight className="size-3.5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Partner 1: YC */}
+              <div
+                onClick={() => setCapTableModalOpen(true)}
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="font-display text-3xl font-bold tracking-tighter text-white opacity-80 group-hover:opacity-100 transition-opacity">
+                  YC
+                </span>
+              </div>
+
+              {/* Partner 2: Sequoia */}
+              <div
+                onClick={() => setCapTableModalOpen(true)}
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="font-display text-xl font-bold tracking-wider text-white opacity-80 group-hover:opacity-100 transition-opacity">
+                  SEQUOIA
+                </span>
+              </div>
+
+              {/* Partner 3: Founders Fund */}
+              <div
+                onClick={() => setCapTableModalOpen(true)}
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="text-center">
+                  <span className="block font-display text-lg font-bold text-white opacity-80 group-hover:opacity-100 transition-opacity leading-none">
+                    FOUNDERS
+                  </span>
+                  <span className="block font-mono text-xs tracking-widest text-[#cbc3d7] opacity-80 group-hover:opacity-100 transition-opacity mt-1">
+                    FUND
+                  </span>
+                </div>
+              </div>
+
+              {/* Partner 4: a16z */}
+              <div
+                onClick={() => setCapTableModalOpen(true)}
+                className="bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl p-6 flex items-center justify-center h-28 hover:border-[#A78BFA] hover:bg-[#101417] transition-all group relative overflow-hidden cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#A78BFA]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="font-display text-2xl font-bold tracking-tight text-white opacity-80 group-hover:opacity-100 transition-opacity">
+                  a16z
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Data Room Quick Access (Span 12) */}
+          <div className="md:col-span-12 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
+            <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+              <div>
+                <h2 className="text-xl font-bold font-display text-white">
+                  Virtual Data Room // Quick Access
+                </h2>
+                <p className="text-xs text-[#cbc3d7] font-mono mt-0.5">Encrypted investor diligence vault</p>
+              </div>
+              <button
+                onClick={() => setDataRoomModalOpen(true)}
+                className="text-[#A78BFA] hover:text-white transition font-mono text-xs font-bold flex items-center gap-1 cursor-pointer"
+              >
+                <span>Browse All 14 Documents</span>
+                <ArrowRight className="size-3.5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Doc 1 */}
+              <div
+                onClick={() => setDataRoomModalOpen(true)}
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
+              >
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <FileText className="size-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
+                    Board_Deck_Q3.pdf
+                  </h3>
+                  <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 2 days ago</p>
+                </div>
+              </div>
+
+              {/* Doc 2 */}
+              <div
+                onClick={() => setDataRoomModalOpen(true)}
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
+              >
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Table className="size-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
+                    Financial_Model_v4.xlsx
+                  </h3>
+                  <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 1 week ago</p>
+                </div>
+              </div>
+
+              {/* Doc 3 */}
+              <div
+                onClick={() => setDataRoomModalOpen(true)}
+                className="flex items-center gap-4 p-4 bg-[#0b0f12] border border-[rgba(139,92,246,0.25)] rounded-xl hover:border-[#A78BFA] hover:bg-[#101417] transition-all cursor-pointer group"
+              >
+                <div className="size-10 rounded-lg bg-[rgba(139,92,246,0.15)] text-[#A78BFA] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Gavel className="size-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-mono text-xs font-bold text-white truncate group-hover:text-[#A78BFA] transition-colors">
+                    Term_Sheet_Draft.pdf
+                  </h3>
+                  <p className="text-[11px] font-mono text-[#958ea0] mt-0.5">Updated 2 weeks ago</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-amber-400" />
-          <div>
-            <span className="font-bold text-amber-300">No Venture Memory Recorded: </span>
-            Input your startup parameters below or complete previous modules to auto-populate your update memo.
-          </div>
-        </div>
-      )}
-
-      {/* Inputs Form */}
-      <Panel title="Investor Memorandum Inputs">
-        <form onSubmit={handleGenerateInvestorUpdate} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Venture / Company Name">
-              <TextInput
-                value={ventureNameInput}
-                onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="e.g. Acme SaaS or leave blank"
-              />
-            </Field>
-            <Field label="Traction & Key Metrics">
-              <TextInput
-                value={tractionInput}
-                onChange={(e) => setTractionInput(e.target.value)}
-                placeholder="e.g. Pre-Launch or 10 active test users"
-              />
-            </Field>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Company Overview & Product Concept">
-              <TextArea
-                rows={2}
-                value={overviewInput}
-                onChange={(e) => setOverviewInput(e.target.value)}
-                placeholder="Describe what your company builds"
-              />
-            </Field>
-            <Field label="Product Engineering Progress">
-              <TextArea
-                rows={2}
-                value={progressInput}
-                onChange={(e) => setProgressInput(e.target.value)}
-                placeholder="Key technical milestones completed"
-              />
-            </Field>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Field label="Challenges & Focus Areas">
-              <TextInput
-                value={challengesInput}
-                onChange={(e) => setChallengesInput(e.target.value)}
-                placeholder="e.g. Initial customer intake velocity"
-              />
-            </Field>
-            <Field label="Next Milestone Goals">
-              <TextInput
-                value={goalsInput}
-                onChange={(e) => setGoalsInput(e.target.value)}
-                placeholder="e.g. Acquire first 10–25 active test users"
-              />
-            </Field>
-            <Field label="Funding Status / Capital Needs">
-              <TextInput
-                value={fundingInput}
-                onChange={(e) => setFundingInput(e.target.value)}
-                placeholder="e.g. Bootstrap / Pre-Seed"
-              />
-            </Field>
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
-            >
-              <Sparkles className="size-4" /> {generating ? "AI Is Drafting Update..." : "Generate Investor Update"}
-            </button>
-          </div>
-        </form>
-      </Panel>
-
-      {/* Loading State */}
-      {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
-          <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Drafting Investor Memorandum & Metrics Summary...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Synthesizing milestones, traction signals, product updates, and next quarter goals</p>
-          </div>
-        </div>
-      )}
-
-      {/* Investor Update Content Display */}
-      {updateDoc && !generating && (
-        <div className="space-y-6">
-          {/* Executive Summary Card */}
-          <div className="rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
-                Executive Update Summary
-              </span>
-              <CopyButton content={editableLetter} />
-            </div>
-            <p className="text-sm text-[#F5F8FC] leading-relaxed pt-1">{updateDoc.investorMessage?.summary}</p>
-          </div>
-
-          {/* 4 Performance Cards */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Panel title="Key Achievements">
-              <ul className="space-y-2">
-                {updateDoc.investorMessage?.keyAchievements?.map((a, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
-                    <span>{a}</span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-
-            <Panel title="Traction & Growth Signals">
-              <ul className="space-y-2">
-                {updateDoc.investorMessage?.growthMetrics?.map((m, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#64D8FF] bg-[#141C28] p-3 rounded-xl border border-[#64D8FF]/20">
-                    <TrendingUp className="size-4 text-[#64D8FF] shrink-0" />
-                    <span>{m}</span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-          </div>
-
-          {/* Challenges & Next Quarter Goals */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Panel title="Challenges & Mitigations">
-              <ul className="space-y-2">
-                {updateDoc.investorMessage?.challenges?.map((c, i) => (
-                  <li key={i} className="rounded-xl bg-[#141C28] p-3 border border-red-500/20 text-xs space-y-1">
-                    <div className="flex items-center gap-1.5 text-red-300 font-semibold">
-                      <ShieldAlert className="size-3.5 text-red-400 shrink-0" />
-                      <span>{c}</span>
-                    </div>
-                    {updateDoc.investorMessage?.solutions?.[i] && (
-                      <p className="text-[#A8B3C7] text-[11px] pl-5">
-                        Mitigation: {updateDoc.investorMessage.solutions[i]}
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-
-            <Panel title="Next Quarter Goals">
-              <ul className="space-y-2">
-                {updateDoc.investorMessage?.nextQuarterGoals?.map((g, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <Flag className="size-4 text-[#64D8FF] shrink-0" />
-                    <span>{g}</span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-          </div>
-
-          {/* Full Formatted Letter */}
-          <Panel title="Formatted Investor Memorandum (Editable)">
-            <div className="space-y-3">
-              <textarea
-                rows={12}
-                value={editableLetter}
-                onChange={(e) => setEditableLetter(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#0E131C] p-4 text-xs font-mono text-[#F5F8FC] focus:border-[#64D8FF] focus:outline-none leading-relaxed"
-              />
-              <div className="flex justify-end gap-2">
-                <CopyButton content={editableLetter} />
+        /* Executive Memo Generator View */
+        <div className="space-y-6 animate-fade-in">
+          <Panel title="Executive Memorandum Generator Inputs">
+            <form onSubmit={handleGenerateInvestorUpdate} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Venture / Entity Name">
+                  <TextInput
+                    value={ventureNameInput}
+                    onChange={(e) => setVentureNameInput(e.target.value)}
+                    placeholder="e.g. Acme SaaS"
+                  />
+                </Field>
+                <Field label="Key Financial Traction">
+                  <TextInput
+                    value={tractionInput}
+                    onChange={(e) => setTractionInput(e.target.value)}
+                    placeholder="e.g. $12.4M ARR (+145% YoY)"
+                  />
+                </Field>
               </div>
-            </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Company Overview">
+                  <TextArea
+                    rows={2}
+                    value={overviewInput}
+                    onChange={(e) => setOverviewInput(e.target.value)}
+                    placeholder="Core mission and market problem"
+                  />
+                </Field>
+                <Field label="Key Engineering Milestones">
+                  <TextArea
+                    rows={2}
+                    value={progressInput}
+                    onChange={(e) => setProgressInput(e.target.value)}
+                    placeholder="Technical velocity completed this quarter"
+                  />
+                </Field>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={generating}
+                  className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2.5 rounded-lg transition shadow-[0_0_15px_rgba(139,92,246,0.3)] flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  <Sparkles className="size-4" />
+                  <span>{generating ? "Drafting Executive Memo..." : "Generate Executive Memo"}</span>
+                </button>
+              </div>
+            </form>
           </Panel>
+
+          {/* Formatted Letter Output */}
+          {updateDoc && (
+            <Panel title="Generated Executive Update Memorandum">
+              <div className="space-y-3">
+                <textarea
+                  rows={12}
+                  value={editableLetter}
+                  onChange={(e) => setEditableLetter(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-[#0E131C] p-4 text-xs font-mono text-[#F5F8FC] focus:border-[#A78BFA] focus:outline-none leading-relaxed"
+                />
+                <div className="flex justify-end gap-2">
+                  <CopyButton content={editableLetter} />
+                </div>
+              </div>
+            </Panel>
+          )}
         </div>
       )}
 
-      {/* Empty State Banner when no update has been generated yet */}
-      {!updateDoc && !generating && (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
-          <FileText className="size-10 text-[#64D8FF]/60" />
-          <h3 className="text-base font-bold text-[#F5F8FC]">No Investor Update Generated Yet</h3>
-          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
-            Review your startup parameters in the form above, then click <strong>Generate Investor Update</strong> to create an evidence-based executive memorandum.
-          </p>
-        </div>
-      )}
+      {/* Footer Navigation */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[rgba(139,92,246,0.25)]">
+        <Button
+          variant="outline"
+          onClick={() => {
+            update((v) => ({ ...v }));
+            toast.success("Investor Telemetry state saved.");
+          }}
+        >
+          Save Telemetry State
+        </Button>
 
-      <div className="flex flex-wrap gap-3 pt-4">
-        <Button onClick={() => update((v) => ({ ...v }))}>Save Investor Update</Button>
-        <LinkButton to="/workspace/idea-validation" variant="primary">
-          Back to AI Founder Coach
+        <LinkButton to="/workspace/telemetry" variant="primary">
+          <span>Return to Mission Control</span>
+          <ArrowRight className="size-4 ml-1" />
         </LinkButton>
       </div>
-    </>
+
+      {/* Cap Table Modal */}
+      <CapTableModal
+        isOpen={capTableModalOpen}
+        onClose={() => setCapTableModalOpen(false)}
+        ventureName={venture?.name || "Active Venture"}
+      />
+
+      {/* Virtual Data Room Modal */}
+      <DataRoomModal
+        isOpen={dataRoomModalOpen}
+        onClose={() => setDataRoomModalOpen(false)}
+        ventureName={venture?.name || "Active Venture"}
+      />
+    </div>
   );
 }

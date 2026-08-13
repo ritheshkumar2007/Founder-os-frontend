@@ -222,22 +222,22 @@ function TractionPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Step 08"
+        eyebrow="Step 06"
         title="Traction Analytics & Growth Auditor"
         description="AI Growth Advisor analyzes actual startup metrics, user retention, acquisition channels, and calculated investor readiness score."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#64D8FF]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Audits Saved</span>
+              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+                <History className="size-3.5 text-[#A78BFA]" />
+                <span className="font-mono text-xs text-white">{history.length} Audits Saved</span>
               </div>
             )}
 
             <button
               onClick={() => void handleAnalyzeTraction()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
               {generating ? "AI Is Auditing Traction..." : "Run AI Traction Audit"}
@@ -247,10 +247,10 @@ function TractionPage() {
       />
 
       {/* Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
+        <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
         <div>
-          <span className="font-bold text-[#64D8FF]">Evidence-Based Growth Auditor: </span>
+          <span className="font-bold text-[#A78BFA]">Evidence-Based Growth Auditor: </span>
           Input your real metrics below (or leave blank if Pre-Launch) to generate an honest growth audit, first-user acquisition roadmap, and investor readiness diagnostic.
         </div>
       </div>
@@ -326,7 +326,7 @@ function TractionPage() {
             <button
               type="submit"
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-5 py-2.5 text-xs font-extrabold text-black transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
             >
               <Sparkles className="size-4" /> {generating ? "AI Is Auditing Traction..." : "Run AI Traction Audit"}
             </button>
@@ -336,11 +336,11 @@ function TractionPage() {
 
       {/* Loading State */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-[#A78BFA]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Analyzing Growth Metrics & Retention Signals...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Benchmarking conversion rates, acquisition channels, growth experiments, and investor readiness</p>
+            <h3 className="text-sm font-bold text-white">Analyzing Growth Metrics & Retention Signals...</h3>
+            <p className="text-xs font-mono text-[#958ea0]">Benchmarking conversion rates, acquisition channels, growth experiments, and investor readiness</p>
           </div>
         </div>
       )}
@@ -357,17 +357,17 @@ function TractionPage() {
           </div>
 
           {/* Investor Readiness Score Header */}
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl">
             <div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
                 Growth Diagnostic Status
               </span>
-              <h2 className="text-xl font-extrabold text-[#F5F8FC] mt-2">{traction.aiAnalysis?.growthHealth}</h2>
+              <h2 className="text-xl font-extrabold text-white mt-2">{traction.aiAnalysis?.growthHealth}</h2>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-end">
-                <span className="text-[10px] font-mono uppercase text-[#A8B3C7]">Investor Readiness Score</span>
-                <span className={`text-2xl font-extrabold font-mono ${traction.aiAnalysis?.investorReadinessScore >= 70 ? 'text-[#46E3A3]' : 'text-amber-300'}`}>
+                <span className="text-[10px] font-mono uppercase text-[#958ea0]">Investor Readiness Score</span>
+                <span className="text-2xl font-extrabold font-mono text-[#A78BFA]">
                   {traction.aiAnalysis?.investorReadinessScore} / 100
                 </span>
               </div>
@@ -377,10 +377,10 @@ function TractionPage() {
           {/* SWOT Grid */}
           <div className="grid gap-6 lg:grid-cols-3">
             <Panel title="Key Strengths">
-              <ul className="space-y-2 text-xs text-[#F5F8FC]">
+              <ul className="space-y-2 text-xs text-white">
                 {traction.aiAnalysis?.strengths?.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 bg-[#141C28] p-3 rounded-xl border border-emerald-500/20">
-                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <li key={i} className="flex items-start gap-2 bg-[#101417] p-3 rounded-xl border border-white/5">
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0 mt-0.5" />
                     <span>{s}</span>
                   </li>
                 ))}
@@ -388,10 +388,10 @@ function TractionPage() {
             </Panel>
 
             <Panel title="Weaknesses & Bottlenecks">
-              <ul className="space-y-2 text-xs text-red-300">
+              <ul className="space-y-2 text-xs text-[#cbc3d7]">
                 {traction.aiAnalysis?.weaknesses?.map((w, i) => (
-                  <li key={i} className="flex items-start gap-2 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-                    <ShieldAlert className="size-4 text-red-400 shrink-0 mt-0.5" />
+                  <li key={i} className="flex items-start gap-2 bg-[#101417] p-3 rounded-xl border border-white/10">
+                    <ShieldAlert className="size-4 text-[#A78BFA] shrink-0 mt-0.5" />
                     <span>{w}</span>
                   </li>
                 ))}
@@ -399,10 +399,10 @@ function TractionPage() {
             </Panel>
 
             <Panel title="Growth Opportunities">
-              <ul className="space-y-2 text-xs text-[#64D8FF]">
+              <ul className="space-y-2 text-xs text-white">
                 {traction.aiAnalysis?.opportunities?.map((o, i) => (
-                  <li key={i} className="flex items-start gap-2 bg-[#64D8FF]/10 p-3 rounded-xl border border-[#64D8FF]/20">
-                    <ArrowUpRight className="size-4 text-[#64D8FF] shrink-0 mt-0.5" />
+                  <li key={i} className="flex items-start gap-2 bg-[#101417] p-3 rounded-xl border border-[rgba(139,92,246,0.25)]">
+                    <ArrowUpRight className="size-4 text-[#A78BFA] shrink-0 mt-0.5" />
                     <span>{o}</span>
                   </li>
                 ))}
@@ -415,14 +415,14 @@ function TractionPage() {
             <Panel title="Priority Action Items">
               <div className="space-y-2 text-xs">
                 {traction.aiAnalysis?.nextActions?.map((act, i) => (
-                  <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-1">
+                  <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-4 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#F5F8FC]">{act.action}</span>
-                      <span className="text-[10px] font-mono text-[#64D8FF] bg-[#64D8FF]/10 px-2 py-0.5 rounded-md border border-[#64D8FF]/20">
+                      <span className="font-bold text-white">{act.action}</span>
+                      <span className="text-[10px] font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2 py-0.5 rounded-md border border-[rgba(139,92,246,0.3)]">
                         {act.priority} Priority
                       </span>
                     </div>
-                    <span className="text-[11px] font-mono text-[#46E3A3] block pt-0.5">
+                    <span className="text-[11px] font-mono text-[#cbc3d7] block pt-0.5">
                       Expected Impact: {act.expectedImpact}
                     </span>
                   </div>
@@ -433,14 +433,14 @@ function TractionPage() {
             <Panel title="Recommended Growth Experiments">
               <div className="space-y-2 text-xs">
                 {traction.aiAnalysis?.growthExperiments?.map((exp, i) => (
-                  <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 space-y-1">
+                  <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-4 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[#F5F8FC]">{exp.experiment}</span>
-                      <span className="text-[10px] font-mono text-[#A8B3C7] bg-white/5 px-2 py-0.5 rounded-md">
+                      <span className="font-bold text-white">{exp.experiment}</span>
+                      <span className="text-[10px] font-mono text-[#958ea0] bg-white/5 px-2 py-0.5 rounded-md">
                         {exp.timeline}
                       </span>
                     </div>
-                    <p className="text-[#A8B3C7] text-[11px]">Goal: {exp.goal}</p>
+                    <p className="text-[#cbc3d7] text-[11px]">Goal: {exp.goal}</p>
                   </div>
                 ))}
               </div>
@@ -451,10 +451,10 @@ function TractionPage() {
 
       {/* Empty State Banner when no audit has been run yet */}
       {!traction && !generating && (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
-          <Activity className="size-10 text-[#64D8FF]/60" />
-          <h3 className="text-base font-bold text-[#F5F8FC]">No Traction Audit Generated Yet</h3>
-          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b0f12] p-12 text-center space-y-3">
+          <Activity className="size-10 text-[#A78BFA]/60" />
+          <h3 className="text-base font-bold text-white">No Traction Audit Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#cbc3d7] font-sans">
             Enter your active numbers in the form above, or click <strong>Run AI Traction Audit</strong> with blank fields to generate a Pre-Traction baseline strategy for acquiring your first 10–50 users.
           </p>
         </div>

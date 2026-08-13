@@ -165,7 +165,7 @@ export function CopyButton({ text, label = "Copy" }: { text: string; label?: str
         }
       }}
     >
-      {copied ? <Check className="size-4 text-[#46E3A3]" /> : <Copy className="size-4" />}
+      {copied ? <Check className="size-4 text-[#A78BFA]" /> : <Copy className="size-4" />}
       {copied ? "Copied" : label}
     </Button>
   );
@@ -182,7 +182,7 @@ export function Progress({ value, label }: { value: number; label?: string }) {
       ) : null}
       <div className="h-2 w-full overflow-hidden rounded-full bg-surface-2 border border-border/40">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] transition-all duration-700 ease-out shadow-[0_0_12px_rgba(79,140,255,0.4)]"
+          className="h-full rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#A78BFA] transition-all duration-700 ease-out shadow-[0_0_12px_rgba(167,139,250,0.5)]"
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
         />
       </div>

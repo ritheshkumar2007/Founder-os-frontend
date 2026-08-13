@@ -105,14 +105,14 @@ export const TrajectoryStoryline: React.FC = () => {
     <section id="trajectory" className="relative py-24 px-4 max-w-7xl mx-auto z-10 space-y-12">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-[#0E131C] text-xs font-mono text-[#64D8FF]">
-          <Sparkles className="size-3.5 text-[#4F8CFF]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-xs font-mono text-[#A78BFA]">
+          <Sparkles className="size-3.5 text-[#A78BFA]" />
           <span>STARTUP WORKFLOW FRAMEWORK</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold font-display text-[#F5F8FC] tracking-tight">
+        <h2 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
           From Idea Brief to <span className="text-gradient-system">Scaled Venture</span>
         </h2>
-        <p className="text-base text-[#A8B3C7]">
+        <p className="text-base text-[#cbc3d7]">
           Follow the 5-stage operating system trajectory to build with speed, clarity, and precision.
         </p>
       </div>
@@ -126,19 +126,19 @@ export const TrajectoryStoryline: React.FC = () => {
             <button
               key={s.id}
               onClick={() => setActiveStageId(s.id)}
-              className={`p-4 rounded-2xl border text-left transition-all duration-200 ${
+              className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "border-[#4F8CFF] bg-[#161F2D] shadow-[0_0_20px_rgba(79,140,255,0.2)]"
-                  : "border-white/5 bg-[#121924] hover:bg-[#1A2433] hover:border-white/10"
+                  ? "border-[#A78BFA] bg-[#101417] shadow-[0_0_20px_rgba(139,92,246,0.25)]"
+                  : "border-white/5 bg-[#0b0f12] hover:bg-[#101417] hover:border-white/10"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-xs font-mono font-bold ${isActive ? "text-[#4F8CFF]" : "text-[#A8B3C7]"}`}>
+                <span className={`text-xs font-mono font-bold ${isActive ? "text-[#A78BFA]" : "text-[#cbc3d7]"}`}>
                   {s.stepNumber}
                 </span>
-                <Icon className={`size-4 ${isActive ? "text-[#64D8FF]" : "text-[#74839B]"}`} />
+                <Icon className={`size-4 ${isActive ? "text-[#A78BFA]" : "text-[#958ea0]"}`} />
               </div>
-              <p className={`text-xs font-semibold truncate ${isActive ? "text-[#F5F8FC]" : "text-[#A8B3C7]"}`}>
+              <p className={`text-xs font-semibold truncate ${isActive ? "text-white" : "text-[#cbc3d7]"}`}>
                 {s.title}
               </p>
             </button>
@@ -147,41 +147,41 @@ export const TrajectoryStoryline: React.FC = () => {
       </div>
 
       {/* Stage Detail Workspace Panel */}
-      <div className="panel p-8 sm:p-10 border border-white/10 bg-[#161F2D] rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.5)]">
+      <div className="panel p-8 sm:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)]">
         <div className="grid lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-6">
             <div className="flex items-center gap-3">
-              <span className="text-xs font-mono px-3 py-1 rounded-full border border-[#4F8CFF]/30 bg-[#4F8CFF]/15 text-[#64D8FF] font-semibold">
+              <span className="text-xs font-mono px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold">
                 {activeStage.badge}
               </span>
-              <span className="text-xs font-mono text-[#A8B3C7]">STEP {activeStage.stepNumber} OF 05</span>
+              <span className="text-xs font-mono text-[#958ea0]">STEP {activeStage.stepNumber} OF 05</span>
             </div>
 
             <div>
-              <h3 className="text-2xl sm:text-3xl font-bold font-display text-[#F5F8FC]">
+              <h3 className="text-2xl sm:text-3xl font-bold font-display text-white">
                 {activeStage.title}
               </h3>
-              <p className="text-sm font-mono text-[#64D8FF] mt-1">{activeStage.subtitle}</p>
+              <p className="text-sm font-mono text-[#A78BFA] mt-1">{activeStage.subtitle}</p>
             </div>
 
-            <p className="text-sm text-[#A8B3C7] leading-relaxed">{activeStage.description}</p>
+            <p className="text-sm text-[#cbc3d7] leading-relaxed">{activeStage.description}</p>
 
             <div className="space-y-2 pt-2">
               {activeStage.details.map((detail, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 text-xs text-[#F5F8FC]">
-                  <Check className="size-4 text-[#46E3A3] shrink-0" />
+                <div key={idx} className="flex items-center gap-2.5 text-xs text-white">
+                  <Check className="size-4 text-[#A78BFA] shrink-0" />
                   <span>{detail}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col justify-center p-6 rounded-2xl border border-white/5 bg-[#0E131C] space-y-4">
-            <span className="text-xs font-mono uppercase text-[#74839B]">Stage Metric Benchmark</span>
-            <p className="text-4xl sm:text-5xl font-bold font-display text-[#4F8CFF]">
+          <div className="lg:col-span-5 flex flex-col justify-center p-6 rounded-2xl border border-white/5 bg-[#101417] space-y-4">
+            <span className="text-xs font-mono uppercase text-[#958ea0]">Stage Metric Benchmark</span>
+            <p className="text-4xl sm:text-5xl font-bold font-display text-[#A78BFA]">
               {activeStage.telemetryMetric}
             </p>
-            <p className="text-xs font-mono text-[#A8B3C7]">{activeStage.telemetryLabel}</p>
+            <p className="text-xs font-mono text-[#cbc3d7]">{activeStage.telemetryLabel}</p>
           </div>
         </div>
       </div>

@@ -231,22 +231,22 @@ function MvpScopePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Step 04"
-        title="MVP Scope AI Generator"
-        description="AI Product Manager designs a realistic 2-week MVP blueprint tailored to your startup idea."
+        eyebrow="Step 02"
+        title="MVP Scope Architect"
+        description="Transform customer pain into a 12-part technical MVP blueprint, ruthless feature prioritization, and realistic 2-week launch milestones."
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#64D8FF]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Generations Saved</span>
+              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+                <History className="size-3.5 text-[#A78BFA]" />
+                <span className="font-mono text-xs text-white">{history.length} Generations Saved</span>
               </div>
             )}
 
             <button
               onClick={() => void handleGenerateMvpBlueprint()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
               {generating ? "Generating Blueprint..." : "Generate MVP Blueprint"}
@@ -257,18 +257,18 @@ function MvpScopePage() {
 
       {/* Venture Memory Context Banner */}
       {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
+        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
+          <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
           <div>
-            <span className="font-bold text-[#64D8FF]">Venture Memory Connected: </span>
+            <span className="font-bold text-[#A78BFA]">Venture Memory Connected: </span>
             Auto-inherited your validated idea and target audience from Step 1. You can edit parameters below or generate your 12-part technical MVP blueprint.
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-amber-400" />
+        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
+          <AlertCircle className="size-5 shrink-0 text-[#A78BFA]" />
           <div>
-            <span className="font-bold text-amber-300">No Venture Memory Recorded: </span>
+            <span className="font-bold text-[#A78BFA]">No Venture Memory Recorded: </span>
             Input your startup details in the form below or complete Step 1 (Idea Validation) to auto-populate your parameters.
           </div>
         </div>
@@ -315,7 +315,7 @@ function MvpScopePage() {
             <button
               type="submit"
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-5 py-2.5 text-xs font-extrabold text-black transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
             >
               <Sparkles className="size-4" /> {generating ? "AI Is Analyzing Idea..." : "Generate MVP Scope Blueprint"}
             </button>
@@ -325,11 +325,11 @@ function MvpScopePage() {
 
       {/* Loading Animation */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-[#A78BFA]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Designing Your Realistic MVP Scope...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Analyzing core features, user journey, technical requirements, and 2-week timeline</p>
+            <h3 className="text-sm font-bold text-white">Designing Your Realistic MVP Scope...</h3>
+            <p className="text-xs font-mono text-[#958ea0]">Analyzing core features, user journey, technical requirements, and 2-week timeline</p>
           </div>
         </div>
       )}
@@ -338,15 +338,15 @@ function MvpScopePage() {
       {blueprint && !generating && (
         <div className="space-y-6">
           {/* Header Badge */}
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl">
             <div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
                 Generated MVP Blueprint
               </span>
-              <h2 className="text-2xl font-extrabold font-display text-[#F5F8FC] mt-2">{blueprint.mvpName}</h2>
+              <h2 className="text-2xl font-extrabold font-display text-white mt-2">{blueprint.mvpName}</h2>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-mono text-[#46E3A3] bg-[#46E3A3]/10 px-3 py-1.5 rounded-xl border border-[#46E3A3]/30">
+              <span className="text-xs font-mono text-white bg-[rgba(139,92,246,0.15)] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)]">
                 Status: Ready to Build
               </span>
             </div>
@@ -357,8 +357,8 @@ function MvpScopePage() {
             <Panel title="Core MVP Features">
               <ul className="space-y-2">
                 {blueprint.coreFeatures?.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <CheckCircle2 className="size-4 text-[#64D8FF] shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-white bg-[#101417] p-3 rounded-xl border border-white/5">
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -368,8 +368,8 @@ function MvpScopePage() {
             <Panel title="Must-Have Features (Build First)">
               <ul className="space-y-2">
                 {blueprint.mustHaveFeatures?.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-emerald-500/20">
-                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-white bg-[#101417] p-3 rounded-xl border border-[rgba(139,92,246,0.3)]">
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -379,8 +379,8 @@ function MvpScopePage() {
             <Panel title="Nice-to-Have Features (v1.1)">
               <ul className="space-y-2">
                 {blueprint.niceToHaveFeatures?.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#A8B3C7] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <span className="size-2 rounded-full bg-[#4F8CFF] shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#cbc3d7] bg-[#101417] p-3 rounded-xl border border-white/5">
+                    <span className="size-2 rounded-full bg-[#A78BFA] shrink-0" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -390,8 +390,8 @@ function MvpScopePage() {
             <Panel title="Features to Avoid (Scope Creep)">
               <ul className="space-y-2">
                 {blueprint.featuresToAvoid?.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs text-red-300 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-                    <ShieldAlert className="size-4 text-red-400 shrink-0" />
+                  <li key={i} className="flex items-center gap-2.5 text-xs text-[#cbc3d7] bg-[#101417] p-3 rounded-xl border border-white/10">
+                    <ShieldAlert className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -403,9 +403,9 @@ function MvpScopePage() {
           <Panel title="User Journey (Primary Workflow)">
             <div className="grid gap-3 sm:grid-cols-3">
               {blueprint.userJourney?.map((step, i) => (
-                <div key={i} className="flex flex-col gap-2 rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs">
-                  <span className="font-mono text-[10px] font-bold text-[#64D8FF] uppercase">Step {i + 1}</span>
-                  <p className="font-semibold text-[#F5F8FC]">{step}</p>
+                <div key={i} className="flex flex-col gap-2 rounded-xl border border-white/5 bg-[#101417] p-4 text-xs">
+                  <span className="font-mono text-[10px] font-bold text-[#A78BFA] uppercase">Step {i + 1}</span>
+                  <p className="font-semibold text-white">{step}</p>
                 </div>
               ))}
             </div>
@@ -416,8 +416,8 @@ function MvpScopePage() {
             <Panel title="Technical Requirements">
               <div className="flex flex-wrap gap-2">
                 {blueprint.technicalRequirements?.map((req, i) => (
-                  <span key={i} className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#141C28] px-3 py-2 text-xs font-mono text-[#F5F8FC]">
-                    <Cpu className="size-3.5 text-[#64D8FF]" />
+                  <span key={i} className="inline-flex items-center gap-1.5 rounded-xl border border-white/5 bg-[#101417] px-3 py-2 text-xs font-mono text-white">
+                    <Cpu className="size-3.5 text-[#A78BFA]" />
                     {req}
                   </span>
                 ))}
@@ -427,8 +427,8 @@ function MvpScopePage() {
             <Panel title="Success Metrics (KPIs)">
               <ul className="space-y-2">
                 {blueprint.successMetrics?.map((m, i) => (
-                  <li key={i} className="flex items-center gap-2 text-xs font-semibold text-emerald-300 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
-                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
+                  <li key={i} className="flex items-center gap-2 text-xs font-semibold text-white bg-[#101417] p-3 rounded-xl border border-[rgba(139,92,246,0.25)]">
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{m}</span>
                   </li>
                 ))}
@@ -440,16 +440,16 @@ function MvpScopePage() {
           <Panel title="Development Timeline Visualization">
             <div className="space-y-4">
               {blueprint.developmentTimeline?.map((t, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
+                <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-4 text-xs space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#F5F8FC] text-sm">{t.phase}</span>
-                    <span className="font-mono text-[11px] text-[#46E3A3] bg-[#46E3A3]/10 px-2.5 py-1 rounded-lg border border-[#46E3A3]/20">
+                    <span className="font-bold text-white text-sm">{t.phase}</span>
+                    <span className="font-mono text-[11px] text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
                       {t.duration}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {t.tasks?.map((task, ti) => (
-                      <span key={ti} className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] text-[#A8B3C7]">
+                      <span key={ti} className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] text-[#cbc3d7]">
                         • {task}
                       </span>
                     ))}
@@ -463,8 +463,8 @@ function MvpScopePage() {
           <Panel title="Post-Launch Future Roadmap">
             <div className="grid gap-3 sm:grid-cols-3">
               {blueprint.futureRoadmap?.map((item, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-3 text-xs text-[#A8B3C7] font-mono">
-                  <span className="text-[#64D8FF] font-bold">v2.{i + 1}: </span>{item}
+                <div key={i} className="rounded-xl border border-white/5 bg-[#101417] p-3 text-xs text-[#cbc3d7] font-mono">
+                  <span className="text-[#A78BFA] font-bold">v2.{i + 1}: </span>{item}
                 </div>
               ))}
             </div>
@@ -474,10 +474,10 @@ function MvpScopePage() {
 
       {/* Empty State Banner when no blueprint has been generated yet */}
       {!blueprint && !generating && (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
-          <Layers className="size-10 text-[#64D8FF]/60" />
-          <h3 className="text-base font-bold text-[#F5F8FC]">No MVP Scope Blueprint Generated Yet</h3>
-          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b0f12] p-12 text-center space-y-3">
+          <Layers className="size-10 text-[#A78BFA]/60" />
+          <h3 className="text-base font-bold text-white">No MVP Scope Blueprint Generated Yet</h3>
+          <p className="max-w-md text-xs text-[#cbc3d7] font-sans">
             Review your startup parameters in the form above, then click <strong>Generate MVP Blueprint</strong> to construct your 12-part technical scope, feature priorities, and 2-week timeline.
           </p>
         </div>

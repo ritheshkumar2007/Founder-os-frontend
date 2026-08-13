@@ -20,8 +20,8 @@ export const LaunchCTA: React.FC = () => {
       {/* Main Container */}
       <div className="glass-card relative rounded-2xl p-8 sm:p-14 text-center space-y-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Top Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-glass-border bg-surface-container text-xs font-mono text-electric-violet">
-          <span className="size-2 rounded-full bg-tertiary shadow-[0_0_8px_#41dfa0]" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs font-mono text-[#A78BFA]">
+          <span className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
           <span className="font-bold">STARTUP OPERATING SYSTEM READY</span>
         </div>
 
@@ -31,7 +31,7 @@ export const LaunchCTA: React.FC = () => {
             Ready to Build Something <br />
             <span className="text-gradient-neural">Extraordinary?</span>
           </h2>
-          <p className="text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-[#cbc3d7] max-w-xl mx-auto">
             FounderOS is the operating system for building high-velocity, high-growth startups on an obsidian canvas.
           </p>
         </div>
@@ -46,27 +46,27 @@ export const LaunchCTA: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter founder email..."
-                className="w-full sm:flex-1 px-4 py-3 rounded-lg border border-glass-border bg-surface-container text-on-surface placeholder-on-secondary-container focus:outline-none focus:border-electric-violet font-label-mono text-sm"
+                className="w-full sm:flex-1 px-4 py-3 rounded-lg border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-mono text-sm"
               />
               <button
                 type="submit"
-                className="btn-primary w-full sm:w-auto px-6 py-3 rounded-lg font-label-mono text-sm font-bold flex items-center justify-center gap-2 shrink-0 group active:scale-95 duration-200 cursor-pointer"
+                className="btn-primary w-full sm:w-auto px-6 py-3 rounded-lg font-mono text-sm font-bold flex items-center justify-center gap-2 shrink-0 group active:scale-95 duration-200 cursor-pointer bg-[#A78BFA] text-black hover:bg-[#bfa8ff]"
               >
-                <Sparkles className="size-4 text-white" />
+                <Sparkles className="size-4 text-black" />
                 <span>Enter FounderOS</span>
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 text-black" />
               </button>
             </form>
           ) : (
-            <div className="p-4 rounded-lg border border-tertiary/40 bg-tertiary/15 text-tertiary font-mono text-sm flex items-center justify-center gap-2">
-              <CheckCircle2 className="size-5 text-tertiary" />
+            <div className="p-4 rounded-lg border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-mono text-sm flex items-center justify-center gap-2">
+              <CheckCircle2 className="size-5 text-[#A78BFA]" />
               <span className="font-bold">FOUNDEROS WORKSPACE READY. CHECK YOUR INBOX.</span>
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-on-surface-variant">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-[#cbc3d7]">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="size-3.5 text-tertiary" /> No Credit Card Required
+              <ShieldCheck className="size-3.5 text-[#A78BFA]" /> No Credit Card Required
             </span>
             <span>•</span>
             <span>Instant Workspace Access</span>

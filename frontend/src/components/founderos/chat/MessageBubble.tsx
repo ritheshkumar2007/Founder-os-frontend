@@ -17,12 +17,12 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       if (line.trim().startsWith("•") || line.trim().startsWith("-")) {
         return (
           <div key={idx} className="flex items-start gap-2 my-1 pl-2 text-sm">
-            <span className="text-[#4F8CFF] font-bold mt-0.5">•</span>
+            <span className="text-[#A78BFA] font-bold mt-0.5">•</span>
             <span
               dangerouslySetInnerHTML={{
                 __html: line
                   .replace(/^[•-]\s*/, "")
-                  .replace(/\*\*(.*?)\*\*/g, "<strong class='text-[#F5F8FC] font-semibold'>$1</strong>"),
+                  .replace(/\*\*(.*?)\*\*/g, "<strong class='text-white font-semibold'>$1</strong>"),
               }}
             />
           </div>
@@ -35,7 +35,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           key={idx}
           className={idx > 0 ? "mt-2 text-sm leading-relaxed" : "text-sm leading-relaxed"}
           dangerouslySetInnerHTML={{
-            __html: line.replace(/\*\*(.*?)\*\*/g, "<strong class='text-[#F5F8FC] font-semibold'>$1</strong>"),
+            __html: line.replace(/\*\*(.*?)\*\*/g, "<strong class='text-white font-semibold'>$1</strong>"),
           }}
         />
       );
@@ -50,8 +50,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     >
       {/* Assistant Avatar */}
       {isAssistant && (
-        <div className="shrink-0 size-9 rounded-xl bg-gradient-to-br from-[#4F8CFF]/25 to-[#64D8FF]/15 border border-[#4F8CFF]/40 text-[#4F8CFF] flex items-center justify-center shadow-[0_0_15px_rgba(79,140,255,0.2)] mt-0.5">
-          <Bot className="size-5 text-[#4F8CFF]" />
+        <div className="shrink-0 size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA] flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.2)] mt-0.5">
+          <Bot className="size-5 text-[#A78BFA]" />
         </div>
       )}
 
@@ -59,15 +59,15 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       <div
         className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 sm:p-5 text-sm transition-all shadow-md ${
           isAssistant
-            ? "rounded-tl-sm border border-white/10 bg-[#161F2D]/90 backdrop-blur-xl text-[#F5F8FC] shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
-            : "rounded-tr-sm bg-gradient-to-br from-[#4F8CFF] to-[#2563EB] text-[#F5F8FC] shadow-[0_4px_20px_rgba(79,140,255,0.35)]"
+            ? "rounded-tl-sm border border-[rgba(139,92,246,0.3)] bg-[#101417]/90 backdrop-blur-xl text-white shadow-[0_10px_25px_rgba(0,0,0,0.5)]"
+            : "rounded-tr-sm bg-[#A78BFA] text-black font-medium shadow-[0_4px_20px_rgba(139,92,246,0.35)]"
         }`}
       >
         {/* Role header for assistant */}
         {isAssistant && (
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#64D8FF] mb-2 font-medium">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#A78BFA] mb-2 font-medium">
             <Sparkles className="size-3" />
-            <span>FOUNDEROS AI COACH</span>
+            <span>FOUNDEROS AI CO-FOUNDER</span>
           </div>
         )}
 
@@ -77,7 +77,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {/* Timestamp */}
         <div
           className={`text-[10px] font-mono mt-2.5 text-right ${
-            isAssistant ? "text-[#A8B3C7]" : "text-white/70"
+            isAssistant ? "text-[#958ea0]" : "text-black/70"
           }`}
         >
           {new Date(message.createdAt || Date.now()).toLocaleTimeString([], {
@@ -89,8 +89,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
       {/* Founder Avatar */}
       {!isAssistant && (
-        <div className="shrink-0 size-9 rounded-xl bg-[#1E293B] border border-white/10 text-[#F5F8FC] flex items-center justify-center shadow-md mt-0.5">
-          <User className="size-5 text-[#A8B3C7]" />
+        <div className="shrink-0 size-9 rounded-xl bg-[#101417] border border-[rgba(139,92,246,0.3)] text-white flex items-center justify-center shadow-md mt-0.5">
+          <User className="size-5 text-[#A78BFA]" />
         </div>
       )}
     </div>

@@ -10,6 +10,7 @@ const { workflowEvents, WORKFLOW_EVENT_TYPES } = require('../workflow/workflowEv
 const registry = require('../agents/index');
 const router = require('../agents/router');
 const { saveMessage, getConversationHistory } = require('./memoryService');
+const { generateFounderResponse } = require('./deepseekService');
 
 /**
  * Generate a smart, dynamic conversational response using Venture parameters
@@ -323,14 +324,37 @@ CRITICAL RESPONSE RULES:
     includeCompetitors: targetAgentId.includes('competitor'),
   });
 
-  // 15. Call LLM Engine (With intelligent dynamic fallback if key unconfigured)
+  // 15. Call LLM Engine (Prioritize Hugging Face DeepSeek-V3-0324, fallback to Gemini / Dynamic)
   let aiResponse = '';
-  const apiKey = process.env.GEMINI_API_KEY;
-  
-  if (apiKey && apiKey.trim()) {
+  const hfToken = process.env.HF_TOKEN;
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+
+  if (hfToken && hfToken.trim()) {
     try {
-      console.log(`[AI] Calling Gemini LLM | Agent: ${targetAgentId}`);
-      const genAI = new GoogleGenerativeAI(apiKey.trim());
+      console.log(`[AI] Calling DeepSeek-V3 via Hugging Face Router | Agent: ${targetAgentId}`);
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...(conversationHistory || [])
+          .filter((m) => m && m.content && (m.role === 'user' || m.role === 'assistant' || m.role === 'model'))
+          .map((m) => ({
+            role: m.role === 'model' ? 'assistant' : m.role || 'user',
+            content: String(m.content),
+          })),
+        { role: 'user', content: cleanInput },
+      ];
+
+      aiResponse = await generateFounderResponse(messages);
+      console.log(`[AI] DeepSeek-V3 response received | Length: ${aiResponse.length} chars`);
+    } catch (hfErr) {
+      console.warn('[AI] DeepSeek-V3 request warning, attempting Gemini fallback:', hfErr.message || hfErr);
+    }
+  }
+
+  // Fallback to Gemini if DeepSeek did not generate a response
+  if ((!aiResponse || !aiResponse.trim()) && geminiApiKey && geminiApiKey.trim()) {
+    try {
+      console.log(`[AI] Calling Gemini LLM (Fallback) | Agent: ${targetAgentId}`);
+      const genAI = new GoogleGenerativeAI(geminiApiKey.trim());
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash', systemInstruction: systemPrompt });
 
       const formattedHistory = (conversationHistory || [])
@@ -349,17 +373,14 @@ CRITICAL RESPONSE RULES:
         aiResponse = (await result.response).text();
       }
       console.log(`[AI] Gemini response received | Length: ${aiResponse.length} chars`);
-    } catch (llmErr) {
-      console.warn('[AI] Gemini LLM request warning, generating dynamic response:', llmErr.message || llmErr);
-      aiResponse = generateDynamicFallbackReply(cleanInput, venture, targetAgentId);
+    } catch (geminiErr) {
+      console.warn('[AI] Gemini LLM request warning:', geminiErr.message || geminiErr);
     }
-  } else {
-    console.log('[AI] GEMINI_API_KEY unconfigured, generating dynamic response');
-    aiResponse = generateDynamicFallbackReply(cleanInput, venture, targetAgentId);
   }
 
-  // 16. Validate AI Response
+  // 16. Dynamic Rule-Based Fallback if all external LLMs are unavailable
   if (!aiResponse || typeof aiResponse !== 'string' || !aiResponse.trim()) {
+    console.log('[AI] Generating dynamic intelligent fallback response');
     aiResponse = generateDynamicFallbackReply(cleanInput, venture, targetAgentId);
   }
 

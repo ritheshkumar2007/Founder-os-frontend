@@ -149,7 +149,7 @@ export const ChatPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen max-h-screen bg-[#080A0F] text-[#F5F8FC] overflow-hidden selection:bg-[#4F8CFF]/30">
+    <div className="flex flex-col h-screen max-h-screen bg-[#020408] text-white overflow-hidden selection:bg-[rgba(139,92,246,0.3)]">
       {/* Header */}
       <ChatHeader
         onOpenScore={() => setScoreOpen(true)}

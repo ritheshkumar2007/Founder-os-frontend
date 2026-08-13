@@ -63,29 +63,29 @@ export const TelemetryPlayground: React.FC = () => {
 
   return (
     <section id="simulator" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Background Cyan Neon Laser Grid & Radar */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] bg-gradient-to-r from-[#00F0FF]/20 via-[#4F8CFF]/25 to-[#00F0FF]/20 rounded-full blur-[150px] pointer-events-none" />
+      {/* Background Neon Laser Grid & Radar */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] bg-[rgba(139,92,246,0.15)] rounded-full blur-[150px] pointer-events-none" />
 
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#64D8FF]/40 bg-[#64D8FF]/10 text-xs font-mono text-[#64D8FF]">
-          <Terminal className="size-3.5 text-[#64D8FF]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.1)] text-xs font-mono text-[#A78BFA]">
+          <Terminal className="size-3.5 text-[#A78BFA]" />
           <span>INTERACTIVE AI SIMULATOR</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold font-display text-[#F5F8FC] tracking-tight">
+        <h2 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
           Test Your Venture Idea in <br />
           <span className="text-gradient-neural">FounderOS Real-Time AI</span>
         </h2>
-        <p className="text-base text-[#A8B3C7]">
+        <p className="text-base text-[#cbc3d7]">
           Enter your startup idea below to experience how FounderOS generates instant TAM analysis, validation scores, and 7-day launch blueprints.
         </p>
       </div>
 
       {/* Playground Console Container */}
-      <div className="glass-card p-6 sm:p-10 border border-[#00F0FF]/30 bg-[#07111F]/95 backdrop-blur-2xl relative z-10 space-y-8 shadow-[0_0_60px_rgba(0,240,255,0.2)]">
+      <div className="glass-card p-6 sm:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl relative z-10 space-y-8 shadow-[0_0_60px_rgba(139,92,246,0.15)] rounded-3xl">
         {/* Preset Chips */}
         <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-          <span className="text-[#AAB7CC] mr-2">Try sample ideas:</span>
+          <span className="text-[#958ea0] mr-2">Try sample ideas:</span>
           {PRESETS.map((preset) => (
             <button
               key={preset.label}
@@ -93,7 +93,7 @@ export const TelemetryPlayground: React.FC = () => {
                 setIdeaText(preset.prompt);
                 handleSimulate(preset.prompt);
               }}
-              className="px-3.5 py-2 rounded-xl border border-[#00F0FF]/30 bg-[#0B1628] text-[#00F0FF] hover:border-[#00F0FF] hover:bg-[#00F0FF]/20 transition-all font-semibold shadow-[0_0_10px_rgba(0,240,255,0.15)]"
+              className="px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[#A78BFA] hover:border-[#A78BFA] hover:bg-[rgba(139,92,246,0.15)] transition-all font-semibold shadow-[0_0_10px_rgba(139,92,246,0.15)] cursor-pointer"
             >
               {preset.label}
             </button>
@@ -107,22 +107,22 @@ export const TelemetryPlayground: React.FC = () => {
             onChange={(e) => setIdeaText(e.target.value)}
             rows={3}
             placeholder="Describe your venture idea (e.g., 'An AI agent platform that automates customer support for Shopify stores')..."
-            className="w-full p-4 rounded-2xl border border-[#00F0FF]/40 bg-[#02040A] text-white placeholder-[#74839A]/60 focus:outline-none focus:border-[#00F0FF] focus:ring-2 focus:ring-[#00F0FF]/50 font-mono text-sm resize-none shadow-[inset_0_0_20px_rgba(0,240,255,0.1)]"
+            className="w-full p-4 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-mono text-sm resize-none shadow-[inset_0_0_20px_rgba(139,92,246,0.1)]"
           />
           <div className="mt-3 flex justify-end">
             <button
               onClick={() => handleSimulate()}
               disabled={isGenerating || !ideaText.trim()}
-              className="btn-primary-blue px-6 py-3.5 rounded-xl text-sm font-extrabold disabled:opacity-50 flex items-center gap-2 shadow-[0_0_30px_rgba(0,240,255,0.5)]"
+              className="px-6 py-3.5 rounded-xl text-sm font-extrabold disabled:opacity-50 flex items-center gap-2 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black shadow-[0_0_30px_rgba(139,92,246,0.4)] transition cursor-pointer"
             >
               {isGenerating ? (
                 <>
-                  <Sparkles className="size-4 animate-spin text-[#00F0FF]" />
+                  <Sparkles className="size-4 animate-spin text-black" />
                   <span>Computing Telemetry...</span>
                 </>
               ) : (
                 <>
-                  <Play className="size-4 fill-current text-[#02040A]" />
+                  <Play className="size-4 fill-current text-black" />
                   <span>Run Mission Analysis</span>
                 </>
               )}
@@ -132,31 +132,31 @@ export const TelemetryPlayground: React.FC = () => {
 
         {/* Live Output Simulation Window */}
         {result && (
-          <div className="p-6 rounded-2xl border border-[#00F0FF]/50 bg-[#02040A]/95 space-y-6 animate-fade-in font-mono shadow-[0_0_40px_rgba(0,240,255,0.25)]">
+          <div className="p-6 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408]/95 space-y-6 animate-fade-in font-mono shadow-[0_0_40px_rgba(139,92,246,0.2)]">
             <div className="flex flex-wrap items-center justify-between border-b border-white/[0.08] pb-4">
               <div className="flex items-center gap-3">
-                <span className="size-3 rounded-full bg-[#00F0FF] animate-ping shadow-[0_0_10px_#00F0FF]" />
+                <span className="size-3 rounded-full bg-[#A78BFA] animate-ping shadow-[0_0_10px_#A78BFA]" />
                 <span className="text-white font-bold text-lg">{result.ventureName}</span>
-                <span className="text-xs px-2.5 py-0.5 rounded bg-[#00F0FF]/20 text-[#00F0FF] border border-[#00F0FF]/40 font-bold">
+                <span className="text-xs px-2.5 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
                   {result.category}
                 </span>
               </div>
-              <div className="text-xs text-[#00F0FF] font-bold">
-                VALIDATION CONFIDENCE: <strong className="neon-text-cyan text-sm">{result.validationScore} / 100</strong>
+              <div className="text-xs text-[#A78BFA] font-bold">
+                VALIDATION CONFIDENCE: <strong className="text-white text-sm">{result.validationScore} / 100</strong>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               {/* Box 1 */}
-              <div className="p-4 rounded-xl border border-[#00F0FF]/30 bg-[#0B1628] space-y-2">
-                <p className="text-[#74839A] uppercase tracking-wider text-[10px]">Market Velocity & TAM</p>
-                <p className="text-xl font-bold text-white neon-text-cyan">{result.tam}</p>
-                <p className="text-[11px] text-[#5AF2A2]">High buyer willingness-to-pay index</p>
+              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+                <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Market Velocity & TAM</p>
+                <p className="text-xl font-bold text-white">{result.tam}</p>
+                <p className="text-[11px] text-[#A78BFA]">High buyer willingness-to-pay index</p>
               </div>
 
               {/* Box 2 */}
-              <div className="p-4 rounded-xl border border-[#00F0FF]/30 bg-[#0B1628] space-y-2">
-                <p className="text-[#74839A] uppercase tracking-wider text-[10px]">Competitor Whitespace</p>
+              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+                <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Competitor Whitespace</p>
                 <div className="flex flex-wrap gap-1">
                   {result.targetCompetitors.map((comp) => (
                     <span key={comp} className="px-2 py-0.5 rounded bg-white/10 text-white/80 text-[10px]">
@@ -164,24 +164,24 @@ export const TelemetryPlayground: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <p className="text-[11px] text-[#00F0FF]">Key Unfair Advantage: 4.8x faster</p>
+                <p className="text-[11px] text-[#cbc3d7]">Key Unfair Advantage: 4.8x faster</p>
               </div>
 
               {/* Box 3 */}
-              <div className="p-4 rounded-xl border border-[#00F0FF]/30 bg-[#0B1628] space-y-2">
-                <p className="text-[#74839A] uppercase tracking-wider text-[10px]">Recommended Sprint</p>
-                <p className="text-base font-bold text-[#00F0FF]">{result.launchTimeline}</p>
-                <p className="text-[11px] text-[#AAB7CC]">3 Core Features max to ship</p>
+              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+                <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Recommended Sprint</p>
+                <p className="text-base font-bold text-[#A78BFA]">{result.launchTimeline}</p>
+                <p className="text-[11px] text-[#cbc3d7]">3 Core Features max to ship</p>
               </div>
             </div>
 
             {/* Scope Features Checklist */}
             <div className="space-y-2 pt-2">
-              <p className="text-xs text-[#74839A] uppercase tracking-widest">Scoped MVP Build Roadmap:</p>
+              <p className="text-xs text-[#958ea0] uppercase tracking-widest">Scoped MVP Build Roadmap:</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {result.mvpScope.map((item, idx) => (
-                  <div key={idx} className="p-3 rounded-xl border border-white/[0.08] bg-[#07111F] flex items-center gap-2 text-xs text-white">
-                    <CheckCircle2 className="size-4 text-[#5AF2A2] shrink-0" />
+                  <div key={idx} className="p-3 rounded-xl border border-white/[0.08] bg-[#101417] flex items-center gap-2 text-xs text-white">
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -191,10 +191,10 @@ export const TelemetryPlayground: React.FC = () => {
             <div className="pt-2 flex justify-end">
               <a
                 href="/signin"
-                className="btn-primary-blue inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold bg-[#A78BFA] hover:bg-[#bfa8ff] text-black transition cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)]"
               >
                 <span>Launch This Venture in FounderOS</span>
-                <ArrowRight className="size-3.5" />
+                <ArrowRight className="size-3.5 text-black" />
               </a>
             </div>
           </div>

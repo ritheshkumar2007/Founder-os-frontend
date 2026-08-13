@@ -12,6 +12,13 @@ export interface NavSection {
 
 export const STAGED_NAV: NavSection[] = [
   {
+    category: "Mission Control",
+    items: [
+      { to: "/workspace/telemetry", label: "Mission Telemetry" },
+      { to: "/workspace/intelligence", label: "Venture Intelligence" },
+    ],
+  },
+  {
     category: "Idea Validation",
     items: [
       { to: "/workspace/idea-validation", label: "Idea Validation" },
@@ -63,17 +70,17 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <div className="flex h-full flex-col gap-5 bg-[#121924] p-5 relative select-none border-r border-white/5">
+    <div className="flex h-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none border-r border-[rgba(139,92,246,0.2)]">
       {/* Brand Header */}
       <Link to="/" className="flex items-center gap-3 group">
-        <span className="grid size-9 place-items-center rounded-xl border border-[#4F8CFF]/40 bg-[#4F8CFF]/15 font-display text-[#4F8CFF] text-base font-bold shadow-[0_0_15px_rgba(79,140,255,0.3)]">
-          <Rocket className="size-4 text-[#4F8CFF]" />
+        <span className="grid size-9 place-items-center rounded-xl border border-[#A78BFA]/40 bg-[#A78BFA]/15 font-display text-[#A78BFA] text-base font-bold shadow-[0_0_15px_rgba(167,139,250,0.3)]">
+          <Rocket className="size-4 text-[#A78BFA]" />
         </span>
         <div className="flex flex-col">
-          <span className="font-display text-base font-bold text-[#F5F8FC] tracking-tight">
-            Founder<span className="text-[#4F8CFF]">OS</span>
+          <span className="font-display text-base font-bold text-white tracking-tight">
+            Founder<span className="text-[#A78BFA]">OS</span>
           </span>
-          <span className="text-[10px] font-mono text-[#A8B3C7] uppercase tracking-widest -mt-0.5">
+          <span className="text-[10px] font-mono text-[#958ea0] uppercase tracking-widest -mt-0.5">
             Startup Workspace
           </span>
         </div>
@@ -83,30 +90,30 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <button
         type="button"
         onClick={handleCreateVenture}
-        className="btn-system inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_0_20px_rgba(79,140,255,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+        className="btn-system inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-[0_0_20px_rgba(167,139,250,0.25)] transition hover:brightness-110 active:scale-[0.98] cursor-pointer text-white"
       >
         <Plus className="size-4" /> New Venture
       </button>
 
       {/* Venture Selector Dropdown */}
       <div className="relative">
-        <label className="text-[10px] uppercase tracking-wider font-mono text-[#A8B3C7]/80 mb-1.5 block px-1">
+        <label className="text-[10px] uppercase tracking-wider font-mono text-[#958ea0] mb-1.5 block px-1">
           Active Venture
         </label>
         <button
           type="button"
           onClick={() => setOpenSelector((o) => !o)}
-          className="flex w-full items-center justify-between rounded-xl border border-white/5 bg-[#0E131C]/80 px-3.5 py-2.5 text-left text-sm font-medium text-[#F5F8FC] transition hover:bg-white/5 hover:border-[#4F8CFF]/30"
+          className="flex w-full items-center justify-between rounded-xl border border-white/5 bg-[#101417] px-3.5 py-2.5 text-left text-sm font-medium text-white transition hover:bg-white/5 hover:border-[#A78BFA]/40"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <Layers className="size-3.5 text-[#64D8FF] shrink-0" />
+            <Layers className="size-3.5 text-[#A78BFA] shrink-0" />
             <span className="truncate">{venture?.name ?? "Select Venture"}</span>
           </div>
-          <ChevronDown className={cn("size-4 text-[#A8B3C7] transition-transform duration-200", openSelector && "rotate-180")} />
+          <ChevronDown className={cn("size-4 text-[#958ea0] transition-transform duration-200", openSelector && "rotate-180")} />
         </button>
 
         {openSelector ? (
-          <ul className="absolute z-40 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-[#0E131C] p-1 shadow-[0_20px_45px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+          <ul className="absolute z-40 mt-2 w-full overflow-hidden rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-1 shadow-[0_20px_45px_rgba(0,0,0,0.8)] backdrop-blur-xl">
             {app.ventures.map((v) => (
               <li key={v.id}>
                 <button
@@ -118,11 +125,11 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   }}
                   className={cn(
                     "w-full truncate rounded-lg px-3 py-2 text-left text-sm transition hover:bg-white/5 flex items-center justify-between",
-                    v.id === venture?.id ? "text-[#4F8CFF] font-semibold bg-[#4F8CFF]/10" : "text-[#F5F8FC]",
+                    v.id === venture?.id ? "text-[#A78BFA] font-semibold bg-[#A78BFA]/10" : "text-white",
                   )}
                 >
                   <span className="truncate">{v.name}</span>
-                  {v.id === venture?.id ? <span className="size-1.5 rounded-full bg-[#4F8CFF] shadow-[0_0_8px_#4F8CFF] shrink-0" /> : null}
+                  {v.id === venture?.id ? <span className="size-1.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] shrink-0" /> : null}
                 </button>
               </li>
             ))}
@@ -134,7 +141,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <nav className="flex-1 space-y-4 overflow-y-auto pr-1">
         {STAGED_NAV.map((section) => (
           <div key={section.category} className="space-y-1">
-            <p className="px-2 text-[10px] uppercase font-mono tracking-widest text-[#A8B3C7]/60">
+            <p className="px-2 text-[10px] uppercase font-mono tracking-widest text-[#958ea0]">
               {section.category}
             </p>
             {section.items.map((item) => {
@@ -150,14 +157,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   className={cn(
                     "group flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative",
                     active
-                      ? "bg-[#4F8CFF]/15 text-[#4F8CFF] font-semibold shadow-[0_0_20px_rgba(79,140,255,0.2)] border border-[#4F8CFF]/25"
-                      : "text-[#A8B3C7] hover:bg-white/5 hover:text-[#F5F8FC]",
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold shadow-[0_0_20px_rgba(167,139,250,0.2)] border border-[rgba(139,92,246,0.3)]"
+                      : "text-[#cbc3d7] hover:bg-white/5 hover:text-white",
                   )}
                 >
                   <span
                     className={cn(
                       "size-1.5 rounded-full transition-all",
-                      active ? "bg-[#4F8CFF] shadow-[0_0_8px_#4F8CFF] scale-110" : "bg-white/20 group-hover:bg-[#4F8CFF]/50",
+                      active ? "bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] scale-110" : "bg-white/20 group-hover:bg-[#A78BFA]/50",
                     )}
                   />
                   <span className="truncate">{item.label}</span>
@@ -171,12 +178,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* User Footer Profile & Settings */}
       <div className="border-t border-white/5 pt-3">
         <div className="flex items-center gap-2.5">
-          <span className="grid size-9 place-items-center rounded-full border border-[#4F8CFF]/40 bg-[#4F8CFF]/15 text-[#4F8CFF] font-bold text-sm">
+          <span className="grid size-9 place-items-center rounded-full border border-[#A78BFA]/40 bg-[#A78BFA]/15 text-[#A78BFA] font-bold text-sm">
             {(app.user?.name ?? "F").slice(0, 1).toUpperCase()}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-semibold text-[#F5F8FC]">{app.user?.name ?? "Founder"}</p>
-            <p className="truncate text-[11px] text-[#A8B3C7]">{app.user?.email ?? ""}</p>
+            <p className="truncate text-xs font-semibold text-white">{app.user?.name ?? "Founder"}</p>
+            <p className="truncate text-[11px] text-[#958ea0]">{app.user?.email ?? ""}</p>
           </div>
 
           {/* Account Settings Modal Trigger */}
@@ -185,7 +192,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             aria-label="Account Settings"
             title="Account Settings"
             onClick={() => setShowSettings(true)}
-            className="rounded-lg p-1.5 text-[#A8B3C7] transition hover:bg-white/5 hover:text-[#F5F8FC]"
+            className="rounded-lg p-1.5 text-[#958ea0] transition hover:bg-white/5 hover:text-white"
           >
             <Settings className="size-4" />
           </button>
@@ -196,7 +203,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             aria-label="Sign out"
             title="Sign out"
             onClick={handleSignOut}
-            className="rounded-lg p-1.5 text-[#A8B3C7] transition hover:bg-white/5 hover:text-[#F5F8FC]"
+            className="rounded-lg p-1.5 text-[#958ea0] transition hover:bg-white/5 hover:text-white"
           >
             <LogOut className="size-4" />
           </button>
@@ -205,41 +212,41 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Account Settings Modal */}
       {showSettings ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080A0F]/80 backdrop-blur-md os-window-open">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#161F2D] p-6 shadow-[0_20px_45px_rgba(0,0,0,0.6)] space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-md os-window-open">
+          <div className="w-full max-w-md rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-6 shadow-[0_20px_45px_rgba(0,0,0,0.8)] space-y-5">
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
               <div className="flex items-center gap-2">
-                <Shield className="size-5 text-[#64D8FF]" />
-                <h2 className="text-lg font-bold text-[#F5F8FC]">Account Settings</h2>
+                <Shield className="size-5 text-[#A78BFA]" />
+                <h2 className="text-lg font-bold text-white">Account Settings</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setShowSettings(false)}
-                className="rounded-lg p-1 text-[#A8B3C7] hover:text-[#F5F8FC]"
+                className="rounded-lg p-1 text-[#958ea0] hover:text-white"
               >
                 <X className="size-4" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs">
-              <div className="rounded-xl border border-white/5 bg-[#0E131C] p-4 space-y-2">
-                <p className="text-[10px] uppercase font-mono text-[#A8B3C7]">Authenticated Founder</p>
-                <p className="text-sm font-semibold text-[#F5F8FC]">{app.user?.name}</p>
-                <p className="text-[#A8B3C7]">{app.user?.email}</p>
+            <div className="space-y-4 text-xs font-mono">
+              <div className="rounded-xl border border-white/5 bg-[#0b0f12] p-4 space-y-2">
+                <p className="text-[10px] uppercase text-[#958ea0]">Authenticated Founder</p>
+                <p className="text-sm font-semibold text-white">{app.user?.name}</p>
+                <p className="text-[#cbc3d7]">{app.user?.email}</p>
               </div>
 
-              <div className="rounded-xl border border-white/5 bg-[#0E131C] p-4 space-y-2">
+              <div className="rounded-xl border border-white/5 bg-[#0b0f12] p-4 space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-[#A8B3C7]">Total Ventures:</span>
-                  <span className="font-semibold text-[#F5F8FC]">{app.ventures.length}</span>
+                  <span className="text-[#958ea0]">Total Ventures:</span>
+                  <span className="font-semibold text-white">{app.ventures.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[#A8B3C7]">Current Active Venture:</span>
-                  <span className="font-semibold text-[#4F8CFF] truncate max-w-[180px]">{venture?.name ?? "None"}</span>
+                  <span className="text-[#958ea0]">Current Active Venture:</span>
+                  <span className="font-semibold text-[#A78BFA] truncate max-w-[180px]">{venture?.name ?? "None"}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[#A8B3C7]">Data Isolation:</span>
-                  <span className="text-[#46E3A3] font-mono">100% Encrypted & Isolated</span>
+                  <span className="text-[#958ea0]">Data Isolation:</span>
+                  <span className="text-[#A78BFA]">100% Encrypted & Isolated</span>
                 </div>
               </div>
 
@@ -247,7 +254,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 <Button variant="outline" size="sm" onClick={() => setShowSettings(false)}>
                   Close Settings
                 </Button>
-                <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-[#FF6B6B] hover:text-[#FF6B6B]/80">
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-[#cbc3d7] hover:text-white">
                   <LogOut className="size-3.5 mr-1" /> Sign Out
                 </Button>
               </div>

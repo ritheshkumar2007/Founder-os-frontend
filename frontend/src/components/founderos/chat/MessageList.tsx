@@ -20,7 +20,7 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, loading }) =
   }, [messages, loading]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-2 selection:bg-[#4F8CFF]/30">
+    <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-2 selection:bg-[rgba(139,92,246,0.3)]">
       <div className="max-w-4xl mx-auto space-y-2">
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />

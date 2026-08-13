@@ -24,6 +24,7 @@ import { Route as WorkspaceInvestorUpdateRouteImport } from './routes/workspace/
 import { Route as WorkspaceLaunchSprintRouteImport } from './routes/workspace/launch-sprint'
 import { Route as WorkspaceMarketingPlanRouteImport } from './routes/workspace/marketing-plan'
 import { Route as WorkspaceMvpScopeRouteImport } from './routes/workspace/mvp-scope'
+import { Route as WorkspaceTelemetryRouteImport } from './routes/workspace/telemetry'
 import { Route as WorkspaceTractionRouteImport } from './routes/workspace/traction'
 import { Route as WorkspaceValidateRouteImport } from './routes/workspace/validate'
 import { Route as WorkspaceValidationSummaryRouteImport } from './routes/workspace/validation-summary'
@@ -104,6 +105,11 @@ const WorkspaceMvpScopeRoute = WorkspaceMvpScopeRouteImport.update({
   path: '/mvp-scope',
   getParentRoute: () => WorkspaceRouteRoute,
 } as any)
+const WorkspaceTelemetryRoute = WorkspaceTelemetryRouteImport.update({
+  id: '/telemetry',
+  path: '/telemetry',
+  getParentRoute: () => WorkspaceRouteRoute,
+} as any)
 const WorkspaceTractionRoute = WorkspaceTractionRouteImport.update({
   id: '/traction',
   path: '/traction',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/telemetry': typeof WorkspaceTelemetryRoute
   '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/telemetry': typeof WorkspaceTelemetryRoute
   '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/workspace/launch-sprint': typeof WorkspaceLaunchSprintRoute
   '/workspace/marketing-plan': typeof WorkspaceMarketingPlanRoute
   '/workspace/mvp-scope': typeof WorkspaceMvpScopeRoute
+  '/workspace/telemetry': typeof WorkspaceTelemetryRoute
   '/workspace/traction': typeof WorkspaceTractionRoute
   '/workspace/validate': typeof WorkspaceValidateRoute
   '/workspace/validation-summary': typeof WorkspaceValidationSummaryRoute
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/telemetry'
     | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/telemetry'
     | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/workspace/launch-sprint'
     | '/workspace/marketing-plan'
     | '/workspace/mvp-scope'
+    | '/workspace/telemetry'
     | '/workspace/traction'
     | '/workspace/validate'
     | '/workspace/validation-summary'
@@ -370,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceMvpScopeRouteImport
       parentRoute: typeof WorkspaceRouteRoute
     }
+    '/workspace/telemetry': {
+      id: '/workspace/telemetry'
+      path: '/telemetry'
+      fullPath: '/workspace/telemetry'
+      preLoaderRoute: typeof WorkspaceTelemetryRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
+    }
     '/workspace/traction': {
       id: '/workspace/traction'
       path: '/traction'
@@ -410,6 +429,7 @@ interface WorkspaceRouteRouteChildren {
   WorkspaceLaunchSprintRoute: typeof WorkspaceLaunchSprintRoute
   WorkspaceMarketingPlanRoute: typeof WorkspaceMarketingPlanRoute
   WorkspaceMvpScopeRoute: typeof WorkspaceMvpScopeRoute
+  WorkspaceTelemetryRoute: typeof WorkspaceTelemetryRoute
   WorkspaceTractionRoute: typeof WorkspaceTractionRoute
   WorkspaceValidateRoute: typeof WorkspaceValidateRoute
   WorkspaceValidationSummaryRoute: typeof WorkspaceValidationSummaryRoute
@@ -426,6 +446,7 @@ const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
   WorkspaceLaunchSprintRoute: WorkspaceLaunchSprintRoute,
   WorkspaceMarketingPlanRoute: WorkspaceMarketingPlanRoute,
   WorkspaceMvpScopeRoute: WorkspaceMvpScopeRoute,
+  WorkspaceTelemetryRoute: WorkspaceTelemetryRoute,
   WorkspaceTractionRoute: WorkspaceTractionRoute,
   WorkspaceValidateRoute: WorkspaceValidateRoute,
   WorkspaceValidationSummaryRoute: WorkspaceValidationSummaryRoute,

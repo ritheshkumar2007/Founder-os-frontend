@@ -132,20 +132,20 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
   const activeReport = currentReportFromHistory || reportsMap[activeType];
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="flex h-full w-full max-w-4xl flex-col border-l border-white/10 bg-[#0E131C] text-[#F5F8FC] shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="flex h-full w-full max-w-4xl flex-col border-l border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white shadow-[0_0_50px_rgba(0,0,0,0.9)]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-[#141C28]/80 px-6 py-4 backdrop-blur-md">
+        <div className="flex items-center justify-between border-b border-[rgba(139,92,246,0.25)] bg-[#101417] px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-[#4F8CFF]/20 to-[#64D8FF]/10 border border-[#4F8CFF]/30 text-[#64D8FF]">
+            <span className="grid size-9 place-items-center rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA]">
               <FileText className="size-5" />
             </span>
             <div>
-              <h2 className="text-base font-bold font-display text-[#F5F8FC] flex items-center gap-2">
+              <h2 className="text-base font-bold font-display text-white flex items-center gap-2">
                 Executive Startup Reports
-                <Sparkles className="size-4 text-[#64D8FF]" />
+                <Sparkles className="size-4 text-[#A78BFA]" />
               </h2>
-              <p className="text-xs text-[#A8B3C7]">
+              <p className="text-xs text-[#cbc3d7]">
                 Real-time consulting documents generated from your venture memory.
               </p>
             </div>
@@ -155,15 +155,15 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
             <button
               onClick={() => void handleManualGenerate()}
               disabled={refreshing}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#161F2D] px-3 py-1.5 text-xs font-medium text-[#A8B3C7] transition hover:border-[#64D8FF]/40 hover:text-[#F5F8FC] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-3 py-1.5 text-xs font-medium text-[#cbc3d7] transition hover:border-[#A78BFA] hover:text-white disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw className={`size-3.5 ${refreshing ? "animate-spin text-[#64D8FF]" : ""}`} />
+              <RefreshCw className={`size-3.5 ${refreshing ? "animate-spin text-[#A78BFA]" : ""}`} />
               {refreshing ? "Updating..." : "Refresh Reports"}
             </button>
 
             <button
               onClick={onClose}
-              className="rounded-xl p-1.5 text-[#A8B3C7] transition hover:bg-white/5 hover:text-[#F5F8FC]"
+              className="rounded-xl p-1.5 text-[#958ea0] transition hover:bg-white/5 hover:text-white cursor-pointer"
             >
               <X className="size-5" />
             </button>
@@ -173,8 +173,8 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
         {/* Content Body: Sidebar Navigation & Main Report Viewer */}
         <div className="flex flex-1 overflow-hidden">
           {/* Report Type Selector Tabs */}
-          <div className="w-64 border-r border-white/10 bg-[#0A0D14] p-3 space-y-1.5 overflow-y-auto">
-            <p className="px-3 py-1 text-[11px] font-mono text-[#A8B3C7] uppercase tracking-wider">
+          <div className="w-64 border-r border-[rgba(139,92,246,0.25)] bg-[#020408] p-3 space-y-1.5 overflow-y-auto">
+            <p className="px-3 py-1 text-[11px] font-mono text-[#958ea0] uppercase tracking-wider">
               Report Suite (7)
             </p>
             {REPORT_TYPES.map((r) => {
@@ -187,10 +187,10 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     setActiveType(r.type);
                     setSelectedVersion(null);
                   }}
-                  className={`w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium transition ${
+                  className={`w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium transition cursor-pointer ${
                     active
-                      ? "bg-gradient-to-r from-[#4F8CFF]/20 to-[#64D8FF]/10 text-[#F5F8FC] border border-[#4F8CFF]/40 shadow-sm"
-                      : "text-[#A8B3C7] hover:bg-white/5 hover:text-[#F5F8FC]"
+                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.4)] shadow-sm font-bold"
+                      : "text-[#cbc3d7] hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   <span className="flex items-center gap-2 truncate">
@@ -198,7 +198,7 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     <span className="truncate">{r.label}</span>
                   </span>
                   {hasDoc ? (
-                    <span className="size-1.5 rounded-full bg-[#46E3A3]" />
+                    <span className="size-1.5 rounded-full bg-[#A78BFA]" />
                   ) : (
                     <span className="size-1.5 rounded-full bg-white/20" />
                   )}
@@ -208,21 +208,21 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
           </div>
 
           {/* Report Viewer Area */}
-          <div className="flex-1 flex flex-col overflow-y-auto p-6 space-y-5 bg-[#080A0F]">
+          <div className="flex-1 flex flex-col overflow-y-auto p-6 space-y-5 bg-[#0b0f12]">
             {loading ? (
-              <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#A8B3C7]">
-                <RefreshCw className="size-6 animate-spin text-[#64D8FF]" />
+              <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
+                <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />
                 <p className="text-xs font-mono">Compiling Executive Consulting Reports…</p>
               </div>
             ) : activeReport ? (
               <>
                 {/* Meta Bar: Title, Version, Confidence, Change Explanation */}
-                <div className="space-y-3 rounded-2xl border border-white/10 bg-[#141C28]/90 p-4 shadow-lg">
+                <div className="space-y-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 shadow-lg">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
                     <div>
-                      <h3 className="text-lg font-bold text-[#F5F8FC]">{activeReport.title}</h3>
-                      <p className="text-xs text-[#A8B3C7] mt-0.5">
-                        Type: <span className="font-mono text-[#64D8FF]">{activeReport.type}</span> • Last Updated:{" "}
+                      <h3 className="text-lg font-bold text-white">{activeReport.title}</h3>
+                      <p className="text-xs text-[#cbc3d7] mt-0.5">
+                        Type: <span className="font-mono text-[#A78BFA]">{activeReport.type}</span> • Last Updated:{" "}
                         {new Date(activeReport.lastUpdated || Date.now()).toLocaleString()}
                       </p>
                     </div>
@@ -230,15 +230,15 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     <div className="flex items-center gap-3">
                       {/* Version Selector */}
                       {historyList.length > 0 ? (
-                        <div className="flex items-center gap-1.5 bg-[#0E131C] px-2.5 py-1 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                          <History className="size-3.5 text-[#64D8FF]" />
+                        <div className="flex items-center gap-1.5 bg-[#0b0f12] px-2.5 py-1 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+                          <History className="size-3.5 text-[#A78BFA]" />
                           <select
                             value={selectedVersion ?? activeReport.version}
                             onChange={(e) => setSelectedVersion(Number(e.target.value))}
-                            className="bg-transparent text-xs text-[#F5F8FC] font-mono outline-none cursor-pointer"
+                            className="bg-transparent text-xs text-white font-mono outline-none cursor-pointer"
                           >
                             {historyList.map((h) => (
-                              <option key={h.version} value={h.version} className="bg-[#141C28] text-white">
+                              <option key={h.version} value={h.version} className="bg-[#101417] text-white">
                                 v{h.version} {h.version === historyList[0].version ? "(Latest)" : ""}
                               </option>
                             ))}
@@ -247,8 +247,8 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                       ) : null}
 
                       {/* Confidence Score Pill */}
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 text-xs font-mono font-bold text-[#46E3A3]">
-                        <CheckCircle className="size-3.5" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-xs font-mono font-bold text-[#A78BFA]">
+                        <CheckCircle className="size-3.5 text-[#A78BFA]" />
                         {activeReport.confidenceScore}% Confidence
                       </span>
                     </div>
@@ -256,10 +256,10 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
 
                   {/* Why Content Changed Banner */}
                   {activeReport.changeExplanation ? (
-                    <div className="flex items-start gap-2.5 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-3 text-xs text-[#E1F4FF]">
-                      <ShieldAlert className="size-4 shrink-0 text-[#64D8FF] mt-0.5" />
+                    <div className="flex items-start gap-2.5 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-3 text-xs text-white">
+                      <ShieldAlert className="size-4 shrink-0 text-[#A78BFA] mt-0.5" />
                       <div>
-                        <span className="font-bold text-[#64D8FF]">Why Report Changed: </span>
+                        <span className="font-bold text-[#A78BFA]">Why Report Changed: </span>
                         {activeReport.changeExplanation}
                       </div>
                     </div>
@@ -267,15 +267,15 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                 </div>
 
                 {/* Main Rendered Document Content */}
-                <div className="prose prose-invert max-w-none rounded-2xl border border-white/10 bg-[#0E131C] p-6 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap selection:bg-[#4F8CFF]/30 font-sans shadow-inner">
+                <div className="prose prose-invert max-w-none rounded-2xl border border-white/5 bg-[#020408] p-6 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap selection:bg-[rgba(139,92,246,0.3)] font-sans shadow-inner text-[#cbc3d7]">
                   {activeReport.content}
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center h-64 gap-3 text-center text-[#A8B3C7]">
-                <FileText className="size-8 text-[#4F8CFF]/50" />
-                <p className="text-sm font-semibold text-[#F5F8FC]">No report generated for this module yet.</p>
-                <p className="text-xs max-w-md">
+              <div className="flex flex-col items-center justify-center h-64 gap-3 text-center text-[#958ea0]">
+                <FileText className="size-8 text-[#A78BFA]/50" />
+                <p className="text-sm font-semibold text-white">No report generated for this module yet.</p>
+                <p className="text-xs max-w-md text-[#cbc3d7]">
                   Chat with the FounderOS AI Co-pilot to share your venture details, or click "Refresh Reports" to compile your baseline executive document.
                 </p>
               </div>

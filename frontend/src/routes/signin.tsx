@@ -173,27 +173,27 @@ function SignIn() {
       {/* Back to Landing Page Button */}
       <Link
         to="/"
-        className="absolute top-6 left-6 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-white/10 bg-[#0E131C]/80 text-xs font-mono text-[#A8B3C7] hover:text-[#F5F8FC] hover:border-[#4F8CFF]/40 transition"
+        className="absolute top-6 left-6 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/80 text-xs font-mono text-[#cbc3d7] hover:text-white hover:border-[#A78BFA] transition"
       >
-        <ArrowLeft className="size-3.5" /> Back to Landing Page
+        <ArrowLeft className="size-3.5 text-[#A78BFA]" /> Back to Landing Page
       </Link>
 
       <form
         onSubmit={handleSubmit}
-        className="panel os-window-open w-full max-w-md rounded-2xl p-8 border border-white/10 bg-[#161F2D] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] relative z-10"
+        className="panel os-window-open w-full max-w-md rounded-2xl p-8 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] relative z-10"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="grid size-8 place-items-center rounded-xl border border-[#4F8CFF]/40 bg-[#4F8CFF]/15 text-[#4F8CFF]">
-              <Rocket className="size-4 text-[#4F8CFF]" />
+            <div className="grid size-8 place-items-center rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA]">
+              <Rocket className="size-4 text-[#A78BFA]" />
             </div>
-            <span className="font-display font-bold text-sm tracking-tight text-[#F5F8FC]">
-              FOUNDER<span className="text-[#4F8CFF]">OS</span>
+            <span className="font-display font-bold text-sm tracking-tight text-white">
+              FOUNDER<span className="text-[#A78BFA]">OS</span>
             </span>
           </div>
 
           {/* Mode Switcher Tabs */}
-          <div className="flex items-center p-1 rounded-xl bg-[#0E131C] border border-white/10">
+          <div className="flex items-center p-1 rounded-xl bg-[#101417] border border-white/10">
             <button
               type="button"
               onClick={() => {
@@ -202,7 +202,7 @@ function SignIn() {
                 setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
-                !isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
+                !isSignUp ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "text-[#cbc3d7] hover:text-white"
               }`}
             >
               Sign In
@@ -215,7 +215,7 @@ function SignIn() {
                 setStatusNotice("");
               }}
               className={`px-3 py-1 text-xs font-medium rounded-lg transition ${
-                isSignUp ? "bg-[#4F8CFF] text-[#F5F8FC] shadow-[0_0_12px_rgba(79,140,255,0.4)]" : "text-[#A8B3C7] hover:text-[#F5F8FC]"
+                isSignUp ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "text-[#cbc3d7] hover:text-white"
               }`}
             >
               Sign Up
@@ -223,25 +223,25 @@ function SignIn() {
           </div>
         </div>
 
-        <h1 className="mt-6 text-2xl font-bold tracking-tight text-[#F5F8FC]">
+        <h1 className="mt-6 text-2xl font-bold tracking-tight text-white">
           {isSignUp ? "Create your FounderOS account" : "Welcome back, Founder"}
         </h1>
-        <p className="mt-2 text-xs text-[#A8B3C7] leading-relaxed">
+        <p className="mt-2 text-xs text-[#cbc3d7] leading-relaxed">
           {isSignUp
             ? "Sign up to launch a new venture workspace with built-in AI context, validation tools, and build roadmaps."
             : "Sign in to access your persistent ventures, AI conversations, and real-time validation data."}
         </p>
 
         {statusNotice ? (
-          <div className="mt-4 p-3 rounded-xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 text-xs text-[#64D8FF] flex items-center gap-2">
-            <RefreshCw className="size-4 animate-spin text-[#64D8FF] shrink-0" />
-            <div className="flex-1 font-mono text-[11px]">{statusNotice}</div>
+          <div className="mt-4 p-3 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] text-xs text-white flex items-center gap-2">
+            <RefreshCw className="size-4 animate-spin text-[#A78BFA] shrink-0" />
+            <div className="flex-1 font-mono text-[11px] text-[#A78BFA]">{statusNotice}</div>
           </div>
         ) : null}
 
         {errorMsg ? (
-          <div className="mt-4 p-3 rounded-xl border border-red-500/40 bg-red-500/15 text-xs text-red-300 flex items-start gap-2">
-            <div className="size-2 rounded-full bg-red-400 mt-1 shrink-0" />
+          <div className="mt-4 p-3 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs text-[#cbc3d7] flex items-start gap-2">
+            <div className="size-2 rounded-full bg-[#A78BFA] mt-1 shrink-0" />
             <div className="flex-1">{errorMsg}</div>
           </div>
         ) : null}
@@ -282,7 +282,7 @@ function SignIn() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-3 text-xs font-bold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_20px_rgba(79,140,255,0.4)]"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-3 text-xs font-bold text-black transition disabled:opacity-50 shadow-[0_0_20px_rgba(139,92,246,0.4)] cursor-pointer"
             >
               {loading ? (
                 <>
@@ -303,6 +303,22 @@ function SignIn() {
             </button>
           </div>
 
+          {/* Demo Fast Login Option */}
+          <div className="mt-6 pt-6 border-t border-white/5 text-center">
+            <p className="text-[11px] text-[#958ea0] mb-2 font-mono">Test Sandbox Access</p>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("demo@founderos.io");
+                setPassword("founderos123");
+                setIsSignUp(false);
+              }}
+              className="text-xs font-mono text-[#A78BFA] hover:underline cursor-pointer"
+            >
+              Fill Demo Founder Credentials
+            </button>
+          </div>
+
           {/* Toggle Helper Button */}
           <div className="text-center pt-2">
             <button
@@ -312,7 +328,7 @@ function SignIn() {
                 setErrorMsg("");
                 setStatusNotice("");
               }}
-              className="text-xs text-[#A8B3C7] hover:text-[#64D8FF] transition"
+              className="text-xs text-[#cbc3d7] hover:text-[#A78BFA] transition"
             >
               {isSignUp
                 ? "Already have an account? Click to Sign In"

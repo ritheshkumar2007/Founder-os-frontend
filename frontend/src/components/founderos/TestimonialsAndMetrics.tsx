@@ -43,16 +43,16 @@ export const TestimonialsAndMetrics: React.FC = () => {
         {STATS.map((stat) => (
           <div
             key={stat.label}
-            className="glass-card p-6 border border-[#00F0FF]/30 bg-[#07111F]/80 backdrop-blur-xl text-center space-y-2 relative overflow-hidden group hover:border-[#00F0FF]/60 shadow-[0_0_20px_rgba(0,240,255,0.15)]"
+            className="glass-card p-6 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/90 backdrop-blur-xl text-center space-y-2 relative overflow-hidden group hover:border-[#A78BFA] shadow-[0_0_20px_rgba(139,92,246,0.15)] rounded-2xl"
           >
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_#00F0FF]" />
-            <p className="text-3xl sm:text-4xl font-extrabold font-display text-[#00F0FF] tracking-tight neon-text-cyan">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-[#A78BFA] to-transparent opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_#A78BFA]" />
+            <p className="text-3xl sm:text-4xl font-extrabold font-display text-[#A78BFA] tracking-tight">
               {stat.value}
             </p>
             <p className="text-xs font-mono font-bold text-white uppercase tracking-widest">
               {stat.label}
             </p>
-            <p className="text-[11px] text-[#AAB7CC]">{stat.subtext}</p>
+            <p className="text-[11px] text-[#958ea0]">{stat.subtext}</p>
           </div>
         ))}
       </div>
@@ -60,13 +60,13 @@ export const TestimonialsAndMetrics: React.FC = () => {
       {/* Testimonials Header */}
       <div className="space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#00F0FF]/40 bg-[#00F0FF]/10 text-xs font-mono text-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.25)]">
-            <Quote className="size-3.5 text-[#00F0FF]" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.1)] text-xs font-mono text-[#A78BFA] shadow-[0_0_15px_rgba(139,92,246,0.25)]">
+            <Quote className="size-3.5 text-[#A78BFA]" />
             <span>MISSION LOGS FROM ORBIT</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
             Trusted by Founders Building <br />
-            <span className="text-gradient-cyan">The Next Billion-Dollar Ventures</span>
+            <span className="text-gradient-system">The Next Billion-Dollar Ventures</span>
           </h2>
         </div>
 
@@ -75,36 +75,36 @@ export const TestimonialsAndMetrics: React.FC = () => {
           {REVIEWS.map((rev) => (
             <div
               key={rev.author}
-              className="glass-card p-8 border border-white/[0.08] bg-[#07111F]/80 flex flex-col justify-between space-y-6 hover:border-[#00F0FF]/50 transition-all duration-300 shadow-[0_0_30px_rgba(2,4,10,0.8)]"
+              className="glass-card p-8 border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] flex flex-col justify-between space-y-6 hover:border-[#A78BFA] transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] rounded-2xl"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-[#00F0FF]">
+                  <div className="flex items-center gap-1 text-[#A78BFA]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="size-4 fill-current text-[#00F0FF] shadow-[0_0_6px_#00F0FF]" />
+                      <Star key={i} className="size-4 fill-current text-[#A78BFA] shadow-[0_0_6px_#A78BFA]" />
                     ))}
                   </div>
-                  <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-[#00F0FF]/20 text-[#00F0FF] border border-[#00F0FF]/40 font-bold">
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
                     {rev.badge}
                   </span>
                 </div>
-                <p className="text-sm text-[#F8FAFF] leading-relaxed italic">
+                <p className="text-sm text-[#cbc3d7] leading-relaxed italic">
                   "{rev.quote}"
                 </p>
               </div>
 
               <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-full bg-[#0B1628] border border-[#00F0FF]/50 flex items-center justify-center font-bold text-xs font-mono text-[#00F0FF] shadow-[0_0_12px_rgba(0,240,255,0.3)]">
+                  <div className="size-10 rounded-full bg-[#101417] border border-[rgba(139,92,246,0.4)] flex items-center justify-center font-bold text-xs font-mono text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.2)]">
                     {rev.avatar}
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-white">{rev.author}</h4>
-                    <p className="text-[11px] text-[#AAB7CC]">{rev.role}</p>
+                    <p className="text-[11px] text-[#958ea0]">{rev.role}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] font-mono text-[#00F0FF] font-extrabold block">
+                  <span className="text-[10px] font-mono text-[#A78BFA] font-extrabold block">
                     {rev.metrics}
                   </span>
                 </div>

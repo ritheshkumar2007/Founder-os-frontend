@@ -113,16 +113,16 @@ function IntelligencePage() {
         right={
           <div className="flex items-center gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#46E3A3]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Audits Completed</span>
+              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+                <History className="size-3.5 text-[#A78BFA]" />
+                <span className="font-mono text-xs text-white">{history.length} Audits Completed</span>
               </div>
             )}
 
             <button
               onClick={() => void handleRunIntelligenceAudit()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#46E3A3]/40 bg-gradient-to-r from-[#46E3A3] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(70,227,163,0.4)] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
               {generating ? "Auditing Venture..." : "Run Intelligence Audit"}
@@ -132,21 +132,21 @@ function IntelligencePage() {
       />
 
       {/* Generated from Founder Conversation Banner */}
-      <div className="flex items-center gap-3 rounded-2xl border border-[#46E3A3]/30 bg-[#46E3A3]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-        <Sparkles className="size-5 shrink-0 text-[#46E3A3]" />
+      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
+        <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
         <div>
-          <span className="font-bold text-[#46E3A3]">AI Operating Advisor Active: </span>
+          <span className="font-bold text-[#A78BFA]">AI Operating Advisor Active: </span>
           Real-time command center analyzing your startup health score, current stage, and top priority founder actions.
         </div>
       </div>
 
       {/* Loading State */}
       {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#46E3A3]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#46E3A3]" />
+        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-8 shadow-2xl">
+          <RefreshCw className="size-8 animate-spin text-[#A78BFA]" />
           <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Analyzing Full Venture Operating Health...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Aggregating Idea Validation, MVP Scope, Build Roadmap, Marketing, Launch, Traction, and Investor Updates</p>
+            <h3 className="text-sm font-bold text-white">Analyzing Full Venture Operating Health...</h3>
+            <p className="text-xs font-mono text-[#958ea0]">Aggregating Idea Validation, MVP Scope, Build Roadmap, Marketing, Launch, Traction, and Investor Updates</p>
           </div>
         </div>
       )}
@@ -157,31 +157,31 @@ function IntelligencePage() {
           {/* Top Banner: Component 1 & 2: Health Score Gauge & Venture Stage Indicator */}
           <div className="grid gap-6 sm:grid-cols-3">
             {/* Component 1: Startup Health Score */}
-            <div className="sm:col-span-2 rounded-2xl border border-[#46E3A3]/40 bg-gradient-to-r from-[#0E131C] to-[#14231E] p-6 shadow-2xl flex items-center justify-between">
+            <div className="sm:col-span-2 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl flex items-center justify-between">
               <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#46E3A3] bg-[#46E3A3]/10 px-2.5 py-1 rounded-lg border border-[#46E3A3]/20 flex items-center gap-1.5 w-max">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)] flex items-center gap-1.5 w-max">
                   <Gauge className="size-3.5" /> 1. Startup Health Score
                 </span>
-                <h3 className="text-2xl font-extrabold text-[#F5F8FC]">Operating Health Rating</h3>
-                <p className="text-xs text-[#A8B3C7]">Composite evaluation across 7 workspace AI models</p>
+                <h3 className="text-2xl font-extrabold text-white">Operating Health Rating</h3>
+                <p className="text-xs text-[#cbc3d7]">Composite evaluation across 7 workspace AI models</p>
               </div>
 
-              <div className="text-center bg-[#0E131C] p-4 rounded-2xl border border-[#46E3A3]/30">
-                <span className="text-5xl font-extrabold font-display text-[#46E3A3]">{intelData.healthScore}</span>
-                <span className="block text-[10px] font-mono text-[#A8B3C7] mt-1">/ 100 PTS</span>
+              <div className="text-center bg-[#101417] p-4 rounded-2xl border border-[rgba(139,92,246,0.3)]">
+                <span className="text-5xl font-extrabold font-display text-[#A78BFA]">{intelData.healthScore}</span>
+                <span className="block text-[10px] font-mono text-[#958ea0] mt-1">/ 100 PTS</span>
               </div>
             </div>
 
             {/* Component 2: Venture Stage Indicator */}
-            <div className="rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C] p-6 shadow-2xl flex flex-col justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20 w-max">
+            <div className="rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-6 shadow-2xl flex flex-col justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2.5 py-1 rounded-lg border border-[rgba(139,92,246,0.3)] w-max">
                 2. Venture Stage Indicator
               </span>
               <div className="py-2">
-                <span className="text-xs font-mono text-[#A8B3C7] block uppercase">Current Phase</span>
-                <h4 className="text-lg font-extrabold text-[#F5F8FC] mt-0.5">{intelData.startupStage}</h4>
+                <span className="text-xs font-mono text-[#958ea0] block uppercase">Current Phase</span>
+                <h4 className="text-lg font-extrabold text-white mt-0.5">{intelData.startupStage}</h4>
               </div>
-              <span className="text-xs font-mono text-[#46E3A3] bg-[#46E3A3]/10 px-3 py-1 rounded-xl border border-[#46E3A3]/20 w-max">
+              <span className="text-xs font-mono text-white bg-[rgba(139,92,246,0.15)] px-3 py-1 rounded-xl border border-[rgba(139,92,246,0.3)] w-max">
                 Status: Active Execution
               </span>
             </div>
@@ -212,17 +212,17 @@ function IntelligencePage() {
           <Panel title="7. Founder Priority Action Queue (Top 5 Actions)">
             <div className="space-y-3">
               {intelData.analysis?.priorityActions?.map((act, idx) => (
-                <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs">
+                <div key={idx} className="flex items-center justify-between rounded-xl border border-white/5 bg-[#101417] p-4 text-xs">
                   <div className="flex items-center gap-3">
-                    <span className="size-6 rounded-lg bg-gradient-to-br from-[#4F8CFF] to-[#64D8FF] text-black font-extrabold font-mono flex items-center justify-center shrink-0">
+                    <span className="size-6 rounded-lg bg-[#A78BFA] text-black font-extrabold font-mono flex items-center justify-center shrink-0">
                       {idx + 1}
                     </span>
                     <div>
-                      <h4 className="font-bold text-[#F5F8FC]">{act.action}</h4>
-                      <p className="text-[11px] text-[#A8B3C7]">{act.reason}</p>
+                      <h4 className="font-bold text-white">{act.action}</h4>
+                      <p className="text-[11px] text-[#cbc3d7]">{act.reason}</p>
                     </div>
                   </div>
-                  <span className="font-mono text-[10px] font-bold text-black bg-[#46E3A3] px-2.5 py-1 rounded-md shrink-0">
+                  <span className="font-mono text-[10px] font-bold text-black bg-[#A78BFA] px-2.5 py-1 rounded-md shrink-0">
                     {act.priority}
                   </span>
                 </div>
@@ -236,8 +236,8 @@ function IntelligencePage() {
             <Panel title="4. Operating Risk Monitor">
               <ul className="space-y-2 text-xs">
                 {intelData.analysis?.risks?.map((r, idx) => (
-                  <li key={idx} className="flex items-center gap-2.5 text-red-300 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-                    <ShieldAlert className="size-4 text-red-400 shrink-0" />
+                  <li key={idx} className="flex items-center gap-2.5 text-[#cbc3d7] bg-[#101417] p-3 rounded-xl border border-white/10">
+                    <ShieldAlert className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{r}</span>
                   </li>
                 ))}
@@ -248,8 +248,8 @@ function IntelligencePage() {
             <Panel title="5. Strategic Opportunity Board">
               <ul className="space-y-2 text-xs">
                 {intelData.analysis?.opportunities?.map((o, idx) => (
-                  <li key={idx} className="flex items-center gap-2.5 text-[#E1F4FF] bg-[#64D8FF]/10 p-3 rounded-xl border border-[#64D8FF]/20">
-                    <ArrowUpRight className="size-4 text-[#64D8FF] shrink-0" />
+                  <li key={idx} className="flex items-center gap-2.5 text-white bg-[#101417] p-3 rounded-xl border border-[rgba(139,92,246,0.25)]">
+                    <ArrowUpRight className="size-4 text-[#A78BFA] shrink-0" />
                     <span>{o}</span>
                   </li>
                 ))}
@@ -261,11 +261,11 @@ function IntelligencePage() {
           <Panel title="3. AI Operating Analysis & Recommendations">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-[#46E3A3]">Venture Strengths</span>
-                <ul className="space-y-1.5 text-xs text-[#F5F8FC]">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#A78BFA]">Venture Strengths</span>
+                <ul className="space-y-1.5 text-xs text-white">
                   {intelData.analysis?.strengths?.map((s, idx) => (
-                    <li key={idx} className="flex items-center gap-2 bg-[#141C28] p-2.5 rounded-xl border border-white/5">
-                      <CheckCircle2 className="size-3.5 text-[#46E3A3] shrink-0" />
+                    <li key={idx} className="flex items-center gap-2 bg-[#101417] p-2.5 rounded-xl border border-white/5">
+                      <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
                       <span>{s}</span>
                     </li>
                   ))}
@@ -273,11 +273,11 @@ function IntelligencePage() {
               </div>
 
               <div className="space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase text-amber-400">Areas for Improvement</span>
-                <ul className="space-y-1.5 text-xs text-[#F5F8FC]">
+                <span className="text-[10px] font-mono font-bold uppercase text-[#cbc3d7]">Areas for Improvement</span>
+                <ul className="space-y-1.5 text-xs text-[#cbc3d7]">
                   {intelData.analysis?.weaknesses?.map((w, idx) => (
-                    <li key={idx} className="flex items-center gap-2 bg-[#141C28] p-2.5 rounded-xl border border-white/5">
-                      <ShieldAlert className="size-3.5 text-amber-400 shrink-0" />
+                    <li key={idx} className="flex items-center gap-2 bg-[#101417] p-2.5 rounded-xl border border-white/5">
+                      <ShieldAlert className="size-3.5 text-[#A78BFA] shrink-0" />
                       <span>{w}</span>
                     </li>
                   ))}

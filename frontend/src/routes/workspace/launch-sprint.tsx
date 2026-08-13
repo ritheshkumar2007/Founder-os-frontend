@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Button, CopyButton, Empty, Field, LinkButton, PageHeader, Panel, Progress, Stat, TextArea, TextInput } from "@/components/founderos/ui";
-import { Sparkles, RefreshCw, Clock, CheckCircle2, Calendar, Target, ShieldAlert, Rocket, History, Users, ArrowRight, AlertTriangle, AlertCircle } from "lucide-react";
+import { Sparkles, RefreshCw, Clock, CheckCircle2, Calendar, Target, ShieldAlert, Rocket, History, Users, ArrowRight, AlertTriangle, AlertCircle, Check, Plus, Layers, ArrowUpRight, Route as RouteIcon, Zap, Activity } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
+import { SprintMissionAnalysisModal } from "@/components/founderos/sprint/SprintMissionAnalysisModal";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
-const TITLE = "Launch Sprint — FounderOS";
-const DESCRIPTION = "AI Launch Manager designs a venture-aware, evidence-based launch sprint, task matrix, and risk mitigation.";
+const TITLE = "7-Day Sprint Flight Deck — FounderOS";
+const DESCRIPTION = "High-velocity tactical deployment framework. Execute tasks within strict parameters to compound momentum.";
 
 export const Route = createFileRoute("/workspace/launch-sprint")({
   head: () => ({
@@ -18,7 +20,7 @@ export const Route = createFileRoute("/workspace/launch-sprint")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: SprintPage,
+  component: SprintFlightDeckPage,
 });
 
 export interface SprintPlanData {
@@ -41,132 +43,111 @@ export interface SprintPlanData {
   nextAction?: string;
 }
 
-function formatLaunchSprintPlan(raw: any, ventureNameInput: string, launchDateInput: string, launchGoalInput: string): SprintPlanData {
-  const data = raw?.launchSprint?.sprintPlan || raw?.sprintPlan || raw || {};
-  const hasRealDate = Boolean(launchDateInput && launchDateInput.trim() && !launchDateInput.includes("7 days") && launchDateInput !== "Not set");
-  const launchDateLabel = hasRealDate ? launchDateInput : "Launch date: Not set";
-
-  const preLaunch = (Array.isArray(data.preLaunch) && data.preLaunch.length > 0)
-    ? data.preLaunch
-    : [
-        {
-          day: hasRealDate ? "T-5 Days" : "Pre-Launch Task 1",
-          tasks: ["Verify core MVP workflow and user intake", "Test onboarding sequence with 5 test users"],
-          owner: "Founder",
-          status: "Recommended",
-          reason: "Ensure core value delivery works before public exposure.",
-        },
-        {
-          day: hasRealDate ? "T-2 Days" : "Pre-Launch Task 2",
-          tasks: ["Prepare feedback collection form", "Verify analytics tracking endpoints"],
-          owner: "Founder",
-          status: "Not Started",
-          reason: "Capture early user retention signals.",
-        },
-      ];
-
-  const launchDay = (Array.isArray(data.launchDay) && data.launchDay.length > 0)
-    ? data.launchDay
-    : [
-        {
-          time: "Launch Day Priorities",
-          activity: "Publish launch announcement on primary Marketing Plan channels",
-          responsibility: "Founder",
-        },
-        {
-          time: "Launch Day Priorities",
-          activity: "Direct 1-on-1 outreach to pre-identified target users",
-          responsibility: "Founder",
-        },
-      ];
-
-  const postLaunch = (Array.isArray(data.postLaunch) && data.postLaunch.length > 0)
-    ? data.postLaunch
-    : [
-        {
-          week: "Week +1",
-          actions: ["Conduct 1-on-1 feedback interviews with active test users", "Deploy rapid bug patches"],
-          expectedResult: "Verify if test users repeatedly use the product.",
-        },
-      ];
-
-  const contentSchedule = (Array.isArray(data.contentSchedule) && data.contentSchedule.length > 0)
-    ? data.contentSchedule
-    : [
-        {
-          platform: "Primary Channel (Marketing Plan)",
-          content: `Launch Announcement: Introducing ${ventureNameInput || "our startup"} to target users`,
-          date: "Launch Day",
-        },
-      ];
-
-  const communityStrategy = (Array.isArray(data.communityStrategy) && data.communityStrategy.length > 0)
-    ? data.communityStrategy
-    : ["Engage directly in target communities where target customers seek solutions."];
-
-  const userAcquisitionPlan = (Array.isArray(data.userAcquisitionPlan) && data.userAcquisitionPlan.length > 0)
-    ? data.userAcquisitionPlan
-    : ["Direct 1-on-1 outreach based on Marketing Plan channels."];
-
-  const launchMetrics = (Array.isArray(data.launchMetrics) && data.launchMetrics.length > 0)
-    ? data.launchMetrics
-    : [
-        {
-          metric: "Initial Test Users",
-          target: launchGoalInput && launchGoalInput !== "Launch target: Not defined"
-            ? `Founder-defined launch target: ${launchGoalInput}`
-            : "Suggested launch target: 20–50 initial users",
-        },
-        {
-          metric: "Core Workflow Completion Rate",
-          target: "Suggested launch target: 60% activation rate",
-        },
-      ];
-
-  const riskManagement = (Array.isArray(data.riskManagement) && data.riskManagement.length > 0)
-    ? data.riskManagement
-    : [
-        {
-          risk: "Low activation or user drop-off",
-          solution: "Conduct direct 1-on-1 feedback sessions to identify onboarding friction.",
-        },
-        {
-          risk: "Weak product-market signal",
-          solution: "Iterate core MVP feature based strictly on customer validation quotes.",
-        },
-      ];
-
-  const nextAction = data.nextAction || "Next Action: Complete MVP core testing with 5–10 target users.";
-
-  return {
-    preLaunch,
-    launchDay,
-    postLaunch,
-    contentSchedule,
-    communityStrategy,
-    userAcquisitionPlan,
-    launchMetrics,
-    riskManagement,
-    nextAction,
-    launchOverview: data.launchOverview || {
-      ventureName: ventureNameInput || "Untitled Venture",
-      currentStage: "Early-Stage Execution",
-      launchObjective: launchGoalInput && launchGoalInput !== "Launch target: Not defined"
-        ? `Founder-defined launch target: ${launchGoalInput}`
-        : "Suggested launch target: Acquire 20–50 initial test users",
-      launchDate: launchDateLabel,
-      launchStatus: "Ready for launch testing",
-      customerEvidence: "Customer interview evidence: Not yet recorded.",
-    },
-  };
+interface DirectiveItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  done: boolean;
 }
 
-function SprintPage() {
-  const { venture, update } = useActiveVenture();
-  const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
+interface RoadmapPhase {
+  id: string;
+  dayRange: string;
+  title: string;
+  description: string;
+  minDay: number;
+  maxDay: number;
+  tasks: { id: string; code: string; label: string; done: boolean }[];
+}
 
-  // Form Inputs (clean inputs - auto-inherits from Venture Memory if present)
+const DEFAULT_DIRECTIVES: DirectiveItem[] = [
+  {
+    id: "dir-1",
+    title: "Deploy V2 Authentication",
+    subtitle: "Zero-trust architecture integration",
+    done: true,
+  },
+  {
+    id: "dir-2",
+    title: "Refactor Data Pipeline",
+    subtitle: "Decrease latency by 40%",
+    done: false,
+  },
+  {
+    id: "dir-3",
+    title: "Client Onboarding Flow",
+    subtitle: "Pending design system update",
+    done: false,
+  },
+];
+
+const DEFAULT_PHASES: RoadmapPhase[] = [
+  {
+    id: "phase-1",
+    dayRange: "Day 1-2",
+    title: "Foundation & Intel",
+    description: "System architecture review and environment provisioning. Database schemas locked.",
+    minDay: 1,
+    maxDay: 2,
+    tasks: [
+      { id: "t1-1", code: "Task 1.1", label: "Architecture Spec & API Boundaries", done: true },
+      { id: "t1-2", code: "Task 1.2", label: "Database Schema & Migration Scripts", done: true },
+    ],
+  },
+  {
+    id: "phase-2",
+    dayRange: "Day 3",
+    title: "Core API Infrastructure",
+    description: "RESTful endpoint generation, rate limiting, and zero-trust auth middleware wiring.",
+    minDay: 3,
+    maxDay: 3,
+    tasks: [
+      { id: "t3-1", code: "Task 3.1", label: "RESTful Endpoint Generation", done: true },
+      { id: "t3-2", code: "Task 3.2", label: "Middleware Auth Wiring", done: false },
+    ],
+  },
+  {
+    id: "phase-3",
+    dayRange: "Day 4-5",
+    title: "Front-End Integration",
+    description: "Connecting UI components to staging environment. Real-time state management implementation.",
+    minDay: 4,
+    maxDay: 5,
+    tasks: [
+      { id: "t4-1", code: "Task 4.1", label: "Staging Environment Component Wiring", done: false },
+      { id: "t4-2", code: "Task 4.2", label: "Optimistic State Sync & Error Handling", done: false },
+    ],
+  },
+  {
+    id: "phase-4",
+    dayRange: "Day 6-7",
+    title: "QA & Deployment",
+    description: "Load testing, security audit, and production push sequence.",
+    minDay: 6,
+    maxDay: 7,
+    tasks: [
+      { id: "t6-1", code: "Task 6.1", label: "P99 Latency & End-to-End Test Suite", done: false },
+      { id: "t6-2", code: "Task 6.2", label: "Production DNS & Traffic Cutover", done: false },
+    ],
+  },
+];
+
+function SprintFlightDeckPage() {
+  const { venture, update } = useActiveVenture();
+
+  // Active Flight Deck State
+  const [activeDay, setActiveDay] = useState<number>(3);
+  const [directives, setDirectives] = useState<DirectiveItem[]>(DEFAULT_DIRECTIVES);
+  const [phases, setPhases] = useState<RoadmapPhase[]>(DEFAULT_PHASES);
+  const [newDirectiveText, setNewDirectiveText] = useState("");
+  const [isAddingDirective, setIsAddingDirective] = useState(false);
+  const [analysisModalOpen, setAnalysisModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"flight-deck" | "launch-matrix">("flight-deck");
+
+  // Detailed AI Launch Plan State (from legacy generator)
+  const [generating, setGenerating] = useState(false);
+  const [sprintPlan, setSprintPlan] = useState<SprintPlanData | null>(null);
+  const [history, setHistory] = useState<any[]>([]);
   const [ventureNameInput, setVentureNameInput] = useState("");
   const [ideaInput, setIdeaInput] = useState("");
   const [mvpScopeInput, setMvpScopeInput] = useState("");
@@ -174,12 +155,7 @@ function SprintPage() {
   const [launchDateInput, setLaunchDateInput] = useState("");
   const [launchGoalInput, setLaunchGoalInput] = useState("");
 
-  // Sprint Plan Data
-  const [sprintPlan, setSprintPlan] = useState<SprintPlanData | null>(null);
-  const [history, setHistory] = useState<any[]>([]);
-
-  const ventureId = venture?.id || (venture as any)?._id || "6a709d6ff4af39139e040cc8";
-  const hasVentureMemory = Boolean(venture?.brief?.building || venture?.marketingPlan?.marketingStrategy || venture?.name);
+  const ventureId = venture?.id || (venture as any)?._id || "default-venture";
 
   useEffect(() => {
     if (venture) {
@@ -187,34 +163,65 @@ function SprintPage() {
       setIdeaInput(venture.brief?.building || "");
       setMvpScopeInput(venture.mvpScope?.mustHaveFeatures?.join(", ") || venture.mvp?.job || "");
       setMarketingPlanInput(venture.marketingPlan?.brandPositioning || "");
-      loadLaunchSprintHistory();
-    } else {
-      loadLaunchSprintHistory();
     }
-  }, [ventureId]);
+  }, [venture]);
 
-  async function loadLaunchSprintHistory() {
-    setLoading(true);
-    try {
-      const res = await api.getLaunchSprintHistory(ventureId);
-      if (res.success && res.data?.launchSprint) {
-        const formatted = formatLaunchSprintPlan(res.data.launchSprint, ventureNameInput, launchDateInput, launchGoalInput);
-        setSprintPlan(formatted);
-        setHistory(res.data.history || []);
-      } else {
-        setSprintPlan(null);
-      }
-    } catch (err) {
-      console.warn("Failed to load launch sprint history:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Dynamic Velocity Calculation
+  const totalDirectives = directives.length;
+  const completedDirectives = directives.filter((d) => d.done).length;
+  const totalRoadmapTasks = phases.flatMap((p) => p.tasks).length;
+  const completedRoadmapTasks = phases.flatMap((p) => p.tasks).filter((t) => t.done).length;
 
-  async function handleGenerateLaunchSprint(e?: React.FormEvent) {
-    if (e) e.preventDefault();
+  const totalItems = totalDirectives + totalRoadmapTasks;
+  const totalDone = completedDirectives + completedRoadmapTasks;
+  const velocityScore = totalItems > 0 ? Math.round((totalDone / totalItems) * 50 + 50) : 84;
+
+  const handleToggleDirective = (id: string) => {
+    setDirectives((prev) =>
+      prev.map((d) => {
+        if (d.id === id) {
+          const nextDone = !d.done;
+          if (nextDone) {
+            toast.success(`Directive completed: "${d.title}"`);
+          }
+          return { ...d, done: nextDone };
+        }
+        return d;
+      })
+    );
+  };
+
+  const handleAddDirective = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDirectiveText.trim()) return;
+    const newDir: DirectiveItem = {
+      id: `dir-${Date.now()}`,
+      title: newDirectiveText.trim(),
+      subtitle: "Sprint target",
+      done: false,
+    };
+    setDirectives((prev) => [...prev, newDir]);
+    setNewDirectiveText("");
+    setIsAddingDirective(false);
+    toast.success(`New directive added to Day ${activeDay} sprint`);
+  };
+
+  const handleToggleRoadmapTask = (phaseId: string, taskId: string) => {
+    setPhases((prev) =>
+      prev.map((p) => {
+        if (p.id === phaseId) {
+          return {
+            ...p,
+            tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, done: !t.done } : t)),
+          };
+        }
+        return p;
+      })
+    );
+  };
+
+  async function handleGenerateDetailedPlan() {
     if (generating) return;
-
     setGenerating(true);
     try {
       const res = await api.generateLaunchSprintModule({
@@ -229,311 +236,459 @@ function SprintPage() {
       });
 
       if (res.success && res.data?.launchSprint) {
-        const formatted = formatLaunchSprintPlan(res.data.launchSprint, ventureNameInput, launchDateInput, launchGoalInput);
-        setSprintPlan(formatted);
-        if (Array.isArray(res.data.history)) {
-          setHistory(res.data.history);
-        } else {
-          setHistory((prev) => [res.data.launchSprint, ...prev]);
-        }
-      } else {
-        const formatted = formatLaunchSprintPlan({}, ventureNameInput, launchDateInput, launchGoalInput);
-        setSprintPlan(formatted);
+        setSprintPlan(res.data.launchSprint.sprintPlan || res.data.launchSprint);
+        toast.success("Detailed launch plan generated successfully.");
       }
     } catch (err) {
-      console.warn("Failed to generate launch sprint:", err);
-      const formatted = formatLaunchSprintPlan({}, ventureNameInput, launchDateInput, launchGoalInput);
-      setSprintPlan(formatted);
+      console.warn("Failed to generate launch plan:", err);
+      toast.error("Failed to generate detailed plan.");
     } finally {
       setGenerating(false);
     }
   }
 
   return (
-    <>
-      <PageHeader
-        eyebrow="Step 07"
-        title="Venture Launch Sprint Generator"
-        description="Evidence-based launch execution plan, task matrix, channel distribution, and risk mitigation connected to your venture memory."
-        right={
-          <div className="flex items-center gap-3">
-            {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#0E131C] px-3 py-1.5 rounded-xl border border-white/10 text-xs text-[#A8B3C7]">
-                <History className="size-3.5 text-[#64D8FF]" />
-                <span className="font-mono text-xs text-[#F5F8FC]">{history.length} Sprints Saved</span>
-              </div>
-            )}
+    <div className="space-y-8 select-none">
+      {/* Header Section */}
+      <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-[rgba(139,92,246,0.3)] pb-8">
+        <div className="flex flex-col gap-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.3)] w-fit">
+            <div className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_rgba(167,139,250,0.8)] animate-pulse" />
+            <span className="font-mono text-xs font-semibold text-[#d0bcff]">
+              SPRINT ACTIVE // DAY {activeDay} OF 7
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold font-display text-white tracking-tight mt-1">
+            Time-Boxed Execution
+          </h1>
+          <p className="text-base text-[#cbc3d7] max-w-2xl leading-relaxed">
+            High-velocity tactical deployment framework. Execute tasks within strict parameters to compound momentum.
+          </p>
+        </div>
 
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-[#181c1f] p-1 rounded-xl border border-white/10">
             <button
-              onClick={() => void handleGenerateLaunchSprint()}
-              disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#64D8FF]/40 bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-4 py-2 text-xs font-bold text-black transition hover:opacity-90 shadow-[0_0_20px_rgba(100,216,255,0.4)] disabled:opacity-50"
+              onClick={() => setViewMode("flight-deck")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition ${
+                viewMode === "flight-deck"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  : "text-[#cbc3d7] hover:text-white"
+              }`}
             >
-              <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
-              {generating ? "AI Is Planning Sprint..." : "Generate Launch Sprint"}
+              Flight Deck
+            </button>
+            <button
+              onClick={() => setViewMode("launch-matrix")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition ${
+                viewMode === "launch-matrix"
+                  ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
+                  : "text-[#cbc3d7] hover:text-white"
+              }`}
+            >
+              Full Plan Matrix
             </button>
           </div>
-        }
-      />
 
-      {/* Banner */}
-      {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[#64D8FF]/30 bg-[#64D8FF]/10 p-4 text-xs text-[#E1F4FF] shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#64D8FF]" />
-          <div>
-            <span className="font-bold text-[#64D8FF]">Launch Sprint Agent Active: </span>
-            Connected to Venture Memory, Brief, Validation, MVP Scope, Build Roadmap, and Marketing Plan.
+          {/* Primary Action Button */}
+          <button
+            onClick={() => setAnalysisModalOpen(true)}
+            className="shrink-0 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-bold text-sm px-6 py-3 rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
+            <span>Run Mission Analysis</span>
+          </button>
+        </div>
+      </section>
+
+      {/* Day Progress Switcher Pill Row */}
+      <div className="flex items-center justify-between bg-[#101417]/80 p-3 rounded-2xl border border-[rgba(139,92,246,0.25)] overflow-x-auto gap-2">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-mono text-[#958ea0] uppercase mr-2 hidden sm:inline">Active Sprint Day:</span>
+          {[1, 2, 3, 4, 5, 6, 7].map((d) => {
+            const isCurrent = activeDay === d;
+            const isPast = d < activeDay;
+            return (
+              <button
+                key={d}
+                onClick={() => {
+                  setActiveDay(d);
+                  toast.info(`Switched active flight focus to Day ${d}`);
+                }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+                  isCurrent
+                    ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]"
+                    : isPast
+                    ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]"
+                    : "bg-[#181c1f] text-[#cbc3d7] hover:bg-white/5 border border-white/5"
+                }`}
+              >
+                {isPast && <Check className="size-3" />}
+                <span>Day {d}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <span className="text-xs font-mono text-[#A78BFA] shrink-0 bg-[#181c1f] px-3 py-1 rounded-lg border border-[rgba(139,92,246,0.3)]">
+          T-MINUS {Math.max(0, 7 - activeDay)} DAYS
+        </span>
+      </div>
+
+      {viewMode === "flight-deck" ? (
+        /* Main Flight Deck Grid */
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column: Metrics & Stats (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* Velocity Card */}
+            <div className="glass-card rounded-xl p-6 relative overflow-hidden group border border-[rgba(139,92,246,0.3)]">
+              <div className="absolute -right-4 -top-4 size-24 bg-[rgba(139,92,246,0.1)] rounded-full blur-2xl group-hover:bg-[rgba(139,92,246,0.2)] transition-all duration-500" />
+              <div className="flex justify-between items-start mb-4 relative z-10">
+                <h3 className="font-mono text-xs text-[#cbc3d7] uppercase tracking-wider">
+                  Current Velocity
+                </h3>
+                <span className="material-symbols-outlined text-[#A78BFA]">speed</span>
+              </div>
+              <div className="flex items-baseline gap-2 relative z-10">
+                <span className="text-5xl font-bold font-display text-white">
+                  {velocityScore}
+                </span>
+                <span className="text-sm font-semibold text-[#A78BFA] flex items-center gap-0.5">
+                  <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                  +12%
+                </span>
+              </div>
+              <div className="w-full bg-[#1c2023] rounded-full h-2 mt-6 overflow-hidden border border-[rgba(139,92,246,0.2)] relative z-10">
+                <div
+                  className="bg-[#A78BFA] h-full rounded-full shadow-[0_0_10px_rgba(139,92,246,0.8)] transition-all duration-500 ease-out"
+                  style={{ width: `${velocityScore}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Core Objectives Bento / Sprint Directives */}
+            <div className="glass-card rounded-xl p-6 flex-1 flex flex-col border border-[rgba(139,92,246,0.3)]">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-mono text-xs text-[#cbc3d7] uppercase tracking-wider flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-[#A78BFA]">target</span>
+                  Sprint Directives
+                </h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181c1f] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
+                  {completedDirectives}/{totalDirectives} DONE
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-3 flex-1">
+                {directives.map((dir) => {
+                  return (
+                    <div
+                      key={dir.id}
+                      onClick={() => handleToggleDirective(dir.id)}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+                        dir.done
+                          ? "bg-[rgba(139,92,246,0.08)] border-[#A78BFA]/50"
+                          : "bg-[#181c1f]/60 border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)] hover:bg-[#181c1f]"
+                      }`}
+                    >
+                      <div
+                        className={`size-5 mt-0.5 rounded flex items-center justify-center transition-all ${
+                          dir.done
+                            ? "bg-[#A78BFA] border border-[#A78BFA] text-black shadow-[0_0_8px_rgba(139,92,246,0.6)]"
+                            : "border border-[#958ea0] bg-transparent hover:border-[#A78BFA]"
+                        }`}
+                      >
+                        {dir.done && <Check className="size-3.5 stroke-[3]" />}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <h4
+                          className={`text-sm font-medium ${
+                            dir.done ? "text-white line-through text-[#cbc3d7]" : "text-[#e0e3e7]"
+                          }`}
+                        >
+                          {dir.title}
+                        </h4>
+                        <p className="text-xs text-[#958ea0] mt-0.5 truncate">
+                          {dir.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Add Directive Inline Form */}
+                {isAddingDirective ? (
+                  <form onSubmit={handleAddDirective} className="mt-2 space-y-2">
+                    <input
+                      type="text"
+                      autoFocus
+                      value={newDirectiveText}
+                      onChange={(e) => setNewDirectiveText(e.target.value)}
+                      placeholder="Enter directive title..."
+                      className="w-full bg-[#020408] border border-[#A78BFA] rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#74839A] focus:outline-none"
+                    />
+                    <div className="flex justify-end gap-2 text-xs font-mono">
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingDirective(false)}
+                        className="px-2.5 py-1 text-[#958ea0] hover:text-white"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-3 py-1 bg-[#A78BFA] text-black font-bold rounded-lg hover:bg-[#bfa8ff]"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setIsAddingDirective(true)}
+                    className="mt-2 w-full py-2.5 rounded-xl border border-dashed border-[rgba(139,92,246,0.3)] hover:border-[#A78BFA] text-[#cbc3d7] hover:text-[#A78BFA] font-mono text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Plus className="size-3.5" />
+                    <span>Add Sprint Directive</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: 7-Day Roadmap (8 cols) */}
+          <div className="lg:col-span-8 glass-card rounded-xl p-6 md:p-8 border border-[rgba(139,92,246,0.3)]">
+            <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+              <h2 className="text-xl font-bold font-display text-white flex items-center gap-3">
+                <span className="material-symbols-outlined text-[#A78BFA]">route</span>
+                Tactical Roadmap
+              </h2>
+              <span className="font-mono text-xs text-[#cbc3d7] bg-[#181c1f] px-3 py-1 rounded-md border border-[rgba(139,92,246,0.3)]">
+                T-MINUS {Math.max(0, 7 - activeDay)} DAYS
+              </span>
+            </div>
+
+            {/* Tactical Timeline with vertical connector */}
+            <div className="relative sprint-timeline pl-10 md:pl-12 py-2 flex flex-col gap-8">
+              {phases.map((phase) => {
+                const isCompleted = activeDay > phase.maxDay;
+                const isActive = activeDay >= phase.minDay && activeDay <= phase.maxDay;
+                const isLocked = activeDay < phase.minDay;
+
+                return (
+                  <div key={phase.id} className="relative z-10 group">
+                    {/* Node Dot Icon */}
+                    {isCompleted ? (
+                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#A78BFA] flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
+                        <Check className="size-3 text-[#A78BFA] stroke-[3]" />
+                      </div>
+                    ) : isActive ? (
+                      <div className="absolute -left-10 md:-left-12 size-6 rounded-full bg-[#020408] border-2 border-[#A78BFA] flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.8)] animate-pulse">
+                        <div className="size-2 bg-[#A78BFA] rounded-full" />
+                      </div>
+                    ) : (
+                      <div className="absolute -left-[35px] md:-left-[43px] size-4 rounded-full bg-[#020408] border-2 border-[#958ea0] flex items-center justify-center mt-1" />
+                    )}
+
+                    {/* Phase Content Box */}
+                    {isActive ? (
+                      <div className="bg-[#0b0f12] border border-[#A78BFA] rounded-xl p-6 shadow-[0_0_30px_rgba(139,92,246,0.15)] relative overflow-hidden">
+                        <div className="absolute top-0 right-0 size-32 bg-[rgba(139,92,246,0.06)] blur-3xl rounded-full pointer-events-none" />
+
+                        <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2 relative z-10">
+                          <h3 className="text-lg font-bold font-display text-white text-glow">
+                            {phase.dayRange}: {phase.title}
+                          </h3>
+                          <span className="font-mono text-xs text-[#d0bcff] bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] px-2.5 py-0.5 rounded flex items-center gap-1.5 w-fit">
+                            <span className="material-symbols-outlined text-[14px]">sync</span>
+                            IN PROGRESS
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-[#cbc3d7] mb-4 leading-relaxed relative z-10">
+                          {phase.description}
+                        </p>
+
+                        {/* Interactive Task Sub-Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10 mt-2">
+                          {phase.tasks.map((task) => (
+                            <div
+                              key={task.id}
+                              onClick={() => handleToggleRoadmapTask(phase.id, task.id)}
+                              className={`p-3.5 rounded-lg border transition-all cursor-pointer flex flex-col gap-1 ${
+                                task.done
+                                  ? "bg-[#000000] border-[#A78BFA]/50 text-white shadow-[0_0_8px_rgba(139,92,246,0.2)]"
+                                  : "bg-[#000000] border-[rgba(139,92,246,0.3)] hover:border-[#A78BFA] focus-within:shadow-[0_0_8px_rgba(139,92,246,0.4)]"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-mono text-[10px] text-[#A78BFA] font-bold uppercase">
+                                  {task.code}
+                                </span>
+                                {task.done && (
+                                  <span className="text-[10px] font-mono text-[#A78BFA] flex items-center gap-1">
+                                    <Check className="size-3" /> Done
+                                  </span>
+                                )}
+                              </div>
+                              <span className={`text-xs font-medium ${task.done ? "line-through text-[#cbc3d7]" : "text-white"}`}>
+                                {task.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className={`border rounded-xl p-5 transition-all duration-300 ${
+                          isCompleted
+                            ? "bg-[#0a0c10] border-[rgba(139,92,246,0.3)] opacity-80 hover:opacity-100"
+                            : "bg-[#0a0c10] border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)]"
+                        }`}
+                      >
+                        <div className="flex flex-col md:flex-row justify-between md:items-center mb-2 gap-2">
+                          <h3
+                            className={`text-base font-medium ${
+                              isCompleted
+                                ? "text-white line-through decoration-[#958ea0]"
+                                : "text-[#e0e3e7]"
+                            }`}
+                          >
+                            {phase.dayRange}: {phase.title}
+                          </h3>
+                          <span
+                            className={`font-mono text-[11px] px-2.5 py-0.5 rounded w-fit ${
+                              isCompleted
+                                ? "text-[#A78BFA] bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] font-bold"
+                                : "text-[#958ea0] bg-[#181c1f] border border-white/5"
+                            }`}
+                          >
+                            {isCompleted ? "COMPLETED" : "LOCKED"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#cbc3d7] leading-relaxed">
+                          {phase.description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-amber-400" />
-          <div>
-            <span className="font-bold text-amber-300">No Venture Memory Recorded: </span>
-            Input your launch parameters in the form below or complete previous steps to auto-populate channels and targets.
-          </div>
-        </div>
-      )}
-
-      {/* Form Inputs */}
-      <Panel title="Launch Execution Inputs (Leave Blank if Not Set)">
-        <form onSubmit={handleGenerateLaunchSprint} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Field label="Venture Name">
-              <TextInput
-                value={ventureNameInput}
-                onChange={(e) => setVentureNameInput(e.target.value)}
-                placeholder="e.g. Acme SaaS or leave blank"
-              />
-            </Field>
-            <Field label="Target Launch Date">
-              <TextInput
-                value={launchDateInput}
-                onChange={(e) => setLaunchDateInput(e.target.value)}
-                placeholder="e.g. 2026-09-15 (or leave blank for 'Not set')"
-              />
-            </Field>
-            <Field label="Launch Target / Goal">
-              <TextInput
-                value={launchGoalInput}
-                onChange={(e) => setLaunchGoalInput(e.target.value)}
-                placeholder="e.g. Acquire 20–50 test users (or leave blank)"
-              />
-            </Field>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Startup Product Idea">
-              <TextArea
-                rows={2}
-                value={ideaInput}
-                onChange={(e) => setIdeaInput(e.target.value)}
-                placeholder="Describe your core product concept"
-              />
-            </Field>
-            <Field label="Marketing Channels (Inherited from Marketing Plan)">
-              <TextArea
-                rows={2}
-                value={marketingPlanInput}
-                onChange={(e) => setMarketingPlanInput(e.target.value)}
-                placeholder="Channels inherited from Marketing Plan module"
-              />
-            </Field>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4F8CFF] to-[#64D8FF] px-5 py-2.5 text-xs font-extrabold text-black transition hover:opacity-90 disabled:opacity-50 shadow-[0_0_15px_rgba(79,140,255,0.4)]"
-            >
-              <Sparkles className="size-4" /> {generating ? "AI Is Planning Sprint..." : "Generate Launch Sprint"}
-            </button>
-          </div>
-        </form>
-      </Panel>
-
-      {/* Loading State */}
-      {generating && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4 rounded-2xl border border-[#64D8FF]/30 bg-[#0E131C]/90 p-8 shadow-2xl">
-          <RefreshCw className="size-8 animate-spin text-[#64D8FF]" />
-          <div className="text-center space-y-1">
-            <h3 className="text-sm font-bold text-[#F5F8FC]">Generating Evidence-Based Launch Sprint...</h3>
-            <p className="text-xs font-mono text-[#A8B3C7]">Retrieving Venture Memory, Validation evidence, Marketing Plan channels, and MVP readiness</p>
-          </div>
-        </div>
-      )}
-
-      {/* Sprint Output Display */}
-      {sprintPlan && !generating && (
-        <div className="space-y-6">
-          {/* Launch Overview Header Card */}
-          {sprintPlan.launchOverview && (
-            <div className="rounded-2xl border border-[#64D8FF]/40 bg-[#0E131C] p-6 shadow-2xl space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
-                    Launch Sprint Overview
-                  </span>
-                  <h2 className="text-xl font-extrabold text-[#F5F8FC] mt-1">{sprintPlan.launchOverview.ventureName}</h2>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-mono text-[#64D8FF] bg-[#64D8FF]/10 px-3 py-1 rounded-xl border border-[#64D8FF]/30">
-                    {sprintPlan.launchOverview.launchDate}
-                  </span>
-                  <span className={`text-xs font-mono px-3 py-1 rounded-xl border ${sprintPlan.launchOverview.launchStatus.includes('Not ready') ? 'text-amber-300 bg-amber-500/10 border-amber-500/30' : 'text-[#46E3A3] bg-[#46E3A3]/10 border-[#46E3A3]/30'}`}>
-                    Status: {sprintPlan.launchOverview.launchStatus}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 text-xs">
-                <div className="rounded-xl bg-[#141C28] p-3.5 border border-white/10 space-y-1">
-                  <span className="font-mono text-[10px] uppercase text-[#64D8FF] block font-bold">Launch Objective:</span>
-                  <p className="text-[#F5F8FC] font-semibold">{sprintPlan.launchOverview.launchObjective}</p>
-                </div>
-
-                <div className="rounded-xl bg-[#141C28] p-3.5 border border-white/10 space-y-1">
-                  <span className="font-mono text-[10px] uppercase text-[#46E3A3] block font-bold">Customer Evidence Signal:</span>
-                  <p className="text-[#A8B3C7]">{sprintPlan.launchOverview.customerEvidence}</p>
-                </div>
-              </div>
+        /* Full Launch Plan Matrix (Detailed AI Planning View) */
+        <div className="space-y-6 animate-fade-in">
+          <Panel title="AI Launch Parameters & Inputs">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Field label="Venture Name">
+                <TextInput
+                  value={ventureNameInput}
+                  onChange={(e) => setVentureNameInput(e.target.value)}
+                  placeholder="e.g. Acme SaaS"
+                />
+              </Field>
+              <Field label="Target Launch Date">
+                <TextInput
+                  value={launchDateInput}
+                  onChange={(e) => setLaunchDateInput(e.target.value)}
+                  placeholder="e.g. 2026-09-15"
+                />
+              </Field>
+              <Field label="Launch Target / Goal">
+                <TextInput
+                  value={launchGoalInput}
+                  onChange={(e) => setLaunchGoalInput(e.target.value)}
+                  placeholder="e.g. Acquire 20–50 test users"
+                />
+              </Field>
             </div>
-          )}
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={handleGenerateDetailedPlan}
+                disabled={generating}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] text-black font-bold px-5 py-2.5 text-xs hover:bg-[#bfa8ff] transition cursor-pointer disabled:opacity-50"
+              >
+                <Sparkles className="size-4" />
+                {generating ? "AI Is Planning Sprint..." : "Generate Full Matrix"}
+              </button>
+            </div>
+          </Panel>
 
-          {/* Pre-Launch Sprint Tasks */}
-          <Panel title="Pre-Launch Sprint Tasks">
-            <div className="space-y-3">
-              {sprintPlan.preLaunch?.map((item, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
-                  <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                    <span className="font-bold text-[#64D8FF] font-mono text-sm">{item.day}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[#A8B3C7] bg-white/5 px-2 py-0.5 rounded-md">
-                        Owner: {item.owner}
-                      </span>
-                      {item.status && (
-                        <span className="text-[10px] font-mono text-[#46E3A3] bg-[#46E3A3]/10 px-2 py-0.5 rounded-md border border-[#46E3A3]/20">
-                          {item.status}
+          {sprintPlan && (
+            <div className="space-y-6">
+              {/* Pre-Launch Tasks */}
+              <Panel title="Pre-Launch Sprint Tasks">
+                <div className="space-y-3">
+                  {sprintPlan.preLaunch?.map((item, i) => (
+                    <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-2">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                        <span className="font-bold text-[#A78BFA] font-mono text-sm">{item.day}</span>
+                        <span className="text-[10px] font-mono text-[#A78BFA] bg-[rgba(139,92,246,0.15)] px-2 py-0.5 rounded-md border border-[rgba(139,92,246,0.3)]">
+                          Owner: {item.owner}
                         </span>
-                      )}
+                      </div>
+                      <ul className="space-y-1 text-white">
+                        {item.tasks?.map((t, ti) => (
+                          <li key={ti} className="flex items-center gap-2">
+                            <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
+                            <span>{t}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
-                  <ul className="space-y-1 text-[#F5F8FC]">
-                    {item.tasks?.map((t, ti) => (
-                      <li key={ti} className="flex items-center gap-2">
-                        <CheckCircle2 className="size-3.5 text-[#46E3A3] shrink-0" />
-                        <span>{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {item.reason && (
-                    <p className="text-[11px] text-[#A8B3C7] font-sans pt-1 italic">Reason: {item.reason}</p>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-          </Panel>
+              </Panel>
 
-          {/* Launch Day Priorities */}
-          <Panel title="Launch Day Priorities">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {sprintPlan.launchDay?.map((item, i) => (
-                <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-1.5">
-                  <span className="font-mono text-[10px] font-bold text-[#64D8FF] uppercase">{item.time}</span>
-                  <p className="font-semibold text-[#F5F8FC]">{item.activity}</p>
-                  <span className="text-[10px] font-mono text-[#A8B3C7] block">Responsibility: {item.responsibility}</span>
+              {/* Launch Day Priorities */}
+              <Panel title="Launch Day Priorities">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {sprintPlan.launchDay?.map((item, i) => (
+                    <div key={i} className="rounded-xl border border-white/10 bg-[#141C28] p-4 text-xs space-y-1.5">
+                      <span className="font-mono text-[10px] font-bold text-[#A78BFA] uppercase">{item.time}</span>
+                      <p className="font-semibold text-[#F5F8FC]">{item.activity}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </Panel>
-
-          {/* Content Schedule & Acquisition Plan */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Panel title="Content Distribution Plan (Marketing Plan Channels)">
-              <ul className="space-y-2 text-xs">
-                {sprintPlan.contentSchedule?.map((c, i) => (
-                  <li key={i} className="rounded-xl bg-[#141C28] p-3 border border-white/10 space-y-1">
-                    <div className="flex justify-between font-mono text-[10px] text-[#64D8FF]">
-                      <span>{c.platform}</span>
-                      <span>{c.date}</span>
-                    </div>
-                    <p className="text-[#F5F8FC] font-semibold">{c.content}</p>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-
-            <Panel title="User Acquisition Tactics">
-              <ul className="space-y-2 text-xs">
-                {sprintPlan.userAcquisitionPlan?.map((plan, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[#F5F8FC] bg-[#141C28] p-3 rounded-xl border border-white/10">
-                    <Rocket className="size-3.5 text-[#64D8FF] shrink-0" />
-                    <span>{plan}</span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-          </div>
-
-          {/* Metrics & Risk Management */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Panel title="Launch Metrics & Goals">
-              <div className="space-y-2 text-xs">
-                {sprintPlan.launchMetrics?.map((m, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-xl bg-[#141C28] p-3 border border-white/10">
-                    <span className="font-medium text-[#F5F8FC]">{m.metric}</span>
-                    <span className="font-mono text-[11px] text-[#64D8FF] bg-[#64D8FF]/10 px-2.5 py-1 rounded-lg border border-[#64D8FF]/20">
-                      {m.target}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </Panel>
-
-            <Panel title="Venture-Specific Risks & Mitigations">
-              <div className="space-y-2 text-xs">
-                {sprintPlan.riskManagement?.map((r, i) => (
-                  <div key={i} className="rounded-xl bg-[#141C28] p-3 border border-red-500/20 space-y-1">
-                    <div className="flex items-center gap-1.5 text-red-300 font-semibold">
-                      <ShieldAlert className="size-3.5 text-red-400 shrink-0" />
-                      <span>{r.risk}</span>
-                    </div>
-                    <p className="text-[#A8B3C7] pl-5">{r.solution}</p>
-                  </div>
-                ))}
-              </div>
-            </Panel>
-          </div>
-
-          {/* Next Action Footer Banner */}
-          {sprintPlan.nextAction && (
-            <div className="rounded-2xl border border-[#46E3A3]/40 bg-[#46E3A3]/10 p-5 shadow-2xl flex items-center gap-3">
-              <CheckCircle2 className="size-6 text-[#46E3A3] shrink-0" />
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase text-[#46E3A3] block">Next Action:</span>
-                <p className="text-sm font-bold text-[#F5F8FC]">{sprintPlan.nextAction.replace(/^Next Action:\s*/i, "")}</p>
-              </div>
+              </Panel>
             </div>
           )}
         </div>
       )}
 
-      {/* Empty State Banner when no sprint has been generated yet */}
-      {!sprintPlan && !generating && (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0E131C] p-12 text-center space-y-3">
-          <Rocket className="size-10 text-[#64D8FF]/60" />
-          <h3 className="text-base font-bold text-[#F5F8FC]">No Launch Sprint Generated Yet</h3>
-          <p className="max-w-md text-xs text-[#A8B3C7] font-sans">
-            Review your launch parameters in the form above, or click <strong>Generate Launch Sprint</strong> to create an evidence-based task matrix, content plan, and risk mitigation roadmap.
-          </p>
+      {/* Footer Navigation CTAs */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[rgba(139,92,246,0.25)]">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => {
+              update((v) => ({ ...v }));
+              toast.success("7-Day Sprint Flight Deck state saved.");
+            }}
+          >
+            Save Sprint Flight Deck
+          </Button>
         </div>
-      )}
 
-      <div className="flex flex-wrap gap-3 pt-4">
-        <Button onClick={() => update((v) => ({ ...v }))}>Save Launch Sprint</Button>
         <LinkButton to="/workspace/traction" variant="primary">
-          Continue to Traction Dashboard
+          <span>Continue to Traction Engine</span>
+          <ArrowRight className="size-4 ml-1" />
         </LinkButton>
       </div>
-    </>
+
+      {/* Mission Analysis Modal */}
+      <SprintMissionAnalysisModal
+        isOpen={analysisModalOpen}
+        onClose={() => setAnalysisModalOpen(false)}
+        ventureName={venture?.name || "Active Venture"}
+        velocityScore={velocityScore}
+        activeDay={activeDay}
+        completedDirectivesCount={completedDirectives}
+        totalDirectivesCount={totalDirectives}
+      />
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Globe, ShieldCheck, Activity, Cpu, Zap, Server } from "lucide-react";
+import { Globe } from "lucide-react";
 
 interface Hub {
   city: string;
@@ -22,35 +22,35 @@ const HUBS: Hub[] = [
 export const GlobalOrbitalCanvas: React.FC = () => {
   return (
     <section className="relative py-20 px-4 max-w-7xl mx-auto z-10">
-      <div className="panel p-8 sm:p-12 border border-white/10 bg-[#161F2D] backdrop-blur-2xl relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.5)] rounded-3xl">
+      <div className="panel p-8 sm:p-12 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] rounded-3xl">
         {/* Soft Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#4F8CFF]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[rgba(139,92,246,0.1)] rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
           {/* Left Information */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-[#0E131C] text-xs font-mono text-[#64D8FF] shadow-sm">
-              <Globe className="size-3.5 text-[#4F8CFF]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs font-mono text-[#A78BFA] shadow-sm">
+              <Globe className="size-3.5 text-[#A78BFA]" />
               <span>GLOBAL WORKSPACE ECOSYSTEM</span>
             </div>
 
-            <h3 className="text-3xl sm:text-4xl font-bold font-display text-[#F5F8FC] tracking-tight leading-tight">
+            <h3 className="text-3xl sm:text-4xl font-bold font-display text-white tracking-tight leading-tight">
               1,240+ Startups Operating <br />
               <span className="text-gradient-neural">Across 42 Innovation Hubs</span>
             </h3>
 
-            <p className="text-sm text-[#A8B3C7] leading-relaxed">
+            <p className="text-sm text-[#cbc3d7] leading-relaxed">
               From San Francisco to Tokyo, entrepreneurs rely on FounderOS to turn raw ideas into validated, high-velocity ventures with zero waste and full data security.
             </p>
 
             <div className="grid grid-cols-2 gap-4 pt-2 font-mono text-xs">
-              <div className="p-4 rounded-2xl border border-white/5 bg-[#0E131C] space-y-1">
-                <span className="text-[#74839B] uppercase text-[10px]">AI Latency</span>
-                <p className="text-lg font-bold text-[#46E3A3]">12ms Avg</p>
+              <div className="p-4 rounded-2xl border border-white/5 bg-[#101417] space-y-1">
+                <span className="text-[#958ea0] uppercase text-[10px]">AI Latency</span>
+                <p className="text-lg font-bold text-[#A78BFA]">12ms Avg</p>
               </div>
-              <div className="p-4 rounded-2xl border border-white/5 bg-[#0E131C] space-y-1">
-                <span className="text-[#74839B] uppercase text-[10px]">Active Hubs</span>
-                <p className="text-lg font-bold text-[#4F8CFF]">42 Hubs</p>
+              <div className="p-4 rounded-2xl border border-white/5 bg-[#101417] space-y-1">
+                <span className="text-[#958ea0] uppercase text-[10px]">Active Hubs</span>
+                <p className="text-lg font-bold text-white">42 Hubs</p>
               </div>
             </div>
           </div>
@@ -60,21 +60,21 @@ export const GlobalOrbitalCanvas: React.FC = () => {
             {HUBS.map((h) => (
               <div
                 key={h.city}
-                className="p-4 rounded-2xl border border-white/5 bg-[#121924] transition-all duration-200 hover:border-[#4F8CFF]/40 hover:bg-[#1A2433] space-y-3"
+                className="p-4 rounded-2xl border border-white/5 bg-[#101417] transition-all duration-200 hover:border-[rgba(139,92,246,0.4)] hover:bg-[#181c1f] space-y-3"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="size-2 rounded-full bg-[#46E3A3] shadow-[0_0_8px_#46E3A3]" />
-                    <span className="font-semibold text-sm text-[#F5F8FC]">{h.city}</span>
+                    <span className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
+                    <span className="font-semibold text-sm text-white">{h.city}</span>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-[#A8B3C7]">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-[#958ea0]">
                     {h.region}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-xs font-mono text-[#A8B3C7] pt-1">
+                <div className="flex items-center justify-between text-xs font-mono text-[#cbc3d7] pt-1">
                   <span>{h.ventures} Active Ventures</span>
-                  <span className="text-[#64D8FF]">{h.latency}</span>
+                  <span className="text-[#A78BFA]">{h.latency}</span>
                 </div>
               </div>
             ))}
