@@ -117,7 +117,13 @@ function WorkspaceLayout() {
         </header>
 
         {/* Operating System Window Workspace Content */}
-        <main className="mx-auto w-full max-w-6xl space-y-6 sm:space-y-8 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 pb-32 flex-1 os-window-open min-w-0">
+        <main
+          className={
+            pathname === "/workspace/idea-validation"
+              ? "w-full max-w-none p-0 flex-1 os-window-open min-w-0 flex flex-col overflow-hidden"
+              : "mx-auto w-full max-w-6xl space-y-6 sm:space-y-8 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 pb-32 flex-1 os-window-open min-w-0"
+          }
+        >
           <Outlet />
         </main>
       </div>

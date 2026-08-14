@@ -184,37 +184,172 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 onNavigate?.();
               };
 
+              const isIdeaValidation = item.to === "/workspace/idea-validation";
+              const validationSessions = venture?.validationSessions || [];
+
               return (
-                <button
-                  key={item.to}
-                  type="button"
-                  onClick={handleItemClick}
-                  className={cn(
-                    "w-full group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative text-left cursor-pointer",
-                    active
-                      ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold shadow-[0_0_20px_rgba(167,139,250,0.2)] border border-[rgba(139,92,246,0.3)]"
-                      : "text-[#cbc3d7] hover:bg-white/5 hover:text-white",
-                  )}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    {isCompleted ? (
-                      <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
-                    ) : isCurrent ? (
-                      <ArrowRight className="size-3.5 text-[#A78BFA] shrink-0" />
-                    ) : (
-                      <span
-                        className={cn(
-                          "size-1.5 rounded-full transition-all shrink-0",
-                          active ? "bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] scale-110" : "bg-white/20 group-hover:bg-[#A78BFA]/50",
-                        )}
-                      />
+                <div key={item.to} className="space-y-1">
+                  <button
+                    type="button"
+                    onClick={handleItemClick}
+                    className={cn(
+                      "w-full group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative text-left cursor-pointer",
+                      active
+                        ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold shadow-[0_0_20px_rgba(167,139,250,0.2)] border border-[rgba(139,92,246,0.3)]"
+                        : "text-[#cbc3d7] hover:bg-white/5 hover:text-white",
                     )}
-                    <span className="truncate">{item.label}</span>
-                  </div>
-                  {isCompleted && !active ? (
-                    <span className="text-[10px] font-mono text-[#A78BFA]/80">✓ Done</span>
-                  ) : null}
-                </button>
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {isCompleted ? (
+                        <CheckCircle2 className="size-3.5 text-[#A78BFA] shrink-0" />
+                      ) : isCurrent ? (
+                        <ArrowRight className="size-3.5 text-[#A78BFA] shrink-0" />
+                      ) : (
+                        <span
+                          className={cn(
+                            "size-1.5 rounded-full transition-all shrink-0",
+                            active ? "bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] scale-110" : "bg-white/20 group-hover:bg-[#A78BFA]/50",
+                          )}
+                        />
+                      )}
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    {isCompleted && !active ? (
+                      <span className="text-[10px] font-mono text-[#A78BFA]/80">✓ Done</span>
+                    ) : null}
+                  </button>
+
+                  {/* Nested Validation History & "+ New Validation" inside Sidebar */}
+                  {isIdeaValidation && (
+                    <div className="pl-3 pr-1 py-1 space-y-1.5 border-l border-[rgba(139,92,246,0.2)] ml-3 my-1">
+                      {/* "+ Validate Another Idea" Button */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentHasProgress =
+                            venture?.validationState?.completed ||
+                            venture?.validationState?.answers?.question1 ||
+                            (venture?.chat && venture.chat.length > 1);
+
+                          if (currentHasProgress) {
+                            const sessionTitle =
+                              venture.validationState?.answers?.question1 ||
+                              venture.brief?.problem ||
+                              venture.brief?.building ||
+                              venture.name ||
+                              `Validated Idea (${new Date().toLocaleDateString()})`;
+
+                            const cleanTitle = sessionTitle.length > 30 ? sessionTitle.slice(0, 30) + "..." : sessionTitle;
+
+                            const newSession = {
+                              id: uid(),
+                              title: cleanTitle,
+                              createdAt: new Date().toISOString(),
+                              validationState: venture.validationState,
+                              ideaScore: venture.ideaScore || null,
+                              chat: venture.chat || [],
+                              brief: venture.brief,
+                            };
+
+                            update((v) => ({
+                              ...v,
+                              validationSessions: [newSession, ...(v.validationSessions || []).filter((s) => s.id !== newSession.id)],
+                              chat: [
+                                {
+                                  id: uid(),
+                                  role: "assistant",
+                                  content: "I am your FounderOS Idea Validation Coach. What specific problem are you solving, and who is the exact target customer experiencing it?",
+                                  createdAt: new Date().toISOString(),
+                                },
+                              ],
+                              validationState: {
+                                currentQuestion: 1,
+                                answers: { question1: null, question2: null, question3: null, question4: null, question5: null },
+                                completed: false,
+                                score: null,
+                              },
+                              ideaScore: null,
+                            }));
+                            toast.success("Saved previous chat! Started fresh idea validation.");
+                          } else {
+                            update((v) => ({
+                              ...v,
+                              chat: [
+                                {
+                                  id: uid(),
+                                  role: "assistant",
+                                  content: "I am your FounderOS Idea Validation Coach. What specific problem are you solving, and who is the exact target customer experiencing it?",
+                                  createdAt: new Date().toISOString(),
+                                },
+                              ],
+                              validationState: {
+                                currentQuestion: 1,
+                                answers: { question1: null, question2: null, question3: null, question4: null, question5: null },
+                                completed: false,
+                                score: null,
+                              },
+                              ideaScore: null,
+                            }));
+                            toast.info("Started fresh idea validation.");
+                          }
+                          navigate({ to: "/workspace/idea-validation" as any });
+                          onNavigate?.();
+                        }}
+                        className="w-full flex items-center justify-between gap-1.5 rounded-lg px-2 py-1.5 text-xs text-[#A78BFA] hover:bg-[rgba(139,92,246,0.15)] transition border border-[rgba(139,92,246,0.25)] border-dashed cursor-pointer font-mono"
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <Plus className="size-3 shrink-0" />
+                          <span className="truncate">+ Validate Another Idea</span>
+                        </span>
+                      </button>
+
+                      {/* Saved Sessions in History */}
+                      {validationSessions.map((session) => (
+                        <div
+                          key={session.id}
+                          onClick={() => {
+                            update((v) => ({
+                              ...v,
+                              chat: session.chat,
+                              validationState: session.validationState,
+                              ideaScore: session.ideaScore,
+                              brief: session.brief || v.brief,
+                            }));
+                            toast.success(`Loaded saved validation: "${session.title}"`);
+                            navigate({ to: "/workspace/idea-validation" as any });
+                            onNavigate?.();
+                          }}
+                          className="group flex items-center justify-between gap-1.5 rounded-lg px-2 py-1.5 text-xs text-[#cbc3d7] hover:text-white hover:bg-white/5 transition cursor-pointer"
+                        >
+                          <span className="truncate text-[11px] group-hover:text-[#A78BFA]">
+                            {session.title || "Validated Idea"}
+                          </span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {session.ideaScore?.overallScore ? (
+                              <span className="font-mono text-[9px] font-bold text-[#A78BFA] bg-[rgba(139,92,246,0.2)] px-1 py-0.2 rounded">
+                                {session.ideaScore.overallScore}
+                              </span>
+                            ) : null}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                update((v) => ({
+                                  ...v,
+                                  validationSessions: (v.validationSessions || []).filter((s) => s.id !== session.id),
+                                }));
+                                toast.info("Removed validation session.");
+                              }}
+                              className="opacity-0 group-hover:opacity-100 p-0.5 text-[#958ea0] hover:text-rose-400 rounded transition"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
