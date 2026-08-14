@@ -1,11 +1,5 @@
-const mongoose = require('mongoose');
-const MvpScope = require('../models/MvpScope');
-const Venture = require('../models/Venture');
-const { generateMvpScopeFromGemini } = require('../services/mvpGeminiService');
+const assert = require('assert');
 
-/**
- * Validate input quality before generating MVP Scope
- */
 function validateMvpInputQuality({ ventureName, idea, targetUsers, problem }) {
   const vName = (ventureName || '').trim();
   const vUsers = (targetUsers || '').trim();
@@ -44,7 +38,6 @@ function validateMvpInputQuality({ ventureName, idea, targetUsers, problem }) {
           message: "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
         };
       }
-      // Substring check if near-identical length
       if (f1.length > 5 && f2.length > 5) {
         if ((f1.includes(f2) || f2.includes(f1)) && Math.abs(f1.length - f2.length) < 4) {
           return {
@@ -120,131 +113,84 @@ function validateMvpInputQuality({ ventureName, idea, targetUsers, problem }) {
   return { valid: true };
 }
 
-/**
- * Controller to handle POST /api/mvp-scope/generate
- */
-async function generateScope(req, res, next) {
-  try {
-    const userId = req.user.id;
-    let {
-      ventureId,
-      ventureName,
-      idea,
-      targetUsers,
-      problem,
-      alternatives,
-      painFrequency,
-      differentiation,
-      evidence,
-      validationScore,
-      weakestCategory,
-    } = req.body;
+const EXPECTED_ERROR = "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.";
 
-    let venture = null;
-    if (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) {
-      venture = await Venture.findOne({ _id: ventureId, owner: userId });
-    }
-    if (!venture) {
-      venture = await Venture.findOne({ owner: userId }).sort({ updatedAt: -1 });
-    }
+console.log("Running MVP Scope input quality validation tests...\n");
 
-    // Auto-fill from Venture memory if fields missing
-    if (venture) {
-      ventureId = venture._id;
-      ventureName = ventureName || venture.ventureName || venture.name;
-      idea = idea || venture.brief?.building;
-      targetUsers = targetUsers || venture.validationState?.answers?.question1 || venture.brief?.audience;
-      problem = problem || venture.validationState?.answers?.question1 || venture.brief?.problem;
-      alternatives = alternatives || venture.validationState?.answers?.question2 || venture.brief?.workaround;
-      painFrequency = painFrequency || venture.validationState?.answers?.question3 || venture.brief?.outcome;
-      differentiation = differentiation || venture.validationState?.answers?.question4;
-      evidence = evidence || venture.validationState?.answers?.question5;
-      validationScore = validationScore || venture.ideaScore?.overallScore;
-    }
+// Test 1: Duplicated fields
+const res1 = validateMvpInputQuality({
+  ventureName: "Acme",
+  targetUsers: "crypto traders",
+  idea: "crypto traders",
+  problem: "crypto traders",
+});
+assert.strictEqual(res1.valid, false);
+assert.strictEqual(res1.message, EXPECTED_ERROR);
+console.log("✓ Test 1 Passed: Duplicated fields correctly rejected.");
 
-    // Validate Input Quality
-    const qualityCheck = validateMvpInputQuality({
-      ventureName,
-      idea,
-      targetUsers,
-      problem,
-    });
+// Test 2: Generic target users ('founders')
+const res2 = validateMvpInputQuality({
+  ventureName: "FounderTool",
+  targetUsers: "founders",
+  idea: "Autonomous email cold outreach assistant",
+  problem: "High bounce rate on outbound marketing emails",
+});
+assert.strictEqual(res2.valid, false);
+assert.strictEqual(res2.message, EXPECTED_ERROR);
+console.log("✓ Test 2 Passed: Generic target users ('founders') rejected.");
 
-    if (!qualityCheck.valid) {
-      return res.status(400).json({
-        success: false,
-        message: qualityCheck.message,
-      });
-    }
+// Test 3: Generic target users ('users')
+const res3 = validateMvpInputQuality({
+  ventureName: "AppX",
+  targetUsers: "users",
+  idea: "Task management web app with priority tags",
+  problem: "Users forget deadlines on critical weekly projects",
+});
+assert.strictEqual(res3.valid, false);
+assert.strictEqual(res3.message, EXPECTED_ERROR);
+console.log("✓ Test 3 Passed: Generic target users ('users') rejected.");
 
-    // Call Gemini API
-    const generatedScope = await generateMvpScopeFromGemini({
-      ventureName,
-      idea,
-      targetUsers,
-      problem,
-      alternatives,
-      painFrequency,
-      differentiation,
-      evidence,
-      validationScore,
-      weakestCategory,
-    });
+// Test 4: Vague idea ('helping people')
+const res4 = validateMvpInputQuality({
+  ventureName: "HelpCo",
+  targetUsers: "Dental Clinic Office Managers",
+  idea: "helping people",
+  problem: "High patient no-show rates for cleanings",
+});
+assert.strictEqual(res4.valid, false);
+assert.strictEqual(res4.message, EXPECTED_ERROR);
+console.log("✓ Test 4 Passed: Vague idea ('helping people') rejected.");
 
-    const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
+// Test 5: Vague problem ('i am solving the problem for founders')
+const res5 = validateMvpInputQuality({
+  ventureName: "SolveX",
+  targetUsers: "Bootstrapped SaaS Founders",
+  idea: "Automated Stripe churn alerts with discount triggers",
+  problem: "i am solving the problem for founders",
+});
+assert.strictEqual(res5.valid, false);
+assert.strictEqual(res5.message, EXPECTED_ERROR);
+console.log("✓ Test 5 Passed: Vague problem ('i am solving the problem for founders') rejected.");
 
-    // Save to MongoDB
-    const newScope = await MvpScope.create({
-      userId,
-      ventureId: targetVentureId,
-      ventureName,
-      idea,
-      targetUsers,
-      problem,
-      generatedScope,
-    });
+// Test 6: Vague problem ('making things easier')
+const res6 = validateMvpInputQuality({
+  ventureName: "EasyApp",
+  targetUsers: "Shopify E-commerce Store Owners",
+  idea: "Automated inventory restock notification agent",
+  problem: "making things easier",
+});
+assert.strictEqual(res6.valid, false);
+assert.strictEqual(res6.message, EXPECTED_ERROR);
+console.log("✓ Test 6 Passed: Vague problem ('making things easier') rejected.");
 
-    return res.status(201).json({
-      success: true,
-      message: 'MVP Scope generated successfully',
-      mvpScope: newScope,
-    });
-  } catch (error) {
-    console.error('Error in mvpController generateScope:', error);
-    next(error);
-  }
-}
+// Test 7: Valid specific inputs
+const res7 = validateMvpInputQuality({
+  ventureName: "DocuFlow",
+  targetUsers: "Commercial Real Estate Brokers",
+  idea: "Automated lease compliance extraction from 100-page PDF contracts",
+  problem: "Brokers spend 12 hours manually cross-checking tenant indemnity clauses in scanned PDFs",
+});
+assert.strictEqual(res7.valid, true);
+console.log("✓ Test 7 Passed: Valid specific persona & concrete problem accepted.");
 
-/**
- * Controller to handle GET /api/mvp-scope/:ventureId
- */
-async function getScopeHistory(req, res, next) {
-  try {
-    const { ventureId } = req.params;
-    const userId = req.user.id;
-
-    let scopes = [];
-    if (ventureId && ventureId !== 'latest' && mongoose.Types.ObjectId.isValid(ventureId)) {
-      scopes = await MvpScope.find({ ventureId, userId }).sort({ createdAt: -1 });
-    }
-    if (!scopes || scopes.length === 0) {
-      scopes = await MvpScope.find({ userId }).sort({ createdAt: -1 });
-    }
-
-    const latest = scopes[0] || null;
-
-    return res.status(200).json({
-      success: true,
-      mvpScope: latest,
-      history: scopes,
-    });
-  } catch (error) {
-    console.error('Error in mvpController getScopeHistory:', error);
-    next(error);
-  }
-}
-
-module.exports = {
-  generateScope,
-  getScopeHistory,
-};
+console.log("\nAll 7 MVP input quality tests passed successfully! 🚀");

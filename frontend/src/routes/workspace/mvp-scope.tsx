@@ -173,11 +173,157 @@ function formatScopeBlueprint(raw: any, fallbackName: string, ideaText: string, 
   };
 }
 
+export function validateMvpInputQuality({
+  ventureName,
+  idea,
+  targetUsers,
+  problem,
+}: {
+  ventureName?: string;
+  idea?: string;
+  targetUsers?: string;
+  problem?: string;
+}) {
+  const vName = (ventureName || "").trim();
+  const vUsers = (targetUsers || "").trim();
+  const vIdea = (idea || "").trim();
+  const vProblem = (problem || "").trim();
+
+  // 1. Basic length check
+  if (vName.length < 2 || vUsers.length < 3 || vIdea.length < 6 || vProblem.length < 6) {
+    return {
+      valid: false,
+      message:
+        "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+    };
+  }
+
+  const normalize = (str: string) =>
+    str
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const normName = normalize(vName);
+  const normUsers = normalize(vUsers);
+  const normIdea = normalize(vIdea);
+  const normProblem = normalize(vProblem);
+
+  // 2. Meaningful difference check (Identical or near-identical text)
+  const fields = [normName, normUsers, normIdea, normProblem];
+  for (let i = 0; i < fields.length; i++) {
+    for (let j = i + 1; j < fields.length; j++) {
+      const f1 = fields[i];
+      const f2 = fields[j];
+      if (f1 === f2 && f1.length > 2) {
+        return {
+          valid: false,
+          message:
+            "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+        };
+      }
+      if (f1.length > 5 && f2.length > 5) {
+        if ((f1.includes(f2) || f2.includes(f1)) && Math.abs(f1.length - f2.length) < 4) {
+          return {
+            valid: false,
+            message:
+              "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+          };
+        }
+      }
+    }
+  }
+
+  // 3. Generic Target Users check (Must be a specific persona, not just 'founders' or 'users')
+  const genericUsersList = [
+    "users",
+    "user",
+    "founders",
+    "founder",
+    "people",
+    "person",
+    "customers",
+    "customer",
+    "everyone",
+    "anyone",
+    "anybody",
+    "someone",
+    "clients",
+    "client",
+    "startups",
+    "startup",
+    "all users",
+    "all people",
+    "target users",
+    "target customers",
+    "target customer segments",
+    "early stage founders",
+    "early stage startups",
+    "b2b founders",
+    "b2c users",
+  ];
+
+  if (genericUsersList.includes(normUsers) || (normUsers.split(" ").length === 1 && genericUsersList.includes(normUsers))) {
+    return {
+      valid: false,
+      message:
+        "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+    };
+  }
+
+  // 4. Vague / Generic Idea or Problem Check
+  const genericPhrases = [
+    "i am solving the problem for founders",
+    "solving the problem for founders",
+    "solving problem for founders",
+    "helping people",
+    "helping users",
+    "helping founders",
+    "making things easier",
+    "make things easier",
+    "solving problems",
+    "solving customer problem",
+    "an app",
+    "a website",
+    "ai app",
+    "ai platform",
+    "ai startup",
+    "platform",
+    "good idea",
+    "something cool",
+    "solve pain",
+    "core customer problem",
+    "startup concept",
+    "new startup idea",
+    "validated startup idea",
+  ];
+
+  if (genericPhrases.includes(normIdea) || genericPhrases.includes(normProblem)) {
+    return {
+      valid: false,
+      message:
+        "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+    };
+  }
+
+  if (normProblem.split(" ").length < 3 || normIdea.split(" ").length < 3) {
+    return {
+      valid: false,
+      message:
+        "This doesn't look like real Idea Validation data — the fields are empty, duplicated, or too generic to scope an MVP from. Please complete Idea Validation properly first, or re-enter your actual startup details.",
+    };
+  }
+
+  return { valid: true, message: "" };
+}
+
 function MvpScopePage() {
   const { venture, update } = useActiveVenture();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [inputQualityError, setInputQualityError] = useState<string | null>(null);
 
   // Form Inputs (clean state - auto-inherits from Venture Memory if present)
   const [ventureNameInput, setVentureNameInput] = useState("");
@@ -226,14 +372,34 @@ function MvpScopePage() {
     if (e) e.preventDefault();
     if (generating) return;
 
+    const resolvedName = ventureNameInput || venture?.name || "";
+    const resolvedIdea = ideaInput || venture?.brief?.building || "";
+    const resolvedUsers = targetUsersInput || venture?.validationState?.answers?.question1 || venture?.brief?.audience || "";
+    const resolvedProblem = problemInput || venture?.validationState?.answers?.question1 || venture?.brief?.problem || "";
+
+    // Input Quality Check
+    const qualityCheck = validateMvpInputQuality({
+      ventureName: resolvedName,
+      idea: resolvedIdea,
+      targetUsers: resolvedUsers,
+      problem: resolvedProblem,
+    });
+
+    if (!qualityCheck.valid) {
+      setInputQualityError(qualityCheck.message);
+      toast.error(qualityCheck.message);
+      return;
+    }
+
+    setInputQualityError(null);
     setGenerating(true);
     try {
       const res = await api.generateMvpScopeModule({
         ventureId,
-        ventureName: ventureNameInput || venture?.name || "Untitled Venture",
-        idea: ideaInput || venture?.brief?.building || "Startup Concept",
-        targetUsers: targetUsersInput || venture?.validationState?.answers?.question1 || venture?.brief?.audience || "Target Customers",
-        problem: problemInput || venture?.validationState?.answers?.question1 || venture?.brief?.problem || "Core Customer Problem",
+        ventureName: resolvedName,
+        idea: resolvedIdea,
+        targetUsers: resolvedUsers,
+        problem: resolvedProblem,
         alternatives: venture?.validationState?.answers?.question2 || venture?.brief?.workaround,
         painFrequency: venture?.validationState?.answers?.question3 || venture?.brief?.outcome,
         differentiation: venture?.validationState?.answers?.question4,
@@ -243,16 +409,21 @@ function MvpScopePage() {
       });
 
       if (res.success && res.data?.mvpScope) {
-        const formatted = formatScopeBlueprint(res.data.mvpScope, ventureNameInput, ideaInput, targetUsersInput, problemInput);
+        const formatted = formatScopeBlueprint(res.data.mvpScope, resolvedName, resolvedIdea, resolvedUsers, resolvedProblem);
         setBlueprint(formatted);
         if (Array.isArray(res.data.history)) {
           setHistory(res.data.history);
         } else {
           setHistory((prev) => [res.data.mvpScope, ...prev]);
         }
+      } else if (res.message) {
+        setInputQualityError(res.message);
+        toast.error(res.message);
       }
-    } catch (err) {
-      console.warn("Failed to generate MVP blueprint:", err);
+    } catch (err: any) {
+      const errorMsg = err?.response?.data?.message || err?.message || "Failed to generate MVP blueprint";
+      setInputQualityError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setGenerating(false);
     }
@@ -324,6 +495,17 @@ function MvpScopePage() {
           <LinkButton to="/workspace/idea-validation" variant="primary" className="text-xs shrink-0">
             Validate Idea
           </LinkButton>
+        </div>
+      )}
+
+      {/* Input Quality Rejection Banner */}
+      {inputQualityError && (
+        <div className="flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-white shadow-lg">
+          <ShieldAlert className="size-5 shrink-0 text-rose-400 mt-0.5" />
+          <div className="space-y-1">
+            <span className="font-bold text-rose-300">Input Quality Warning:</span>
+            <p className="text-rose-200 leading-relaxed">{inputQualityError}</p>
+          </div>
         </div>
       )}
 
