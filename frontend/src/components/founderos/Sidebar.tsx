@@ -89,9 +89,9 @@ export function Sidebar({ onNavigate, onToggleCollapse }: { onNavigate?: () => v
             type="button"
             onClick={onToggleCollapse}
             title="Close sidebar"
-            className="hidden lg:flex items-center justify-center size-8 rounded-lg text-[#958ea0] hover:text-white hover:bg-white/5 transition cursor-pointer border border-white/5 shrink-0"
+            className="hidden lg:flex items-center justify-center size-8 rounded-xl border border-white/10 bg-[#101417] text-[#958ea0] hover:text-white hover:border-[#A78BFA]/50 hover:bg-[rgba(139,92,246,0.15)] transition cursor-pointer shrink-0 shadow-sm"
           >
-            <PanelLeftClose className="size-4" />
+            <PanelLeftClose className="size-4 text-[#A78BFA]" />
           </button>
         )}
       </div>
