@@ -12,6 +12,7 @@ import {
 } from "@/components/founderos/ui";
 import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, Clock, CheckCircle2, History, ArrowRight, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
+import { toast } from "sonner";
 import api from "@/lib/api";
 
 const TITLE = "MVP Scope — FounderOS";
@@ -507,7 +508,29 @@ function MvpScopePage() {
       )}
 
       <div className="flex flex-wrap gap-3 pt-4">
-        <Button onClick={() => update((v) => ({ ...v }))}>Save MVP Scope</Button>
+        <Button
+          onClick={() => {
+            if (blueprint) {
+              update((v) => ({
+                ...v,
+                mvp: {
+                  coreProblem: problemInput,
+                  job: targetUsersInput,
+                  promise: ideaInput,
+                  outcome: blueprint.coreFeatures.join(", "),
+                  buildNow: blueprint.mustHaveFeatures,
+                  later: blueprint.niceToHaveFeatures,
+                  target: "Two weeks",
+                },
+              }));
+              toast.success("MVP Scope Blueprint saved to venture memory!");
+            } else {
+              toast.info("Please generate an MVP Scope blueprint first.");
+            }
+          }}
+        >
+          Save MVP Scope
+        </Button>
         <LinkButton to="/workspace/build-roadmap" variant="primary">
           Continue to Build Roadmap
         </LinkButton>
