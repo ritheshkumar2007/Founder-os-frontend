@@ -67,7 +67,7 @@ export function Sidebar({ onNavigate, onToggleCollapse }: { onNavigate?: () => v
   };
 
   return (
-    <div className="flex h-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none border-r border-[rgba(139,92,246,0.2)]">
+    <div className="flex h-full w-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none overflow-hidden">
       {/* Brand Header with Close Sidebar Button */}
       <div className="flex items-center justify-between gap-2">
         <Link to="/" className="flex items-center gap-3 group min-w-0">

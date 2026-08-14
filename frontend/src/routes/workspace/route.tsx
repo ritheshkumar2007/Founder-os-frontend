@@ -72,11 +72,11 @@ function WorkspaceLayout() {
   if (!app.user) return null;
 
   return (
-    <div className="bg-[#020408] min-h-screen flex selection:bg-[#A78BFA]/30 selection:text-white overflow-x-hidden">
+    <div className="bg-[#020408] h-screen max-h-screen w-screen overflow-hidden flex selection:bg-[#A78BFA]/30 selection:text-white">
       {/* Desktop Collapsible Sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 border-r border-[rgba(139,92,246,0.2)] bg-[#0b0f12] lg:block transition-all duration-300 ease-in-out overflow-hidden z-20",
+          "h-full shrink-0 border-r border-[rgba(139,92,246,0.2)] bg-[#0b0f12] hidden lg:block transition-all duration-300 ease-in-out z-20 overflow-hidden",
           sidebarOpen ? "w-72 opacity-100" : "w-0 border-r-0 opacity-0 pointer-events-none"
         )}
       >
@@ -86,9 +86,9 @@ function WorkspaceLayout() {
       </aside>
       <MobileSidebar open={menu} onClose={() => setMenu(false)} />
 
-      <div className="min-w-0 flex-1 flex flex-col bg-[#020408] transition-all duration-300">
+      <div className="min-w-0 flex-1 flex flex-col h-full overflow-hidden bg-[#020408] transition-all duration-300">
         {/* Desktop OS Title Bar & Window Controls */}
-        <header className="flex items-center justify-between border-b border-[rgba(139,92,246,0.2)] bg-[#0b0f12]/95 backdrop-blur-xl px-3.5 sm:px-5 py-2.5 sm:py-3 select-none gap-2">
+        <header className="shrink-0 flex items-center justify-between border-b border-[rgba(139,92,246,0.2)] bg-[#0b0f12]/95 backdrop-blur-xl px-3.5 sm:px-5 py-2.5 sm:py-3 select-none gap-2 z-10">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Desktop Sidebar Open Toggle Button (Visible when sidebar is closed) */}
             {!sidebarOpen && (
@@ -96,7 +96,7 @@ function WorkspaceLayout() {
                 aria-label="Open sidebar"
                 title="Open sidebar"
                 onClick={toggleSidebar}
-                className="hidden lg:flex rounded-lg border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] hover:bg-[rgba(139,92,246,0.25)] p-1.5 text-[#A78BFA] hover:text-white transition items-center justify-center shrink-0 cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.25)]"
+                className="hidden lg:flex rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.15)] hover:bg-[rgba(139,92,246,0.25)] p-1.5 text-[#A78BFA] hover:text-white transition items-center justify-center shrink-0 cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.25)]"
               >
                 <PanelLeftOpen className="size-4" />
               </button>
@@ -156,13 +156,20 @@ function WorkspaceLayout() {
 
         {/* Operating System Window Workspace Content */}
         <main
-          className={
+          className={cn(
+            "flex-1 min-w-0 flex flex-col os-window-open",
             pathname === "/workspace/idea-validation"
-              ? "w-full max-w-none p-0 flex-1 os-window-open min-w-0 flex flex-col overflow-hidden"
-              : "mx-auto w-full max-w-6xl space-y-6 sm:space-y-8 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 pb-32 flex-1 os-window-open min-w-0"
-          }
+              ? "w-full max-w-none p-0 overflow-hidden"
+              : "w-full overflow-y-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 pb-32"
+          )}
         >
-          <Outlet />
+          {pathname === "/workspace/idea-validation" ? (
+            <Outlet />
+          ) : (
+            <div className="mx-auto w-full max-w-6xl space-y-6 sm:space-y-8">
+              <Outlet />
+            </div>
+          )}
         </main>
       </div>
 
