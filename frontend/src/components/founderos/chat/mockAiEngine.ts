@@ -20,35 +20,36 @@ export function generateMockAiResponse(userMessage: string, history: ChatMessage
     executionSpeed: { score: 17, max: 20, reasoning: "Core schedule aggregator can be built in 7 to 14 days." },
   };
 
-  // If thin input with almost no information, ask for the single missing piece
+  // If thin input with almost no information, ask for the single missing piece directly
   if (userMessage.trim().length < 8 && !msgLower.includes("score") && !msgLower.includes("app") && !msgLower.includes("build")) {
-    return `What is the core product you're building and who is the exact target customer experiencing the problem?`;
+    return `Give me the core product in one sentence and the exact target persona who pays for it.`;
   }
 
-  // 100-point Idea Viability Scorecard on any idea description or score inquiry
-  return `### 🏆 100-Point Idea Viability Scorecard: ${scoreVal}/100 [${tier}]
+  if (msgLower.includes("scope") || msgLower.includes("mvp") || msgLower.includes("feature")) {
+    return `Cut anything that doesn't solve the immediate customer friction point. Lock in authentication, core workflow resolution, and a single export or output action. Want me to scope your precision MVP next?`;
+  }
 
-**1. Problem & Market Need:** **${pillars.problemSeverity.score} / ${pillars.problemSeverity.max} pts**
-*${pillars.problemSeverity.reasoning}*
+  if (msgLower.includes("interview") || msgLower.includes("radar") || msgLower.includes("customer")) {
+    return `Sounds like you're at the Problem Radar stage. Ask 5 users how they solve this today and what workarounds they're paying for — if nobody is hacking together a solution right now, the pain isn't urgent enough. Once you have that signal, we'll lock down your MVP scope.`;
+  }
 
-**2. Target Market Specificity:** **${pillars.distribution.score} / ${pillars.distribution.max} pts**
-*${pillars.distribution.reasoning}*
+  if (msgLower.includes("sprint") || msgLower.includes("launch") || msgLower.includes("7-day")) {
+    return `Keep the 7-Day Build Sprint strictly bounded: Day 1-2 schemas and endpoints, Day 3-5 core UI flow, Day 6 smoke testing, Day 7 direct distribution to 10 pilot users. Defer all secondary dashboard widgets to post-launch.`;
+  }
 
-**3. Competitive Differentiation:** **${pillars.unfairAdvantage.score} / ${pillars.unfairAdvantage.max} pts**
-*${pillars.unfairAdvantage.reasoning}*
+  if (msgLower.includes("investor") || msgLower.includes("raise") || msgLower.includes("traction")) {
+    return `Investors care about verified traction velocity: weekly active usage and customer willingness to pay. Lock down 10 reference users on your live build before generating the pitch brief and opening your data room.`;
+  }
 
-**4. Feasibility of 7-Day MVP:** **${pillars.executionSpeed.score} / ${pillars.executionSpeed.max} pts**
-*${pillars.executionSpeed.reasoning}*
+  // 100-point Idea Viability Scorecard on idea description or score inquiry
+  return `### 100-Point Idea Viability Scorecard: ${scoreVal}/100 [${tier}]
 
-**5. Monetization Potential:** **${pillars.willingnessToPay.score} / ${pillars.willingnessToPay.max} pts**
-*${pillars.willingnessToPay.reasoning}*
+- **Problem & Market Need:** ${pillars.problemSeverity.score}/${pillars.problemSeverity.max} pts — ${pillars.problemSeverity.reasoning}
+- **Target Specificity & Distribution:** ${pillars.distribution.score}/${pillars.distribution.max} pts — ${pillars.distribution.reasoning}
+- **Competitive Advantage:** ${pillars.unfairAdvantage.score}/${pillars.unfairAdvantage.max} pts — ${pillars.unfairAdvantage.reasoning}
+- **7-Day MVP Feasibility:** ${pillars.executionSpeed.score}/${pillars.executionSpeed.max} pts — ${pillars.executionSpeed.reasoning}
+- **Willingness to Pay:** ${pillars.willingnessToPay.score}/${pillars.willingnessToPay.max} pts — ${pillars.willingnessToPay.reasoning}
 
----
-
-### ⚠️ Core Risk & Critical Gap
-Study planner and productivity apps operate in a crowded market with high student price sensitivity — if users must type assignments manually, retention drops severely by Week 2.
-
----
-
-**Next Step:** Want me to scope the 7-day MVP feature set next?`;
+**Primary Risk:** High friction in manual data entry will kill retention by Week 2.
+**Next Action:** Sounds like you're ready for the Precision MVP Scope — want me to scope your zero-bloat feature set?`;
 }

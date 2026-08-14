@@ -44,11 +44,11 @@ function AIFounderPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const SUGGESTED_QUESTIONS = [
-    "Should I change my MVP scope?",
-    "How can I get my first 100 paying users?",
-    "Is my startup ready for investors?",
-    "What should I build next?",
-    "Analyze my growth problems and churn.",
+    "Where is my biggest risk right now?",
+    "How should I test willingness-to-pay?",
+    "Which features should I cut from my MVP?",
+    "What should I execute in my 7-day sprint?",
+    "How do I set up my investor data room?",
   ];
 
   useEffect(() => {
@@ -115,9 +115,9 @@ function AIFounderPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Central Command"
-        title="FounderOS AI Co-Founder"
-        description="Strategic AI partner holding real-time memory across your Validation, MVP Scope, Roadmap, Marketing, Launch, Traction, and Investor updates."
+        eyebrow="Mission Control"
+        title="FounderOS AI Copilot"
+        description="Embedded ops officer holding real-time context across your Validation, Problem Radar, MVP Scope, 7-Day Sprint, and Investor Traction."
         right={
           <button
             onClick={() => loadHistory()}
@@ -136,7 +136,7 @@ function AIFounderPage() {
           {/* Component 3: Suggested Questions */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] font-mono text-[#A78BFA] flex items-center gap-1">
-              <HelpCircle className="size-3.5" /> Prompts:
+              <HelpCircle className="size-3.5" /> Directives:
             </span>
             {SUGGESTED_QUESTIONS.map((q, i) => (
               <button
@@ -155,9 +155,9 @@ function AIFounderPage() {
             {messages.length === 0 && !loadingHistory && (
               <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center space-y-3">
                 <Bot className="size-10 text-[#A78BFA]" />
-                <h3 className="text-sm font-bold text-white">I am your FounderOS AI Co-Founder</h3>
+                <h3 className="text-sm font-bold text-white">AI Copilot Standing By</h3>
                 <p className="text-xs text-[#cbc3d7] max-w-md">
-                  I have analyzed your 7 active startup workspaces. Ask me strategic questions about your MVP, marketing strategy, user retention, or investor readiness.
+                  Holding active context across all FounderOS modules. Ask for sharp feedback on customer validation, scope reduction, or your 7-day sprint roadmap.
                 </p>
               </div>
             )}

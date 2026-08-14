@@ -67,7 +67,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {isAssistant && (
           <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#A78BFA] mb-2 font-medium">
             <Sparkles className="size-3" />
-            <span>FOUNDEROS AI CO-FOUNDER</span>
+            <span>FOUNDEROS AI COPILOT</span>
           </div>
         )}
 

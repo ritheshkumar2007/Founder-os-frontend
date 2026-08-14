@@ -22,18 +22,17 @@ const PAGE_LABELS: Record<string, string> = {
 
 const SUGGESTIONS: Record<string, string[]> = {
   "Idea Validation": [
-    "Sharpen my problem statement",
-    "Is my riskiest assumption testable?",
-    "Write a warmer outreach message",
-    "How do I find 5 people to interview?",
-    "What do my interviews really say?",
+    "Where is my biggest risk?",
+    "How should I test willingness-to-pay?",
+    "How do I find 5 target users to interview?",
+    "What do my interviews really prove?",
   ],
-  "MVP Scope": ["Which features should I cut?", "Is my MVP promise clear?"],
-  "Build Roadmap": ["Break milestone one into tasks", "Am I scoping two weeks realistically?"],
-  "Marketing Plan": ["Improve my landing headline", "Where do my customers hang out?"],
-  "Launch Sprint": ["Plan day 3 outreach", "How do I get 5 users to try it?"],
-  "Traction": ["What should I focus on next?", "Are my conversion rates healthy?"],
-  "Investor Update": ["Tighten my key learnings", "What milestone should I commit to?"],
+  "MVP Scope": ["Which features should I cut?", "Is my MVP promise clear and zero-bloat?"],
+  "Build Roadmap": ["Break phase one into shippable tasks", "Am I scoping two weeks realistically?"],
+  "Marketing Plan": ["Sharpen my value proposition", "Where do my target users hang out?"],
+  "Launch Sprint": ["Plan day 1-2 API boundaries", "How do I get 5 users testing by day 7?"],
+  "Traction": ["What metric should I focus on next?", "Are my conversion benchmarks healthy?"],
+  "Investor Update": ["Tighten my key learnings", "What milestones should I commit to?"],
 };
 
 export function ChatDock() {
@@ -178,9 +177,9 @@ export function ChatDock() {
                 <div className="grid size-12 place-items-center rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA]">
                   <Sparkles className="size-6 text-[#A78BFA]" />
                 </div>
-                <h4 className="text-sm font-bold text-white">AI Co-Founder Connected</h4>
+                <h4 className="text-sm font-bold text-white">AI Copilot Connected</h4>
                 <p className="text-xs text-[#cbc3d7] max-w-[260px]">
-                  Ask questions about <span className="text-[#A78BFA] font-semibold">{page}</span> or request strategic startup advice.
+                  Direct, zero-bloat advice for <span className="text-[#A78BFA] font-semibold">{page}</span>. Let's lock in your next action.
                 </p>
               </div>
             ) : (

@@ -12,15 +12,11 @@ import { generateMockAiResponse } from "./mockAiEngine";
 import { deriveIdeaScore } from "@/lib/founderos/derive";
 import api from "@/lib/api";
 
-const INITIAL_GREETING_CONTENT = `Hi! I'm your FounderOS AI Coach.
+const INITIAL_GREETING_CONTENT = `FounderOS AI Copilot online.
 
-I'm here to help you validate your startup and turn it into a successful business.
+I hold live context across your startup workflow — validation, MVP scoping, sprint execution, and investor traction.
 
-Instead of filling out forms, just tell me about your idea.
-
-Let's begin.
-
-What are you building?`;
+Tell me what you're building and who experiences the core problem.`;
 
 export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();
