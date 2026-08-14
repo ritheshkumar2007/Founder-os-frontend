@@ -1,6 +1,6 @@
 {
   "name": "founderos-platform",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "FounderOS - AI-Powered Co-Founder Platform",
   "main": "frontend/backend/src/server.js",
   "scripts": {
