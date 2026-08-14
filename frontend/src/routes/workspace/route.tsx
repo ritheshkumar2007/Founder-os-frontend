@@ -111,13 +111,6 @@ function WorkspaceLayout() {
               <Menu className="size-4" />
             </button>
 
-            {/* Window Controls */}
-            <div className="hidden sm:flex items-center gap-2 mr-2 shrink-0">
-              <span className="size-2.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
-              <span className="size-2.5 rounded-full bg-[#8B5CF6]/60 border border-[rgba(139,92,246,0.4)]" />
-              <span className="size-2.5 rounded-full bg-[#1c2023] border border-white/10" />
-            </div>
-
             {/* Window Title */}
             <div className="flex items-center gap-2 min-w-0">
               <span className="font-mono text-xs font-medium text-white bg-[#101417] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-md shadow-inner truncate">
