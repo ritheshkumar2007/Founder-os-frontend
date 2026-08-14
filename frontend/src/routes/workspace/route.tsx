@@ -45,36 +45,36 @@ function WorkspaceLayout() {
 
       <div className="min-w-0 flex-1 flex flex-col bg-[#020408]">
         {/* Desktop OS Title Bar & Window Controls */}
-        <header className="flex items-center justify-between border-b border-[rgba(139,92,246,0.2)] bg-[#0b0f12]/95 backdrop-blur-xl px-5 py-3 select-none">
-          <div className="flex items-center gap-3">
+        <header className="flex items-center justify-between border-b border-[rgba(139,92,246,0.2)] bg-[#0b0f12]/95 backdrop-blur-xl px-3.5 sm:px-5 py-2.5 sm:py-3 select-none gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Mobile Menu Trigger */}
             <button
               aria-label="Open navigation"
               onClick={() => setMenu(true)}
-              className="lg:hidden rounded-lg border border-white/10 p-2 text-[#958ea0] hover:text-white hover:bg-white/5"
+              className="lg:hidden rounded-lg border border-white/10 p-2 text-[#958ea0] hover:text-white hover:bg-white/5 min-w-[38px] min-h-[38px] flex items-center justify-center shrink-0"
             >
               <Menu className="size-4" />
             </button>
 
             {/* Window Controls */}
-            <div className="hidden sm:flex items-center gap-2 mr-2">
+            <div className="hidden sm:flex items-center gap-2 mr-2 shrink-0">
               <span className="size-2.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
               <span className="size-2.5 rounded-full bg-[#8B5CF6]/60 border border-[rgba(139,92,246,0.4)]" />
               <span className="size-2.5 rounded-full bg-[#1c2023] border border-white/10" />
             </div>
 
             {/* Window Title */}
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-medium text-white bg-[#101417] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-md shadow-inner">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="font-mono text-xs font-medium text-white bg-[#101417] border border-[rgba(139,92,246,0.3)] px-2.5 py-1 rounded-md shadow-inner truncate">
                 {activeAppName}
               </span>
-              <span className="hidden md:inline text-[11px] font-mono text-[#958ea0]">
+              <span className="hidden md:inline text-[11px] font-mono text-[#958ea0] truncate">
                 — FounderOS Startup OS
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* User Session Badge */}
             <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#cbc3d7] bg-[#101417] border border-[rgba(139,92,246,0.2)] px-3 py-1 rounded-full">
               <ShieldCheck className="size-3.5 text-[#A78BFA]" />
@@ -82,16 +82,17 @@ function WorkspaceLayout() {
             </div>
 
             {/* Auto-Save Status Badge */}
-            <div className="flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] shadow-sm">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono px-2.5 sm:px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] shadow-sm">
               {app.saveStatus === "saving" ? (
                 <>
-                  <Loader2 className="size-3.5 animate-spin text-[#A78BFA]" />
+                  <Loader2 className="size-3 sm:size-3.5 animate-spin text-[#A78BFA]" />
                   <span className="text-[#A78BFA] font-medium">Saving...</span>
                 </>
               ) : (
                 <>
-                  <span className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] animate-pulse" />
-                  <span className="text-white font-medium">Auto-Saved</span>
+                  <span className="size-1.5 sm:size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA] animate-pulse" />
+                  <span className="text-white font-medium hidden xs:inline">Auto-Saved</span>
+                  <span className="text-white font-medium xs:hidden">Saved</span>
                 </>
               )}
             </div>
@@ -99,7 +100,7 @@ function WorkspaceLayout() {
         </header>
 
         {/* Operating System Window Workspace Content */}
-        <main className="mx-auto w-full max-w-6xl space-y-8 px-5 py-8 pb-32 sm:px-8 sm:py-10 flex-1 os-window-open">
+        <main className="mx-auto w-full max-w-6xl space-y-6 sm:space-y-8 px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10 pb-32 flex-1 os-window-open min-w-0">
           <Outlet />
         </main>
       </div>

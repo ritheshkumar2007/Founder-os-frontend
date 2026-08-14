@@ -188,6 +188,11 @@
     font-family: "JetBrains Mono", monospace;
   }
 
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    max-width: 100%;
+  }
+
   .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
     font-weight: normal;
@@ -202,6 +207,18 @@
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Responsive typography scaling for fluid headlines on narrow viewports */
+  @media (max-width: 640px) {
+    .text-display-lg {
+      font-size: 2.25rem !important;
+      line-height: 2.75rem !important;
+    }
+    .text-headline-lg {
+      font-size: 1.75rem !important;
+      line-height: 2.25rem !important;
+    }
   }
 }
 
@@ -341,6 +358,18 @@
   .marquee-mask {
     mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
   }
 }
 

@@ -132,18 +132,18 @@ function AIFounderPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Chat Area (2 Columns) */}
-        <div className="lg:col-span-2 space-y-4 flex flex-col h-[750px]">
+        <div className="lg:col-span-2 space-y-4 flex flex-col h-[520px] sm:h-[620px] lg:h-[750px]">
           {/* Component 3: Suggested Questions */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] font-mono text-[#A78BFA] flex items-center gap-1">
-              <HelpCircle className="size-3.5" /> Suggested Prompts:
+              <HelpCircle className="size-3.5" /> Prompts:
             </span>
             {SUGGESTED_QUESTIONS.map((q, i) => (
               <button
                 key={i}
                 onClick={() => void handleSendMessage(q)}
                 disabled={sending}
-                className="text-[11px] text-[#cbc3d7] bg-[#101417] hover:bg-[rgba(139,92,246,0.15)] hover:text-[#A78BFA] hover:border-[rgba(139,92,246,0.4)] px-3 py-1 rounded-xl border border-white/5 transition text-left disabled:opacity-50 cursor-pointer"
+                className="text-[11px] text-[#cbc3d7] bg-[#101417] hover:bg-[rgba(139,92,246,0.15)] hover:text-[#A78BFA] hover:border-[rgba(139,92,246,0.4)] px-2.5 sm:px-3 py-1 rounded-xl border border-white/5 transition text-left disabled:opacity-50 cursor-pointer"
               >
                 {q}
               </button>
@@ -151,9 +151,9 @@ function AIFounderPage() {
           </div>
 
           {/* Component 1: AI Chat Window */}
-          <div className="flex-1 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-4 overflow-y-auto space-y-4 shadow-2xl">
+          <div className="flex-1 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] p-3.5 sm:p-4 overflow-y-auto space-y-3.5 sm:space-y-4 shadow-2xl">
             {messages.length === 0 && !loadingHistory && (
-              <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
+              <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-center space-y-3">
                 <Bot className="size-10 text-[#A78BFA]" />
                 <h3 className="text-sm font-bold text-white">I am your FounderOS AI Co-Founder</h3>
                 <p className="text-xs text-[#cbc3d7] max-w-md">
@@ -165,18 +165,18 @@ function AIFounderPage() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex gap-3 text-xs ${
+                className={`flex gap-2.5 sm:gap-3 text-xs ${
                   msg.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 {msg.role === "assistant" && (
-                  <div className="size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(139,92,246,0.4)]">
-                    <Bot className="size-4 text-black" />
+                  <div className="size-7 sm:size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(139,92,246,0.4)]">
+                    <Bot className="size-3.5 sm:size-4 text-black" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[85%] rounded-2xl p-4 whitespace-pre-wrap leading-relaxed shadow-sm ${
+                  className={`max-w-[90%] sm:max-w-[85%] rounded-2xl p-3 sm:p-4 whitespace-pre-wrap leading-relaxed shadow-sm break-words overflow-hidden ${
                     msg.role === "user"
                       ? "bg-[#A78BFA] text-black font-semibold"
                       : "bg-[#101417] border border-white/5 text-white"
@@ -186,8 +186,8 @@ function AIFounderPage() {
                 </div>
 
                 {msg.role === "user" && (
-                  <div className="size-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white">
-                    <User className="size-4" />
+                  <div className="size-7 sm:size-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white">
+                    <User className="size-3.5 sm:size-4" />
                   </div>
                 )}
               </div>
@@ -195,13 +195,13 @@ function AIFounderPage() {
 
             {/* AI Thinking Animation */}
             {sending && (
-              <div className="flex gap-3 text-xs justify-start">
-                <div className="size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 animate-pulse">
-                  <Bot className="size-4 text-black" />
+              <div className="flex gap-2.5 sm:gap-3 text-xs justify-start">
+                <div className="size-7 sm:size-8 rounded-xl bg-[#A78BFA] flex items-center justify-center shrink-0 animate-pulse">
+                  <Bot className="size-3.5 sm:size-4 text-black" />
                 </div>
-                <div className="bg-[#101417] border border-[rgba(139,92,246,0.3)] p-4 rounded-2xl text-[#A78BFA] flex items-center gap-2 shadow-lg">
+                <div className="bg-[#101417] border border-[rgba(139,92,246,0.3)] p-3.5 sm:p-4 rounded-2xl text-[#A78BFA] flex items-center gap-2 shadow-lg">
                   <RefreshCw className="size-4 animate-spin text-[#A78BFA]" />
-                  <span className="font-mono text-xs text-white">AI Co-Founder is analyzing 7 workspace models...</span>
+                  <span className="font-mono text-xs text-white">AI Co-Founder is analyzing models...</span>
                 </div>
               </div>
             )}
@@ -215,19 +215,19 @@ function AIFounderPage() {
               e.preventDefault();
               void handleSendMessage();
             }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-2 sm:gap-3"
           >
             <input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Ask your AI Co-Founder strategic advice..."
               disabled={sending}
-              className="flex-1 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] px-4 py-3 text-xs text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] transition shadow-inner disabled:opacity-50"
+              className="flex-1 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] transition shadow-inner disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={sending || !inputMessage.trim()}
-              className="rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] p-3 text-black font-bold transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer"
+              className="rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] p-2.5 sm:p-3 text-black font-bold transition disabled:opacity-50 shadow-[0_0_15px_rgba(139,92,246,0.4)] cursor-pointer shrink-0"
             >
               <Send className="size-4" />
             </button>

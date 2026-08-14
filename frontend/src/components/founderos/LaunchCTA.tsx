@@ -13,25 +13,25 @@ export const LaunchCTA: React.FC = () => {
   };
 
   return (
-    <section className="relative py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <section className="relative py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto overflow-hidden">
       {/* Ambient Glow */}
       <div className="absolute inset-0 bg-radial-aurora rounded-3xl blur-3xl opacity-80 pointer-events-none" />
 
       {/* Main Container */}
-      <div className="glass-card relative rounded-2xl p-8 sm:p-14 text-center space-y-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="glass-card relative rounded-2xl p-5 sm:p-10 lg:p-14 text-center space-y-6 sm:space-y-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Top Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs font-mono text-[#A78BFA]">
+        <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[11px] sm:text-xs font-mono text-[#A78BFA]">
           <span className="size-2 rounded-full bg-[#A78BFA] shadow-[0_0_8px_#A78BFA]" />
           <span className="font-bold">STARTUP OPERATING SYSTEM READY</span>
         </div>
 
         {/* Headline */}
-        <div className="max-w-3xl mx-auto space-y-4">
-          <h2 className="text-4xl sm:text-5xl font-bold font-headline-lg text-white tracking-tight leading-tight">
+        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-headline-lg text-white tracking-tight leading-tight">
             Ready to Build Something <br />
             <span className="text-gradient-neural">Extraordinary?</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#cbc3d7] max-w-xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-[#cbc3d7] max-w-xl mx-auto">
             FounderOS is the operating system for building high-velocity, high-growth startups on an obsidian canvas.
           </p>
         </div>

@@ -32,7 +32,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
   const [tilt, setTilt] = useState({ rotateX: 6, rotateY: -2 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || typeof window === "undefined" || window.innerWidth < 1024) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -88,7 +88,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full max-w-6xl mx-auto transition-transform duration-300 ease-out font-sans"
+      className="relative w-full max-w-6xl mx-auto transition-transform duration-300 ease-out font-sans overflow-hidden lg:overflow-visible"
       style={{
         perspective: "1200px",
       }}
@@ -128,33 +128,33 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
       {/* Main OS Window Floating Dashboard Chassis */}
       <div
-        className="relative rounded-[24px] border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl shadow-[0_35px_90px_rgba(0,0,0,0.85)] overflow-hidden"
+        className="relative rounded-[20px] sm:rounded-[24px] border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl shadow-[0_35px_90px_rgba(0,0,0,0.85)] overflow-hidden"
         style={{
-          transform: `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+          transform: typeof window !== "undefined" && window.innerWidth >= 1024 ? `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)` : "none",
           transformStyle: "preserve-3d",
         }}
       >
         {/* Top Desktop OS Window Titlebar */}
-        <div className="flex flex-wrap items-center justify-between px-6 py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]" style={{ transform: "translateZ(20px)" }}>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <div className="size-3 rounded-full bg-[#313538]" />
-              <div className="size-3 rounded-full bg-[#262a2e]" />
-              <div className="size-3 rounded-full bg-[#A78BFA]" />
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="size-2.5 sm:size-3 rounded-full bg-[#313538]" />
+              <div className="size-2.5 sm:size-3 rounded-full bg-[#262a2e]" />
+              <div className="size-2.5 sm:size-3 rounded-full bg-[#A78BFA]" />
             </div>
-            <div className="h-4 w-px bg-white/10" />
-            <div className="flex items-center gap-2 text-xs font-sans text-white">
-              <Rocket className="size-3.5 text-[#A78BFA]" />
-              <span className="font-semibold tracking-wide">FOUNDEROS WORKSPACE</span>
-              <span className="text-white/30">/</span>
-              <span className="text-[#A78BFA] font-medium">Idea Validation.app</span>
+            <div className="h-4 w-px bg-white/10 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-sans text-white truncate">
+              <Rocket className="size-3.5 text-[#A78BFA] shrink-0" />
+              <span className="font-semibold tracking-wide truncate">FOUNDEROS</span>
+              <span className="text-white/30 hidden sm:inline">/</span>
+              <span className="text-[#A78BFA] font-medium hidden sm:inline">Idea Validation.app</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-sans">
-            <div className="flex items-center gap-2 text-[#cbc3d7]">
+          <div className="flex items-center gap-3 sm:gap-4 text-xs font-sans">
+            <div className="hidden sm:flex items-center gap-2 text-[#cbc3d7]">
               <Activity className="size-3.5 text-[#A78BFA] animate-pulse" />
-              <span>APP MODULE: <strong className="text-white font-mono">01 / 07</strong></span>
+              <span>APP: <strong className="text-white font-mono">01/07</strong></span>
             </div>
             <div className="px-2.5 py-1 rounded-md bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] text-[#A78BFA] font-medium text-[11px] flex items-center gap-1.5">
               <span className="size-1.5 rounded-full bg-[#A78BFA] animate-pulse" />
@@ -229,15 +229,15 @@ export const InteractiveHeroDashboard: React.FC = () => {
           </div>
 
           {/* Main Workspace Terminal Area */}
-          <div className="lg:col-span-9 flex flex-col justify-between p-6 bg-[#0b0f12]" style={{ transform: "translateZ(45px)" }}>
+          <div className="lg:col-span-9 flex flex-col justify-between p-4 sm:p-6 bg-[#0b0f12]">
             {/* View Switcher Tabs */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 sm:pb-4 gap-2">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 {[
-                  { id: "ai", label: "AI Copilot Terminal", icon: Terminal },
-                  { id: "validation", label: "Problem Radar", icon: Activity },
-                  { id: "sprint", label: "7-Day Sprint Deck", icon: Zap },
-                  { id: "investor", label: "Traction Telemetry", icon: BarChart3 },
+                  { id: "ai", label: "AI Copilot", fullLabel: "AI Copilot Terminal", icon: Terminal },
+                  { id: "validation", label: "Problem Radar", fullLabel: "Problem Radar", icon: Activity },
+                  { id: "sprint", label: "7-Day Sprint", fullLabel: "7-Day Sprint Deck", icon: Zap },
+                  { id: "investor", label: "Traction", fullLabel: "Traction Telemetry", icon: BarChart3 },
                 ].map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -245,29 +245,30 @@ export const InteractiveHeroDashboard: React.FC = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id as any)}
-                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-sans font-medium transition-all cursor-pointer ${
+                      className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-sans font-medium transition-all cursor-pointer ${
                         isActive
                           ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)]"
                           : "bg-[#101417] border border-white/[0.08] text-[#cbc3d7] hover:text-white hover:border-white/20"
                       }`}
                     >
-                      <Icon className="size-3.5" />
-                      <span>{tab.label}</span>
+                      <Icon className="size-3.5 shrink-0" />
+                      <span className="sm:hidden">{tab.label}</span>
+                      <span className="hidden sm:inline">{tab.fullLabel}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="hidden sm:flex items-center gap-2 text-xs font-sans font-semibold text-[#A78BFA]">
+              <div className="hidden md:flex items-center gap-2 text-xs font-sans font-semibold text-[#A78BFA] shrink-0">
                 <Sparkles className="size-3.5 text-[#A78BFA]" />
-                <span>NEURAL ENGINE ACTIVE</span>
+                <span>NEURAL ENGINE</span>
               </div>
             </div>
 
             {/* Tab 1: AI Copilot Console */}
             {activeTab === "ai" && (
-              <div className="my-5 flex-1 flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#020408] p-5">
-                <div className="space-y-2 font-mono text-xs text-[#A78BFA] overflow-y-auto max-h-[220px] scrollbar-thin">
+              <div className="my-4 sm:my-5 flex-1 flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#020408] p-3.5 sm:p-5">
+                <div className="space-y-2 font-mono text-xs text-[#A78BFA] overflow-y-auto max-h-[200px] sm:max-h-[220px] scrollbar-thin">
                   {typedOutput.map((line, idx) => (
                     <p
                       key={idx}
@@ -291,8 +292,8 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
                 {/* Prompt Quick Actions */}
                 <div className="mt-4 pt-4 border-t border-white/[0.08] space-y-3 font-sans">
-                  <div className="flex flex-wrap gap-2 text-[11px]">
-                    <span className="text-[#958ea0] py-1 font-medium">Preset Commands:</span>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 text-[10px] sm:text-[11px]">
+                    <span className="text-[#958ea0] py-1 font-medium hidden sm:inline">Preset Commands:</span>
                     {[
                       "Analyze TAM & Whitespace",
                       "Scope 7-Day MVP",
@@ -301,7 +302,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
                       <button
                         key={cmd}
                         onClick={() => runSimulationPrompt(cmd)}
-                        className="px-2.5 py-1 rounded-lg border border-white/10 bg-[#101417] text-[#cbc3d7] hover:text-white hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.15)] transition-colors font-medium cursor-pointer"
+                        className="px-2 sm:px-2.5 py-1 rounded-lg border border-white/10 bg-[#101417] text-[#cbc3d7] hover:text-white hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.15)] transition-colors font-medium cursor-pointer"
                       >
                         {cmd}
                       </button>
@@ -313,7 +314,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
                       e.preventDefault();
                       if (customPrompt.trim()) runSimulationPrompt(customPrompt);
                     }}
-                    className="flex items-center gap-2"
+                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
                   >
                     <div className="relative flex-1">
                       <Terminal className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#A78BFA]" />
@@ -321,14 +322,14 @@ export const InteractiveHeroDashboard: React.FC = () => {
                         type="text"
                         value={customPrompt}
                         onChange={(e) => setCustomPrompt(e.target.value)}
-                        placeholder="Type a command for your venture copilot (e.g. 'Calculate burn rate')..."
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-sans text-xs"
+                        placeholder="Type a command (e.g. 'Scope 7-Day MVP')..."
+                        className="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-sans text-xs"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={isSimulating}
-                      className="px-4 py-2.5 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] text-black text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer"
+                      className="px-4 py-2 sm:py-2.5 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] text-black text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
                     >
                       <Play className="size-3.5 fill-current" />
                       <span>Run</span>
@@ -340,7 +341,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
             {/* Tab 2: Validation Radar */}
             {activeTab === "validation" && (
-              <div className="my-5 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 font-sans">
+              <div className="my-4 sm:my-5 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 font-sans">
                 <div className="p-4 rounded-2xl border border-white/[0.08] bg-[#020408] space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-white font-semibold flex items-center gap-2">
@@ -384,7 +385,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
                     </p>
                   </div>
                   <div className="p-3 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] text-xs text-[#A78BFA] flex items-center gap-2">
-                    <CheckCircle2 className="size-4 text-[#A78BFA]" />
+                    <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
                     <span className="font-semibold text-white">Product-Market Fit Signal: STRONG PMF</span>
                   </div>
                 </div>
@@ -393,16 +394,16 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
             {/* Tab 3: 7-Day Sprint Flight Deck */}
             {activeTab === "sprint" && (
-              <div className="my-5 flex-1 space-y-4 font-sans">
-                <div className="flex items-center justify-between p-3.5 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] text-xs text-white">
-                  <div className="flex items-center gap-3">
-                    <Zap className="size-4 text-[#A78BFA]" />
-                    <span className="font-medium">ACTIVE SPRINT COUNTDOWN:</span>
-                    <strong className="text-[#A78BFA] text-sm font-mono tracking-widest">
-                      05 DAYS : 18 HOURS : 42 MINS
+              <div className="my-4 sm:my-5 flex-1 space-y-4 font-sans">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] text-xs text-white gap-2">
+                  <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+                    <Zap className="size-4 text-[#A78BFA] shrink-0" />
+                    <span className="font-medium">SPRINT COUNTDOWN:</span>
+                    <strong className="text-[#A78BFA] text-xs sm:text-sm font-mono tracking-wider sm:tracking-widest">
+                      05D : 18H : 42M
                     </strong>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded bg-[#A78BFA] text-black font-semibold text-[11px]">
+                  <span className="px-2.5 py-0.5 rounded bg-[#A78BFA] text-black font-semibold text-[10px] sm:text-[11px] self-start sm:self-auto">
                     ON TRACK
                   </span>
                 </div>
@@ -446,7 +447,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
             {/* Tab 4: Traction Telemetry */}
             {activeTab === "investor" && (
-              <div className="my-5 flex-1 grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans">
+              <div className="my-4 sm:my-5 flex-1 grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans">
                 {[
                   { label: "Target TAM", val: "$4.2B", change: "+14% YoY" },
                   { label: "Waitlist Traction", val: "1,840", change: "+320 this week" },
@@ -455,18 +456,18 @@ export const InteractiveHeroDashboard: React.FC = () => {
                 ].map((stat) => (
                   <div
                     key={stat.label}
-                    className="p-4 rounded-2xl border border-white/[0.08] bg-[#020408] space-y-1"
+                    className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.08] bg-[#020408] space-y-1 min-w-0"
                   >
-                    <p className="text-[10px] text-[#958ea0] uppercase font-semibold tracking-wider">{stat.label}</p>
-                    <p className="text-xl font-bold font-mono text-white">{stat.val}</p>
-                    <p className="text-[10px] text-[#A78BFA]">{stat.change}</p>
+                    <p className="text-[10px] text-[#958ea0] uppercase font-semibold tracking-wider truncate">{stat.label}</p>
+                    <p className="text-lg sm:text-xl font-bold font-mono text-white truncate">{stat.val}</p>
+                    <p className="text-[10px] text-[#A78BFA] truncate">{stat.change}</p>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Bottom Status Telemetry Footer */}
-            <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-sans text-[#cbc3d7]">
+            <div className="pt-3 border-t border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11px] font-sans text-[#cbc3d7] gap-2">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1 text-[#A78BFA] font-medium">
                   <CheckCircle2 className="size-3.5 text-[#A78BFA]" /> SYSTEM STABLE
@@ -474,7 +475,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
                 <span>•</span>
                 <span>DATA ROOM READY</span>
               </div>
-              <div className="text-[#A78BFA] font-semibold">
+              <div className="text-[#A78BFA] font-semibold text-[10px] sm:text-[11px]">
                 FOUNDEROS WORKSPACE ACTIVE
               </div>
             </div>

@@ -107,23 +107,23 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
-      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
+      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90dvh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
-          <div className="flex items-center gap-3">
-            <div className="size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)]">
-              <PieChart className="size-5" />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="size-8 sm:size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)] shrink-0">
+              <PieChart className="size-4 sm:size-5" />
             </div>
-            <div>
-              <h3 className="font-display text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <div className="min-w-0">
+              <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2 truncate">
                 Fully Diluted Cap Table
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
-                  VERIFIED AUDIT
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] shrink-0">
+                  AUDITED
                 </span>
               </h3>
-              <p className="text-xs font-mono text-[#cbc3d7]/70">
-                Entity: {ventureName || "Active Venture"} • Total Authorized: 10,000,000 Shares
+              <p className="text-[10px] sm:text-xs font-mono text-[#cbc3d7]/70 truncate">
+                {ventureName || "Active Venture"} • 10,000,000 Total Shares
               </p>
             </div>
           </div>
@@ -136,12 +136,12 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
         </div>
 
         {/* Ownership Distribution Bar */}
-        <div className="px-6 py-4 border-b border-white/5 bg-[#101417]/50 space-y-2">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 bg-[#101417]/50 space-y-2">
           <div className="flex justify-between items-center text-xs font-mono">
-            <span className="text-[#958ea0]">Equity Allocation Breakdown:</span>
+            <span className="text-[#958ea0]">Equity Allocation:</span>
             <span className="text-white font-bold">100.0% Allocated</span>
           </div>
-          <div className="w-full h-3 rounded-full overflow-hidden flex border border-white/10">
+          <div className="w-full h-2.5 sm:h-3 rounded-full overflow-hidden flex border border-white/10">
             {SAMPLE_SHAREHOLDERS.map((s) => (
               <div
                 key={s.id}
@@ -151,7 +151,7 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
               />
             ))}
           </div>
-          <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-mono">
+          <div className="flex flex-wrap gap-2.5 sm:gap-3 pt-1 text-[10px] sm:text-[11px] font-mono">
             {SAMPLE_SHAREHOLDERS.map((s) => (
               <div key={s.id} className="flex items-center gap-1.5">
                 <span className="size-2 rounded-full" style={{ backgroundColor: s.color }} />
@@ -163,8 +163,8 @@ export const CapTableModal: React.FC<CapTableModalProps> = ({
         </div>
 
         {/* Table Body */}
-        <div className="p-6 overflow-y-auto flex-1">
-          <div className="rounded-xl border border-white/10 overflow-hidden bg-[#0e131c]">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
+          <div className="rounded-xl border border-white/10 overflow-x-auto bg-[#0e131c]">
             <table className="w-full text-left text-xs font-mono">
               <thead className="bg-[#181c1f] text-[#958ea0] border-b border-white/10">
                 <tr>

@@ -57,7 +57,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
       {/* Message Container */}
       <div
-        className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 sm:p-5 text-sm transition-all shadow-md ${
+        className={`max-w-[92%] sm:max-w-[80%] rounded-2xl p-3.5 sm:p-5 text-xs sm:text-sm transition-all shadow-md break-words overflow-hidden ${
           isAssistant
             ? "rounded-tl-sm border border-[rgba(139,92,246,0.3)] bg-[#101417]/90 backdrop-blur-xl text-white shadow-[0_10px_25px_rgba(0,0,0,0.5)]"
             : "rounded-tr-sm bg-[#A78BFA] text-black font-medium shadow-[0_4px_20px_rgba(139,92,246,0.35)]"

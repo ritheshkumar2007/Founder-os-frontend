@@ -235,21 +235,21 @@ function MvpScopePage() {
         title="MVP Scope Architect"
         description="Transform customer pain into a 12-part technical MVP blueprint, ruthless feature prioritization, and realistic 2-week launch milestones."
         right={
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {history.length > 0 && (
-              <div className="flex items-center gap-1.5 bg-[#101417] px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
+              <div className="flex items-center gap-1.5 bg-[#101417] px-2.5 sm:px-3 py-1.5 rounded-xl border border-[rgba(139,92,246,0.3)] text-xs text-[#cbc3d7]">
                 <History className="size-3.5 text-[#A78BFA]" />
-                <span className="font-mono text-xs text-white">{history.length} Generations Saved</span>
+                <span className="font-mono text-xs text-white">{history.length} Saved</span>
               </div>
             )}
 
             <button
               onClick={() => void handleGenerateMvpBlueprint()}
               disabled={generating}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A78BFA] hover:bg-[#bfa8ff] px-3.5 sm:px-4 py-2 text-xs font-bold text-black transition shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`size-4 ${generating ? "animate-spin text-black" : ""}`} />
-              {generating ? "Generating Blueprint..." : "Generate MVP Blueprint"}
+              <span>{generating ? "Generating..." : "Generate MVP Blueprint"}</span>
             </button>
           </div>
         }

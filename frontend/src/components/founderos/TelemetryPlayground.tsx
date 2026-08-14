@@ -62,30 +62,30 @@ export const TelemetryPlayground: React.FC = () => {
   };
 
   return (
-    <section id="simulator" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="simulator" className="relative py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
       {/* Background Neon Laser Grid & Radar */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[650px] bg-[rgba(139,92,246,0.15)] rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[320px] sm:size-[650px] bg-[rgba(139,92,246,0.15)] rounded-full blur-[100px] sm:blur-[150px] pointer-events-none" />
 
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
+      <div className="text-center max-w-3xl mx-auto space-y-4 mb-10 sm:mb-16 relative z-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.1)] text-xs font-mono text-[#A78BFA]">
           <Terminal className="size-3.5 text-[#A78BFA]" />
           <span>INTERACTIVE AI SIMULATOR</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
+        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight">
           Test Your Venture Idea in <br />
           <span className="text-gradient-neural">FounderOS Real-Time AI</span>
         </h2>
-        <p className="text-base text-[#cbc3d7]">
+        <p className="text-sm sm:text-base text-[#cbc3d7] max-w-2xl mx-auto leading-relaxed">
           Enter your startup idea below to experience how FounderOS generates instant TAM analysis, validation scores, and 7-day launch blueprints.
         </p>
       </div>
 
       {/* Playground Console Container */}
-      <div className="glass-card p-6 sm:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl relative z-10 space-y-8 shadow-[0_0_60px_rgba(139,92,246,0.15)] rounded-3xl">
+      <div className="glass-card p-4 sm:p-8 lg:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl relative z-10 space-y-6 sm:space-y-8 shadow-[0_0_60px_rgba(139,92,246,0.15)] rounded-2xl sm:rounded-3xl">
         {/* Preset Chips */}
         <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-          <span className="text-[#958ea0] mr-2">Try sample ideas:</span>
+          <span className="text-[#958ea0] mr-2 w-full sm:w-auto">Try sample ideas:</span>
           {PRESETS.map((preset) => (
             <button
               key={preset.label}
@@ -93,7 +93,7 @@ export const TelemetryPlayground: React.FC = () => {
                 setIdeaText(preset.prompt);
                 handleSimulate(preset.prompt);
               }}
-              className="px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[#A78BFA] hover:border-[#A78BFA] hover:bg-[rgba(139,92,246,0.15)] transition-all font-semibold shadow-[0_0_10px_rgba(139,92,246,0.15)] cursor-pointer"
+              className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[#A78BFA] hover:border-[#A78BFA] hover:bg-[rgba(139,92,246,0.15)] transition-all font-semibold shadow-[0_0_10px_rgba(139,92,246,0.15)] cursor-pointer text-xs"
             >
               {preset.label}
             </button>
@@ -101,19 +101,19 @@ export const TelemetryPlayground: React.FC = () => {
         </div>
 
         {/* Console Input Bar */}
-        <div className="relative">
+        <div className="relative space-y-3">
           <textarea
             value={ideaText}
             onChange={(e) => setIdeaText(e.target.value)}
             rows={3}
             placeholder="Describe your venture idea (e.g., 'An AI agent platform that automates customer support for Shopify stores')..."
-            className="w-full p-4 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-mono text-sm resize-none shadow-[inset_0_0_20px_rgba(139,92,246,0.1)]"
+            className="w-full p-3.5 sm:p-4 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408] text-white placeholder-[#958ea0] focus:outline-none focus:border-[#A78BFA] font-mono text-xs sm:text-sm resize-none shadow-[inset_0_0_20px_rgba(139,92,246,0.1)]"
           />
-          <div className="mt-3 flex justify-end">
+          <div className="flex justify-end">
             <button
               onClick={() => handleSimulate()}
               disabled={isGenerating || !ideaText.trim()}
-              className="px-6 py-3.5 rounded-xl text-sm font-extrabold disabled:opacity-50 flex items-center gap-2 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black shadow-[0_0_30px_rgba(139,92,246,0.4)] transition cursor-pointer"
+              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-extrabold disabled:opacity-50 flex items-center justify-center gap-2 bg-[#A78BFA] hover:bg-[#bfa8ff] text-black shadow-[0_0_30px_rgba(139,92,246,0.4)] transition cursor-pointer"
             >
               {isGenerating ? (
                 <>
@@ -132,30 +132,30 @@ export const TelemetryPlayground: React.FC = () => {
 
         {/* Live Output Simulation Window */}
         {result && (
-          <div className="p-6 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408]/95 space-y-6 animate-fade-in font-mono shadow-[0_0_40px_rgba(139,92,246,0.2)]">
-            <div className="flex flex-wrap items-center justify-between border-b border-white/[0.08] pb-4">
-              <div className="flex items-center gap-3">
-                <span className="size-3 rounded-full bg-[#A78BFA] animate-ping shadow-[0_0_10px_#A78BFA]" />
-                <span className="text-white font-bold text-lg">{result.ventureName}</span>
-                <span className="text-xs px-2.5 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
+          <div className="p-4 sm:p-6 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#020408]/95 space-y-5 sm:space-y-6 animate-fade-in font-mono shadow-[0_0_40px_rgba(139,92,246,0.2)]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/[0.08] pb-4 gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span className="size-2.5 sm:size-3 rounded-full bg-[#A78BFA] animate-ping shadow-[0_0_10px_#A78BFA]" />
+                <span className="text-white font-bold text-base sm:text-lg">{result.ventureName}</span>
+                <span className="text-[10px] sm:text-xs px-2.5 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] font-bold">
                   {result.category}
                 </span>
               </div>
               <div className="text-xs text-[#A78BFA] font-bold">
-                VALIDATION CONFIDENCE: <strong className="text-white text-sm">{result.validationScore} / 100</strong>
+                CONFIDENCE: <strong className="text-white text-sm">{result.validationScore} / 100</strong>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-xs">
               {/* Box 1 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-3.5 sm:p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-1.5">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Market Velocity & TAM</p>
-                <p className="text-xl font-bold text-white">{result.tam}</p>
-                <p className="text-[11px] text-[#A78BFA]">High buyer willingness-to-pay index</p>
+                <p className="text-lg sm:text-xl font-bold text-white">{result.tam}</p>
+                <p className="text-[10px] sm:text-[11px] text-[#A78BFA]">High buyer willingness-to-pay</p>
               </div>
 
               {/* Box 2 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-3.5 sm:p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-1.5">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Competitor Whitespace</p>
                 <div className="flex flex-wrap gap-1">
                   {result.targetCompetitors.map((comp) => (
@@ -164,14 +164,14 @@ export const TelemetryPlayground: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <p className="text-[11px] text-[#cbc3d7]">Key Unfair Advantage: 4.8x faster</p>
+                <p className="text-[10px] sm:text-[11px] text-[#cbc3d7]">Unfair Advantage: 4.8x faster</p>
               </div>
 
               {/* Box 3 */}
-              <div className="p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-2">
+              <div className="p-3.5 sm:p-4 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] space-y-1.5 sm:col-span-2 md:col-span-1">
                 <p className="text-[#958ea0] uppercase tracking-wider text-[10px]">Recommended Sprint</p>
-                <p className="text-base font-bold text-[#A78BFA]">{result.launchTimeline}</p>
-                <p className="text-[11px] text-[#cbc3d7]">3 Core Features max to ship</p>
+                <p className="text-sm sm:text-base font-bold text-[#A78BFA]">{result.launchTimeline}</p>
+                <p className="text-[10px] sm:text-[11px] text-[#cbc3d7]">3 Core Features max to ship</p>
               </div>
             </div>
 
@@ -182,7 +182,7 @@ export const TelemetryPlayground: React.FC = () => {
                 {result.mvpScope.map((item, idx) => (
                   <div key={idx} className="p-3 rounded-xl border border-white/[0.08] bg-[#101417] flex items-center gap-2 text-xs text-white">
                     <CheckCircle2 className="size-4 text-[#A78BFA] shrink-0" />
-                    <span>{item}</span>
+                    <span className="truncate">{item}</span>
                   </div>
                 ))}
               </div>
@@ -191,7 +191,7 @@ export const TelemetryPlayground: React.FC = () => {
             <div className="pt-2 flex justify-end">
               <a
                 href="/signin"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold bg-[#A78BFA] hover:bg-[#bfa8ff] text-black transition cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold bg-[#A78BFA] hover:bg-[#bfa8ff] text-black transition cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)]"
               >
                 <span>Launch This Venture in FounderOS</span>
                 <ArrowRight className="size-3.5 text-black" />

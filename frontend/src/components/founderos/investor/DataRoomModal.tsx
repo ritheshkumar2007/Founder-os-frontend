@@ -115,23 +115,23 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
-      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#020408]/85 backdrop-blur-xl animate-fade-in select-none">
+      <div className="w-full max-w-4xl rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] text-[#e0e3e7] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_35px_rgba(139,92,246,0.2)] overflow-hidden flex flex-col max-h-[90dvh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
-          <div className="flex items-center gap-3">
-            <div className="size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)]">
-              <FolderLock className="size-5" />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[rgba(139,92,246,0.25)] bg-[#101417]">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="size-8 sm:size-9 rounded-xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] flex items-center justify-center text-[#A78BFA] shadow-[0_0_12px_rgba(139,92,246,0.3)] shrink-0">
+              <FolderLock className="size-4 sm:size-5" />
             </div>
-            <div>
-              <h3 className="font-display text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <div className="min-w-0">
+              <h3 className="font-display text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2 truncate">
                 Virtual Data Room
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)]">
-                  ENCRYPTED AES-256
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.3)] shrink-0">
+                  AES-256
                 </span>
               </h3>
-              <p className="text-xs font-mono text-[#cbc3d7]/70">
-                Secure investor diligence vault for {ventureName || "Active Venture"}
+              <p className="text-[10px] sm:text-xs font-mono text-[#cbc3d7]/70 truncate">
+                Diligence vault for {ventureName || "Active Venture"}
               </p>
             </div>
           </div>
@@ -144,13 +144,13 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="px-6 py-3 border-b border-white/5 bg-[#101417]/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2 overflow-x-auto">
+        <div className="px-4 sm:px-6 py-3 border-b border-white/5 bg-[#101417]/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5">
             {categories.map((c) => (
               <button
                 key={c}
                 onClick={() => setSelectedCategory(c)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer shrink-0 ${
                   selectedCategory === c
                     ? "bg-[#A78BFA] text-black font-bold shadow-[0_0_10px_rgba(139,92,246,0.4)]"
                     : "bg-[#181c1f] text-[#cbc3d7] hover:text-white border border-white/5"
@@ -174,7 +174,7 @@ export const DataRoomModal: React.FC<DataRoomModalProps> = ({
         </div>
 
         {/* Document List Body */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-3">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-3">
           {filteredDocs.map((doc) => (
             <div
               key={doc.id}

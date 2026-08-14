@@ -146,23 +146,23 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative flex flex-col w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/[0.12] bg-zinc-950/95 shadow-2xl text-white"
+        className="relative flex flex-col w-full max-w-3xl max-h-[90dvh] overflow-hidden rounded-2xl border border-white/[0.12] bg-zinc-950/95 shadow-2xl text-white"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
-        <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-white/[0.02]">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-400">
-              <Award className="h-5 w-5" />
+        <div className="flex flex-wrap items-center justify-between border-b border-white/[0.08] px-4 sm:px-6 py-3 sm:py-4 bg-white/[0.02] gap-2">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-400 shrink-0">
+              <Award className="h-4 sm:h-5 w-4 sm:w-5" />
             </div>
-            <div>
-              <h2 className="text-base font-semibold tracking-tight text-white flex items-center gap-2">
-                100-Point Idea Viability Score (IV-Score)
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-semibold tracking-tight text-white flex items-center gap-2 truncate">
+                100-Point Viability Score
               </h2>
-              <p className="text-xs text-white/50">
-                Objective 5-Pillar validation benchmark & AI pressure test
+              <p className="text-[10px] sm:text-xs text-white/50 truncate">
+                5-Pillar validation benchmark & AI pressure test
               </p>
             </div>
           </div>
@@ -171,14 +171,14 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
             <button
               onClick={handleRecalculate}
               disabled={recalculating}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/[0.08] hover:text-white disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-white/[0.04] px-2.5 sm:px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/[0.08] hover:text-white disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${recalculating ? "animate-spin text-indigo-400" : ""}`} />
-              {recalculating ? "Evaluating..." : "Re-Calculate"}
+              <span className="hidden xs:inline">{recalculating ? "Evaluating..." : "Re-Calculate"}</span>
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-white/50 transition-colors hover:bg-white/[0.06] hover:text-white"
+              className="rounded-lg p-1.5 text-white/50 transition-colors hover:bg-white/[0.06] hover:text-white cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -186,9 +186,9 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-6">
           {/* Hero Gauge & Tier Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.04] to-transparent p-5">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.04] to-transparent p-4 sm:p-5">
             {/* Radial Gauge */}
             <div className="md:col-span-4 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/[0.08] pb-4 md:pb-0 md:pr-4">
               <div className="relative flex items-center justify-center">

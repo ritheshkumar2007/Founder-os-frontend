@@ -102,23 +102,23 @@ export const TrajectoryStoryline: React.FC = () => {
   const activeStage = STAGES.find((s) => s.id === activeStageId) || STAGES[0];
 
   return (
-    <section id="trajectory" className="relative py-24 px-4 max-w-7xl mx-auto z-10 space-y-12">
+    <section id="trajectory" className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 space-y-8 sm:space-y-12 overflow-hidden">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-xs font-mono text-[#A78BFA]">
           <Sparkles className="size-3.5 text-[#A78BFA]" />
           <span>STARTUP WORKFLOW FRAMEWORK</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
+        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight">
           From Idea Brief to <span className="text-gradient-system">Scaled Venture</span>
         </h2>
-        <p className="text-base text-[#cbc3d7]">
+        <p className="text-sm sm:text-base text-[#cbc3d7] max-w-2xl mx-auto leading-relaxed">
           Follow the 5-stage operating system trajectory to build with speed, clarity, and precision.
         </p>
       </div>
 
       {/* Interactive Trajectory Navigation Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
         {STAGES.map((s) => {
           const isActive = s.id === activeStageId;
           const Icon = s.icon;
@@ -126,17 +126,17 @@ export const TrajectoryStoryline: React.FC = () => {
             <button
               key={s.id}
               onClick={() => setActiveStageId(s.id)}
-              className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+              className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
                 isActive
                   ? "border-[#A78BFA] bg-[#101417] shadow-[0_0_20px_rgba(139,92,246,0.25)]"
                   : "border-white/5 bg-[#0b0f12] hover:bg-[#101417] hover:border-white/10"
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                 <span className={`text-xs font-mono font-bold ${isActive ? "text-[#A78BFA]" : "text-[#cbc3d7]"}`}>
                   {s.stepNumber}
                 </span>
-                <Icon className={`size-4 ${isActive ? "text-[#A78BFA]" : "text-[#958ea0]"}`} />
+                <Icon className={`size-3.5 sm:size-4 ${isActive ? "text-[#A78BFA]" : "text-[#958ea0]"}`} />
               </div>
               <p className={`text-xs font-semibold truncate ${isActive ? "text-white" : "text-[#cbc3d7]"}`}>
                 {s.title}
@@ -147,9 +147,9 @@ export const TrajectoryStoryline: React.FC = () => {
       </div>
 
       {/* Stage Detail Workspace Panel */}
-      <div className="panel p-8 sm:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)]">
-        <div className="grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-6">
+      <div className="panel p-5 sm:p-8 lg:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] rounded-2xl sm:rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] overflow-hidden">
+        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+          <div className="lg:col-span-7 space-y-4 sm:space-y-6">
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold">
                 {activeStage.badge}
@@ -158,13 +158,13 @@ export const TrajectoryStoryline: React.FC = () => {
             </div>
 
             <div>
-              <h3 className="text-2xl sm:text-3xl font-bold font-display text-white">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-white">
                 {activeStage.title}
               </h3>
-              <p className="text-sm font-mono text-[#A78BFA] mt-1">{activeStage.subtitle}</p>
+              <p className="text-xs sm:text-sm font-mono text-[#A78BFA] mt-1">{activeStage.subtitle}</p>
             </div>
 
-            <p className="text-sm text-[#cbc3d7] leading-relaxed">{activeStage.description}</p>
+            <p className="text-xs sm:text-sm text-[#cbc3d7] leading-relaxed">{activeStage.description}</p>
 
             <div className="space-y-2 pt-2">
               {activeStage.details.map((detail, idx) => (
@@ -176,9 +176,9 @@ export const TrajectoryStoryline: React.FC = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col justify-center p-6 rounded-2xl border border-white/5 bg-[#101417] space-y-4">
+          <div className="lg:col-span-5 flex flex-col justify-center p-4 sm:p-6 rounded-2xl border border-white/5 bg-[#101417] space-y-3 sm:space-y-4">
             <span className="text-xs font-mono uppercase text-[#958ea0]">Stage Metric Benchmark</span>
-            <p className="text-4xl sm:text-5xl font-bold font-display text-[#A78BFA]">
+            <p className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[#A78BFA]">
               {activeStage.telemetryMetric}
             </p>
             <p className="text-xs font-mono text-[#cbc3d7]">{activeStage.telemetryLabel}</p>

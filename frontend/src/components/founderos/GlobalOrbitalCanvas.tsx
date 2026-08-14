@@ -21,25 +21,25 @@ const HUBS: Hub[] = [
 
 export const GlobalOrbitalCanvas: React.FC = () => {
   return (
-    <section className="relative py-20 px-4 max-w-7xl mx-auto z-10">
-      <div className="panel p-8 sm:p-12 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] rounded-3xl">
+    <section className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 overflow-hidden">
+      <div className="panel p-5 sm:p-8 lg:p-12 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] rounded-2xl sm:rounded-3xl">
         {/* Soft Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[rgba(139,92,246,0.1)] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-[rgba(139,92,246,0.1)] rounded-full blur-3xl pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center relative z-10">
           {/* Left Information */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-4 sm:space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#101417] text-xs font-mono text-[#A78BFA] shadow-sm">
               <Globe className="size-3.5 text-[#A78BFA]" />
               <span>GLOBAL WORKSPACE ECOSYSTEM</span>
             </div>
 
-            <h3 className="text-3xl sm:text-4xl font-bold font-display text-white tracking-tight leading-tight">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-white tracking-tight leading-tight">
               1,240+ Startups Operating <br />
               <span className="text-gradient-neural">Across 42 Innovation Hubs</span>
             </h3>
 
-            <p className="text-sm text-[#cbc3d7] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#cbc3d7] leading-relaxed">
               From San Francisco to Tokyo, entrepreneurs rely on FounderOS to turn raw ideas into validated, high-velocity ventures with zero waste and full data security.
             </p>
 

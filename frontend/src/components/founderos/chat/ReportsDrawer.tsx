@@ -171,10 +171,10 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
         </div>
 
         {/* Content Body: Sidebar Navigation & Main Report Viewer */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
           {/* Report Type Selector Tabs */}
-          <div className="w-64 border-r border-[rgba(139,92,246,0.25)] bg-[#020408] p-3 space-y-1.5 overflow-y-auto">
-            <p className="px-3 py-1 text-[11px] font-mono text-[#958ea0] uppercase tracking-wider">
+          <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-[rgba(139,92,246,0.25)] bg-[#020408] p-2.5 sm:p-3 flex md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar gap-1.5 md:space-y-1.5 shrink-0">
+            <p className="hidden md:block px-3 py-1 text-[11px] font-mono text-[#958ea0] uppercase tracking-wider">
               Report Suite (7)
             </p>
             {REPORT_TYPES.map((r) => {
@@ -187,20 +187,20 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
                     setActiveType(r.type);
                     setSelectedVersion(null);
                   }}
-                  className={`w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-medium transition cursor-pointer ${
+                  className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium transition cursor-pointer shrink-0 md:w-full ${
                     active
                       ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] border border-[rgba(139,92,246,0.4)] shadow-sm font-bold"
-                      : "text-[#cbc3d7] hover:bg-white/5 hover:text-white"
+                      : "text-[#cbc3d7] hover:bg-white/5 hover:text-white border border-transparent"
                   }`}
                 >
-                  <span className="flex items-center gap-2 truncate">
+                  <span className="flex items-center gap-1.5 sm:gap-2 truncate">
                     <span>{r.icon}</span>
                     <span className="truncate">{r.label}</span>
                   </span>
                   {hasDoc ? (
-                    <span className="size-1.5 rounded-full bg-[#A78BFA]" />
+                    <span className="size-1.5 rounded-full bg-[#A78BFA] shrink-0" />
                   ) : (
-                    <span className="size-1.5 rounded-full bg-white/20" />
+                    <span className="size-1.5 rounded-full bg-white/20 shrink-0" />
                   )}
                 </button>
               );
@@ -208,7 +208,7 @@ export const ReportsDrawer: React.FC<ReportsDrawerProps> = ({ open, onClose, ini
           </div>
 
           {/* Report Viewer Area */}
-          <div className="flex-1 flex flex-col overflow-y-auto p-6 space-y-5 bg-[#0b0f12]">
+          <div className="flex-1 flex flex-col overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 bg-[#0b0f12]">
             {loading ? (
               <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
                 <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />

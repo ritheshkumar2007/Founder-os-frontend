@@ -265,14 +265,14 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
     <div className="fixed inset-0 z-50 lg:hidden">
       <button
         aria-label="Close navigation"
-        className="absolute inset-0 bg-[#080A0F]/85 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#020408]/85 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="absolute inset-y-0 left-0 w-72 border-r border-white/5 bg-[#121924]">
+      <div className="absolute inset-y-0 left-0 w-72 sm:w-80 max-w-[85vw] border-r border-[rgba(139,92,246,0.25)] bg-[#0b0f12] shadow-2xl">
         <button
           aria-label="Close navigation"
           onClick={onClose}
-          className="absolute right-3 top-4 z-10 rounded-lg p-2 text-[#A8B3C7] hover:text-[#F5F8FC]"
+          className="absolute right-3 top-4 z-10 rounded-lg p-2 text-[#958ea0] hover:text-white"
         >
           <X className="size-4" />
         </button>

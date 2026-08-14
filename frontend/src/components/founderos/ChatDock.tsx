@@ -133,7 +133,7 @@ export function ChatDock() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] px-5 py-3 text-xs font-bold text-white shadow-[0_0_30px_rgba(139,92,246,0.35)] transition-all hover:scale-105 hover:border-[#A78BFA] active:scale-95 cursor-pointer"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 rounded-full border border-[rgba(139,92,246,0.4)] bg-[#0b0f12] px-4 sm:px-5 py-2.5 sm:py-3 text-xs font-bold text-white shadow-[0_0_30px_rgba(139,92,246,0.35)] transition-all hover:scale-105 hover:border-[#A78BFA] active:scale-95 cursor-pointer"
         >
           <span className="relative flex size-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#A78BFA] opacity-75" />
@@ -146,7 +146,7 @@ export function ChatDock() {
 
       {/* Slide-over Dock Window */}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 flex h-[620px] w-[420px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] backdrop-blur-2xl os-window-open">
+        <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 flex h-[80vh] sm:h-[620px] max-h-[620px] w-[calc(100vw-1.5rem)] sm:w-[420px] flex-col overflow-hidden rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] backdrop-blur-2xl os-window-open">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[rgba(139,92,246,0.25)] bg-[#101417] px-5 py-4">
             <div className="flex items-center gap-3">

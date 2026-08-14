@@ -169,18 +169,20 @@ function SignIn() {
   };
 
   return (
-    <main className="bg-midnight-aurora min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+    <main className="bg-midnight-aurora min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 relative overflow-hidden">
       {/* Back to Landing Page Button */}
-      <Link
-        to="/"
-        className="absolute top-6 left-6 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/80 text-xs font-mono text-[#cbc3d7] hover:text-white hover:border-[#A78BFA] transition"
-      >
-        <ArrowLeft className="size-3.5 text-[#A78BFA]" /> Back to Landing Page
-      </Link>
+      <div className="w-full max-w-md mb-4 sm:mb-0 sm:absolute sm:top-6 sm:left-6 sm:w-auto">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/80 text-xs font-mono text-[#cbc3d7] hover:text-white hover:border-[#A78BFA] transition"
+        >
+          <ArrowLeft className="size-3.5 text-[#A78BFA]" /> Back to Landing Page
+        </Link>
+      </div>
 
       <form
         onSubmit={handleSubmit}
-        className="panel os-window-open w-full max-w-md rounded-2xl p-8 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] relative z-10"
+        className="panel os-window-open w-full max-w-md rounded-2xl p-5 sm:p-8 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] relative z-10"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">

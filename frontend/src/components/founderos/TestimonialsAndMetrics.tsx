@@ -37,45 +37,45 @@ const REVIEWS = [
 
 export const TestimonialsAndMetrics: React.FC = () => {
   return (
-    <section id="mission-logs" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-24">
+    <section id="mission-logs" className="relative py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-24 overflow-hidden">
       {/* Telemetry Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {STATS.map((stat) => (
           <div
             key={stat.label}
-            className="glass-card p-6 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/90 backdrop-blur-xl text-center space-y-2 relative overflow-hidden group hover:border-[#A78BFA] shadow-[0_0_20px_rgba(139,92,246,0.15)] rounded-2xl"
+            className="glass-card p-4 sm:p-6 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/90 backdrop-blur-xl text-center space-y-1.5 sm:space-y-2 relative overflow-hidden group hover:border-[#A78BFA] shadow-[0_0_20px_rgba(139,92,246,0.15)] rounded-xl sm:rounded-2xl min-w-0"
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-[#A78BFA] to-transparent opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_#A78BFA]" />
-            <p className="text-3xl sm:text-4xl font-extrabold font-display text-[#A78BFA] tracking-tight">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-[#A78BFA] tracking-tight truncate">
               {stat.value}
             </p>
-            <p className="text-xs font-mono font-bold text-white uppercase tracking-widest">
+            <p className="text-[10px] sm:text-xs font-mono font-bold text-white uppercase tracking-wider sm:tracking-widest truncate">
               {stat.label}
             </p>
-            <p className="text-[11px] text-[#958ea0]">{stat.subtext}</p>
+            <p className="text-[10px] sm:text-[11px] text-[#958ea0] truncate">{stat.subtext}</p>
           </div>
         ))}
       </div>
 
       {/* Testimonials Header */}
-      <div className="space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-4">
+      <div className="space-y-8 sm:space-y-12">
+        <div className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.1)] text-xs font-mono text-[#A78BFA] shadow-[0_0_15px_rgba(139,92,246,0.25)]">
             <Quote className="size-3.5 text-[#A78BFA]" />
             <span>MISSION LOGS FROM ORBIT</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-display text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display text-white tracking-tight">
             Trusted by Founders Building <br />
             <span className="text-gradient-system">The Next Billion-Dollar Ventures</span>
           </h2>
         </div>
 
         {/* 3 Testimonials Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {REVIEWS.map((rev) => (
             <div
               key={rev.author}
-              className="glass-card p-8 border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] flex flex-col justify-between space-y-6 hover:border-[#A78BFA] transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] rounded-2xl"
+              className="glass-card p-5 sm:p-8 border border-[rgba(139,92,246,0.25)] bg-[#0b0f12] flex flex-col justify-between space-y-6 hover:border-[#A78BFA] transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] rounded-2xl"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

@@ -15,15 +15,15 @@ export function PageHeader({
   right?: ReactNode;
 }) {
   return (
-    <header className="os-window-open flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
-      <div>
+    <header className="os-window-open flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 border-b border-border pb-5 sm:pb-6">
+      <div className="min-w-0 flex-1">
         <p className="text-xs uppercase tracking-[0.28em] text-primary font-mono font-medium">{eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-display font-semibold tracking-tight text-foreground sm:text-4xl">{title}</h1>
+        <h1 className="mt-2 text-2xl font-display font-semibold tracking-tight text-foreground sm:text-3xl lg:text-4xl break-words">{title}</h1>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{description}</p>
+          <p className="mt-2 max-w-2xl text-xs sm:text-sm text-muted-foreground leading-relaxed">{description}</p>
         ) : null}
       </div>
-      {right}
+      {right ? <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">{right}</div> : null}
     </header>
   );
 }
@@ -40,11 +40,11 @@ export function Panel({
   action?: ReactNode;
 }) {
   return (
-    <section className={cn("panel os-window-open rounded-2xl p-6 border border-border/80 bg-card text-card-foreground shadow-[var(--shadow-panel)]", className)}>
+    <section className={cn("panel os-window-open rounded-2xl p-4 sm:p-6 border border-border/80 bg-card text-card-foreground shadow-[var(--shadow-panel)] overflow-hidden", className)}>
       {title || action ? (
-        <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/60 pb-3">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-border/60 pb-3">
           {title ? (
-            <h2 className="text-xs font-mono font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            <h2 className="text-xs font-mono font-semibold uppercase tracking-[0.22em] text-muted-foreground truncate">
               {title}
             </h2>
           ) : (
@@ -53,13 +53,13 @@ export function Panel({
           {action}
         </div>
       ) : null}
-      {children}
+      <div className="min-w-0">{children}</div>
     </section>
   );
 }
 
 const btn =
-  "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring touch-manipulation min-h-[40px] select-none";
 
 export function Button({
   variant = "primary",
@@ -77,9 +77,9 @@ export function Button({
     subtle: "bg-surface-2 border border-border/60 text-foreground hover:bg-white/5",
   } as const;
   const sizes = {
-    sm: "px-3 py-1.5 text-xs rounded-lg",
-    md: "px-4 py-2 text-sm rounded-xl",
-    lg: "px-6 py-3 text-base rounded-xl",
+    sm: "px-3 py-1.5 text-xs rounded-lg min-h-[32px]",
+    md: "px-4 py-2.5 text-sm rounded-xl min-h-[40px]",
+    lg: "px-6 py-3 text-base rounded-xl min-h-[48px]",
   } as const;
   const sizeClass = size && size in sizes ? sizes[size as keyof typeof sizes] : "";
   return <button className={cn(btn, variants[variant], sizeClass, className)} {...props} />;
@@ -129,7 +129,7 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block space-y-2">
+    <label className="block space-y-1.5 sm:space-y-2">
       <span className="text-xs uppercase font-mono tracking-[0.18em] text-muted-foreground">{label}</span>
       {children}
       {hint ? <span className="block text-xs text-muted-foreground/70">{hint}</span> : null}
@@ -138,7 +138,7 @@ export function Field({
 }
 
 const control =
-  "w-full rounded-xl border border-input bg-surface/80 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition focus:border-primary/80 focus:ring-2 focus:ring-primary/20";
+  "w-full rounded-xl border border-input bg-surface/80 px-3.5 py-2.5 sm:px-4 sm:py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition focus:border-primary/80 focus:ring-2 focus:ring-primary/20";
 
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return <input {...props} className={cn(control, props.className)} />;
@@ -192,10 +192,10 @@ export function Progress({ value, label }: { value: number; label?: string }) {
 
 export function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-2xl border border-border/80 bg-surface/70 p-4 transition-all duration-200 hover:border-primary/30">
-      <p className="text-xs uppercase font-mono tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-2 font-display text-2xl font-bold text-foreground">{value}</p>
-      {sub ? <p className="mt-1 text-xs text-muted-foreground">{sub}</p> : null}
+    <div className="rounded-2xl border border-border/80 bg-surface/70 p-3.5 sm:p-4 transition-all duration-200 hover:border-primary/30 min-w-0">
+      <p className="text-xs uppercase font-mono tracking-[0.18em] text-muted-foreground truncate">{label}</p>
+      <p className="mt-1.5 sm:mt-2 font-display text-xl sm:text-2xl font-bold text-foreground truncate">{value}</p>
+      {sub ? <p className="mt-1 text-xs text-muted-foreground truncate">{sub}</p> : null}
     </div>
   );
 }

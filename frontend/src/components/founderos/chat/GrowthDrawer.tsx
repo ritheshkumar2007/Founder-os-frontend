@@ -197,12 +197,12 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-[rgba(139,92,246,0.25)] bg-[#020408] px-6 gap-2 pt-2">
+        <div className="flex border-b border-[rgba(139,92,246,0.25)] bg-[#020408] px-3 sm:px-6 gap-1.5 sm:gap-2 pt-2 overflow-x-auto no-scrollbar">
           {[
-            { id: "metrics", label: "Metrics & Funnel", icon: TrendingUp },
-            { id: "recommendations", label: "Growth Recommendations", icon: Sparkles },
-            { id: "feedback", label: "Feedback Themes", icon: MessageSquare },
-            { id: "studio", label: "AI Content Studio", icon: FileText },
+            { id: "metrics", label: "Funnel", fullLabel: "Metrics & Funnel", icon: TrendingUp },
+            { id: "recommendations", label: "Growth Advice", fullLabel: "Growth Recommendations", icon: Sparkles },
+            { id: "feedback", label: "Feedback", fullLabel: "Feedback Themes", icon: MessageSquare },
+            { id: "studio", label: "Studio", fullLabel: "AI Content Studio", icon: FileText },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -210,21 +210,22 @@ export const GrowthDrawer: React.FC<GrowthDrawerProps> = ({ open, onClose }) => 
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-t-xl border-t border-x transition cursor-pointer ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-semibold rounded-t-xl border-t border-x transition cursor-pointer shrink-0 ${
                   active
                     ? "bg-[#0b0f12] text-[#A78BFA] border-[rgba(139,92,246,0.3)] border-b-[#0b0f12] shadow-sm font-bold"
                     : "text-[#cbc3d7] border-transparent hover:text-white hover:bg-white/5"
                 }`}
               >
-                <Icon className="size-4" />
-                {tab.label}
+                <Icon className="size-3.5 sm:size-4" />
+                <span className="sm:hidden">{tab.label}</span>
+                <span className="hidden sm:inline">{tab.fullLabel}</span>
               </button>
             );
           })}
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 bg-[#0b0f12]">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6 bg-[#0b0f12]">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-64 gap-3 text-[#cbc3d7]">
               <RefreshCw className="size-6 animate-spin text-[#A78BFA]" />

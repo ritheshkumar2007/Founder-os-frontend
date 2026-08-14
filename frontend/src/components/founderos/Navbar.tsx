@@ -9,35 +9,35 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-glass-border shadow-[0_0_15px_rgba(139,92,246,0.1)] flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16">
-        <Link to="/" className="flex items-center gap-3">
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#020408]/90 backdrop-blur-xl border-b border-[rgba(139,92,246,0.2)] shadow-[0_0_15px_rgba(139,92,246,0.1)] flex items-center justify-between px-4 sm:px-6 md:px-10 lg:px-12 h-16">
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
           <span
-            className="material-symbols-outlined text-electric-violet text-2xl"
+            className="material-symbols-outlined text-[#A78BFA] text-2xl"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             terminal
           </span>
-          <span className="font-headline-md text-headline-md font-bold tracking-tighter text-on-surface">
+          <span className="font-display text-lg sm:text-xl font-bold tracking-tighter text-white">
             FounderOS
           </span>
         </Link>
 
         {/* Hidden on Mobile, Flex on Desktop */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           <a
-            className="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono"
+            className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
             href="#features"
           >
             Features
           </a>
           <a
-            className="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono"
+            className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
             href="#pricing"
           >
             Pricing
           </a>
           <a
-            className="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono"
+            className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
             href="#docs"
           >
             Docs
@@ -48,7 +48,7 @@ export const Navbar: React.FC = () => {
           {app.user ? (
             <Link
               to="/workspace/idea-validation"
-              className="btn-primary px-6 py-2 rounded-lg font-label-mono text-label-mono active:scale-95 duration-200 flex items-center gap-2"
+              className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2 rounded-lg active:scale-95 duration-200 flex items-center gap-2 shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-pointer"
             >
               <span>Workspace</span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/signin"
-              className="btn-primary px-6 py-2 rounded-lg font-label-mono text-label-mono active:scale-95 duration-200"
+              className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs px-5 py-2 rounded-lg active:scale-95 duration-200 shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-pointer"
             >
               Login
             </Link>
@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg border border-glass-border text-on-surface-variant hover:text-on-surface"
+          className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg border border-[rgba(139,92,246,0.3)] bg-[#101417] text-[#cbc3d7] hover:text-white"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -75,36 +75,36 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-16 left-0 w-full z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-b border-glass-border px-6 py-6 flex flex-col gap-4">
-          <nav className="flex flex-col gap-3 font-label-mono text-label-mono">
+        <div className="md:hidden fixed top-16 left-0 w-full z-40 bg-[#0b0f12]/98 backdrop-blur-2xl border-b border-[rgba(139,92,246,0.3)] px-6 py-6 flex flex-col gap-4 shadow-2xl">
+          <nav className="flex flex-col gap-3 font-mono text-xs uppercase tracking-wider">
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-on-surface-variant hover:text-primary py-1"
+              className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
               Features
             </a>
             <a
               href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-on-surface-variant hover:text-primary py-1"
+              className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
               Pricing
             </a>
             <a
               href="#docs"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-on-surface-variant hover:text-primary py-1"
+              className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
               Docs
             </a>
           </nav>
-          <div className="pt-2 border-t border-glass-border">
+          <div className="pt-3 border-t border-white/10">
             {app.user ? (
               <Link
                 to="/workspace/idea-validation"
                 onClick={() => setMobileMenuOpen(false)}
-                className="btn-primary w-full text-center py-2.5 rounded-lg font-label-mono text-label-mono flex items-center justify-center gap-2"
+                className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs w-full text-center py-3 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
               >
                 <span>Enter Workspace</span>
                 <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -113,7 +113,7 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/signin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="btn-primary w-full text-center py-2.5 rounded-lg font-label-mono text-label-mono block"
+                className="bg-[#A78BFA] hover:bg-[#bfa8ff] text-black font-mono font-bold text-xs w-full text-center py-3 rounded-xl block shadow-[0_0_15px_rgba(139,92,246,0.3)]"
               >
                 Login
               </Link>
