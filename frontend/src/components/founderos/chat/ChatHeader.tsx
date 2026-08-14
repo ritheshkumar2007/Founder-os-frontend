@@ -5,17 +5,10 @@ import { deriveIdeaScore } from "@/lib/founderos/derive";
 import { determineCurrentQuestionIndex } from "./mockAiEngine";
 
 interface ChatHeaderProps {
-  onOpenReports?: () => void;
-  onOpenExecution?: () => void;
-  onOpenGrowth?: () => void;
   onOpenScore?: () => void;
-  latestReports?: any[];
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
-  onOpenReports,
-  onOpenExecution,
-  onOpenGrowth,
   onOpenScore,
 }) => {
   const { venture } = useActiveVenture();
@@ -73,36 +66,6 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
               <span className="hidden xs:inline">Score:</span>
               <span className="font-mono text-white font-extrabold">{scoreVal}/100</span>
               <Sparkles className="size-3 text-[#A78BFA]" />
-            </button>
-          ) : null}
-
-          {onOpenGrowth ? (
-            <button
-              onClick={onOpenGrowth}
-              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-2.5 sm:px-3 py-1.5 text-xs font-bold text-[#cbc3d7] hover:text-white transition hover:bg-[rgba(139,92,246,0.15)] hover:border-[#A78BFA] hover:scale-[1.02] cursor-pointer"
-            >
-              <TrendingUp className="size-3.5 sm:size-4 text-[#A78BFA]" />
-              <span>Growth OS</span>
-            </button>
-          ) : null}
-
-          {onOpenExecution ? (
-            <button
-              onClick={onOpenExecution}
-              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-2.5 sm:px-3 py-1.5 text-xs font-bold text-[#cbc3d7] hover:text-white transition hover:bg-[rgba(139,92,246,0.15)] hover:border-[#A78BFA] hover:scale-[1.02] cursor-pointer"
-            >
-              <Kanban className="size-3.5 sm:size-4 text-[#A78BFA]" />
-              <span>Execution OS</span>
-            </button>
-          ) : null}
-
-          {onOpenReports ? (
-            <button
-              onClick={onOpenReports}
-              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[rgba(139,92,246,0.3)] bg-[#101417] px-2.5 sm:px-3 py-1.5 text-xs font-bold text-[#cbc3d7] hover:text-white transition hover:bg-[rgba(139,92,246,0.15)] hover:border-[#A78BFA] hover:scale-[1.02] cursor-pointer"
-            >
-              <FileText className="size-3.5 sm:size-4 text-[#A78BFA]" />
-              <span>Reports</span>
             </button>
           ) : null}
 

@@ -45,7 +45,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={disabled}
-            placeholder="Describe your product idea or ask for strategic direction..."
+            placeholder="Answer the current validation question..."
             className="flex-1 bg-transparent text-sm text-white placeholder:text-[#958ea0] resize-none outline-none max-h-40 px-2 py-1 scrollbar-thin"
           />
 
@@ -64,7 +64,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
           <span className="flex items-center gap-1.5">
             <CornerDownLeft className="size-3 text-[#A78BFA]" /> Press <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Enter</kbd> to send, <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/10 text-white font-sans">Shift + Enter</kbd> for new line
           </span>
-          <span className="hidden sm:inline text-[#cbc3d7]">FounderOS AI Copilot v2.5</span>
+          <span className="hidden sm:inline text-[#cbc3d7]">FounderOS Idea Validation Coach</span>
         </div>
       </div>
     </div>

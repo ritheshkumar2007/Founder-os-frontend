@@ -4,9 +4,6 @@ import type { ChatMessage } from "@/lib/founderos/types";
 import { ChatHeader } from "./ChatHeader";
 import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
-import { ReportsDrawer, ReportItem } from "./ReportsDrawer";
-import { ExecutionDrawer } from "./ExecutionDrawer";
-import { GrowthDrawer } from "./GrowthDrawer";
 import { IdeaScoreModal } from "./IdeaScoreModal";
 import { generateMockAiResponse } from "./mockAiEngine";
 import { processValidationTurn, INITIAL_COACH_MESSAGE } from "@/lib/founderos/validationEngine";
@@ -20,10 +17,6 @@ export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();
   const [loading, setLoading] = useState(false);
   const [scoreOpen, setScoreOpen] = useState(false);
-  const [reportsOpen, setReportsOpen] = useState(false);
-  const [executionOpen, setExecutionOpen] = useState(false);
-  const [growthOpen, setGrowthOpen] = useState(false);
-  const [latestReports, setLatestReports] = useState<ReportItem[]>([]);
 
   // Initialize conversation with exact initial greeting if empty
   const messages: ChatMessage[] = React.useMemo(() => {
@@ -223,9 +216,6 @@ export const ChatPage: React.FC = () => {
       {/* Header */}
       <ChatHeader
         onOpenScore={() => setScoreOpen(true)}
-        onOpenReports={() => setReportsOpen(true)}
-        onOpenExecution={() => setExecutionOpen(true)}
-        onOpenGrowth={() => setGrowthOpen(true)}
       />
 
       {/* Main Scrollable Chat Area */}
@@ -238,25 +228,6 @@ export const ChatPage: React.FC = () => {
       <IdeaScoreModal
         open={scoreOpen}
         onClose={() => setScoreOpen(false)}
-      />
-
-      {/* Reports Drawer Overlay */}
-      <ReportsDrawer
-        open={reportsOpen}
-        onClose={() => setReportsOpen(false)}
-        initialReports={latestReports}
-      />
-
-      {/* Execution OS Drawer Overlay */}
-      <ExecutionDrawer
-        open={executionOpen}
-        onClose={() => setExecutionOpen(false)}
-      />
-
-      {/* Growth OS Drawer Overlay */}
-      <GrowthDrawer
-        open={growthOpen}
-        onClose={() => setGrowthOpen(false)}
       />
     </div>
   );
