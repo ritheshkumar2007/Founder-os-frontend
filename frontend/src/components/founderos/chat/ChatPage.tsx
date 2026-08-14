@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { uid, useActiveVenture } from "@/lib/founderos/store";
 import type { ChatMessage } from "@/lib/founderos/types";
 import { ChatHeader } from "./ChatHeader";
@@ -8,6 +9,7 @@ import { IdeaScoreModal } from "./IdeaScoreModal";
 import { generateMockAiResponse } from "./mockAiEngine";
 import { processValidationTurn, INITIAL_COACH_MESSAGE } from "@/lib/founderos/validationEngine";
 import { deriveIdeaScore } from "@/lib/founderos/derive";
+import { toast } from "sonner";
 import api from "@/lib/api";
 import type { ValidationState } from "@/lib/founderos/types";
 
@@ -15,6 +17,7 @@ const INITIAL_GREETING_CONTENT = INITIAL_COACH_MESSAGE;
 
 export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [scoreOpen, setScoreOpen] = useState(false);
 
@@ -206,6 +209,14 @@ export const ChatPage: React.FC = () => {
           ideaScore: nextScore,
         };
       });
+
+      if (localTurn.updatedState.completed) {
+        setScoreOpen(true);
+        setTimeout(() => {
+          toast.success("Validation completed! Unlocked Stage 2: MVP Scope");
+          navigate({ to: "/workspace/mvp-scope" as any });
+        }, 3000);
+      }
     } finally {
       setLoading(false);
     }

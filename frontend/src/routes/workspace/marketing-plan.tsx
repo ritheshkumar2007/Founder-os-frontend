@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Button,
@@ -13,6 +13,7 @@ import {
 } from "@/components/founderos/ui";
 import { Sparkles, RefreshCw, UserCheck, Megaphone, Calendar, Rocket, LineChart, Clock, History, CheckCircle2, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
+import { toast } from "sonner";
 import api from "@/lib/api";
 
 const TITLE = "Marketing Plan — FounderOS";
@@ -172,6 +173,7 @@ function formatMarketingStrategy(raw: any, fallbackName: string, audienceInput: 
 
 function MarketingPage() {
   const { venture, update } = useActiveVenture();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
@@ -511,7 +513,45 @@ function MarketingPage() {
       )}
 
       <div className="flex flex-wrap gap-3 pt-4">
-        <Button onClick={() => update((v) => ({ ...v }))}>Save Marketing Plan</Button>
+        <Button
+          onClick={() => {
+            if (strategy) {
+              update((v) => ({
+                ...v,
+                marketing: {
+                  idealCustomer: audienceInput,
+                  positioning: strategy.positioningStatement,
+                  message: strategy.coreProblem,
+                  headline: strategy.tagline,
+                  cta: "Join Waitlist & Start Free",
+                  channels: strategy.growthChannels.map((c) => c.channel),
+                  outreach: strategy.contentTactics.join("\n"),
+                  communityPost: strategy.pricingModel,
+                  referral: "Give 1 Month Free, Get 1 Month Free",
+                  contentIdeas: strategy.contentTactics,
+                  firstHundred: strategy.targetUsers,
+                },
+                marketingPlan: {
+                  ...((v as any).marketingPlan || {}),
+                  positioningStatement: strategy.positioningStatement,
+                  tagline: strategy.tagline,
+                  targetUsers: strategy.targetUsers,
+                  growthChannels: strategy.growthChannels,
+                  ninetyDayRoadmap: strategy.ninetyDayRoadmap,
+                  isSaved: true,
+                },
+              }));
+              toast.success("Marketing Plan saved! Unlocked Stage 5: Growth");
+              setTimeout(() => {
+                navigate({ to: "/workspace/launch-sprint" as any });
+              }, 400);
+            } else {
+              toast.info("Please generate a marketing plan first.");
+            }
+          }}
+        >
+          Save Marketing Plan & Continue
+        </Button>
         <LinkButton to="/workspace/launch-sprint" variant="primary">
           Continue to Launch Sprint
         </LinkButton>

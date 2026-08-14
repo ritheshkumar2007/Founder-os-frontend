@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useAppState } from "@/lib/founderos/store";
+import { useAppState, useActiveVenture } from "@/lib/founderos/store";
+import { getFounderJourney, getStageRoute } from "@/lib/founderos/journey";
 import { Navbar } from "@/components/founderos/Navbar";
 import { Footer } from "@/components/founderos/Footer";
 import { InteractiveHeroDashboard } from "@/components/founderos/InteractiveHeroDashboard";
@@ -30,7 +31,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const app = useAppState();
-  const targetPath = app.user ? "/workspace/idea-validation" : "/signin";
+  const { venture } = useActiveVenture();
+  const targetPath = app.user ? getStageRoute(getFounderJourney(venture).currentStage) : "/signin";
 
   return (
     <div className="bg-crystal-obsidian text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden relative">

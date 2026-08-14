@@ -3,7 +3,9 @@ import { CheckCircle2, Loader2, Menu, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ChatDock } from "@/components/founderos/ChatDock";
 import { MobileSidebar, Sidebar, STAGED_NAV } from "@/components/founderos/Sidebar";
-import { setLastRoute, useAppState } from "@/lib/founderos/store";
+import { setLastRoute, useAppState, useActiveVenture } from "@/lib/founderos/store";
+import { checkRouteAccess, getFounderJourney, getStageRoute } from "@/lib/founderos/journey";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/workspace")({
   component: WorkspaceLayout,
@@ -11,6 +13,7 @@ export const Route = createFileRoute("/workspace")({
 
 function WorkspaceLayout() {
   const app = useAppState();
+  const { venture } = useActiveVenture();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [menu, setMenu] = useState(false);
@@ -29,10 +32,22 @@ function WorkspaceLayout() {
         search: { redirect: redirectUrl },
         replace: true,
       });
-    } else if (pathname) {
+      return;
+    }
+
+    if (pathname && pathname.startsWith("/workspace")) {
+      const access = checkRouteAccess(pathname, venture);
+      if (!access.allowed) {
+        toast.error(access.message);
+        navigate({
+          to: access.redirectUrl as any,
+          replace: true,
+        });
+        return;
+      }
       setLastRoute(pathname);
     }
-  }, [userEmail, navigate, pathname]);
+  }, [userEmail, navigate, pathname, venture]);
 
   if (!app.user) return null;
 

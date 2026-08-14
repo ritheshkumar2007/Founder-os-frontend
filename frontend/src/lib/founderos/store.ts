@@ -241,6 +241,10 @@ export function normalizeVenture(v: any): Venture {
       nextMilestone: v?.investor?.nextMilestone || v?.investorUpdate?.nextMilestone || "",
       ask: v?.investor?.ask || v?.investorUpdate?.fundingNeeded || "",
     },
+    mvpScope: v?.mvpScope || null,
+    roadmap: v?.roadmap || null,
+    marketingPlan: v?.marketingPlan || null,
+    founderJourney: v?.founderJourney || null,
     validationState: v?.validationState || v?.ideaValidation?.validationState || {
       currentQuestion: 1,
       answers: {
@@ -254,7 +258,7 @@ export function normalizeVenture(v: any): Venture {
       score: null,
     },
     chat: Array.isArray(v?.chat) ? v.chat : [],
-  };
+  } as any;
 }
 
 const empty: AppState = { user: null, ventures: [], activeId: null, saveStatus: "saved", users: {} };

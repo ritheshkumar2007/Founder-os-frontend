@@ -315,6 +315,21 @@ const ventureSchema = new mongoose.Schema(
       updatedAt: { type: Date, default: Date.now },
     },
     // Founder Memory Extended Fields
+    founderJourney: {
+      currentStage: {
+        type: String,
+        enum: ['idea_validation', 'mvp_scope', 'roadmap', 'marketing_plan', 'growth'],
+        default: 'idea_validation',
+      },
+      completedStages: {
+        ideaValidation: { type: Boolean, default: false },
+        mvpScope: { type: Boolean, default: false },
+        roadmap: { type: Boolean, default: false },
+        marketingPlan: { type: Boolean, default: false },
+        growth: { type: Boolean, default: false },
+      },
+      updatedAt: { type: Date, default: Date.now },
+    },
     businessModel: { type: String, trim: true, default: '' },
     pricing: { type: String, trim: true, default: '' },
     competitors: [{ type: String }],

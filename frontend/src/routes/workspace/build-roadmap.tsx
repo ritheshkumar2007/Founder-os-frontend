@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Button,
@@ -12,6 +12,7 @@ import {
 } from "@/components/founderos/ui";
 import { Sparkles, RefreshCw, Layers, ShieldAlert, Cpu, CheckCircle2, History, Clock, ArrowRight, Code, Flag, AlertCircle } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
+import { toast } from "sonner";
 import api from "@/lib/api";
 
 const TITLE = "Build Roadmap — FounderOS";
@@ -161,6 +162,7 @@ function formatBuildRoadmap(raw: any, fallbackName: string, startupIdeaInput: st
 
 function RoadmapPage() {
   const { venture, update } = useActiveVenture();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
@@ -478,7 +480,44 @@ function RoadmapPage() {
       )}
 
       <div className="flex flex-wrap gap-3 pt-4">
-        <Button onClick={() => update((v) => ({ ...v }))}>Save Build Roadmap</Button>
+        <Button
+          onClick={() => {
+            if (roadmapData) {
+              const updatedMilestones = roadmapData.phases.map((p, i) => ({
+                id: `ms-${i + 1}`,
+                title: p.phase,
+                tasks: (p.tasks || []).map((t, ti) => ({
+                  id: `task-${i + 1}-${ti + 1}`,
+                  title: t,
+                  owner: "Founder",
+                  status: "Not Started" as const,
+                  due: p.duration,
+                  done: false,
+                })),
+              }));
+
+              update((v) => ({
+                ...v,
+                milestones: updatedMilestones,
+                roadmap: {
+                  ...((v as any).roadmap || {}),
+                  overview: roadmapData.overview,
+                  milestones: roadmapData.phases,
+                  timeline: roadmapData.phases.map((p) => ({ phase: p.phase, duration: p.duration, deliverables: p.tasks })),
+                  isSaved: true,
+                },
+              }));
+              toast.success("Build Roadmap saved! Unlocked Stage 4: Marketing Plan");
+              setTimeout(() => {
+                navigate({ to: "/workspace/marketing-plan" as any });
+              }, 400);
+            } else {
+              toast.info("Please generate a technical roadmap first.");
+            }
+          }}
+        >
+          Save Build Roadmap & Continue
+        </Button>
         <LinkButton to="/workspace/marketing-plan" variant="primary">
           Continue to Marketing Plan
         </LinkButton>

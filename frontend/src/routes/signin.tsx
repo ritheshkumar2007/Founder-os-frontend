@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useState } from "react";
 import { Button, Field, TextInput } from "@/components/founderos/ui";
 import { signIn } from "@/lib/founderos/store";
+import { getFounderJourney, getStageRoute } from "@/lib/founderos/journey";
 import { api, setAuthToken } from "@/lib/api";
 import { ArrowLeft, Rocket, Shield, RefreshCw, UserPlus, LogIn } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -155,10 +156,14 @@ function SignIn() {
       email: trimmedEmail,
     });
 
+    const activeVenture = authResult.userRecord.ventures.find((v) => v.id === authResult.userRecord.activeId) || authResult.userRecord.ventures[0];
+    const journey = getFounderJourney(activeVenture);
+    const stageTarget = getStageRoute(journey.currentStage);
+
     const targetRoute =
       search.redirect && search.redirect.startsWith("/workspace")
         ? search.redirect
-        : authResult.lastRoute || "/workspace/idea-validation";
+        : stageTarget;
 
     navigate({ to: targetRoute as any, replace: true });
     setTimeout(() => {

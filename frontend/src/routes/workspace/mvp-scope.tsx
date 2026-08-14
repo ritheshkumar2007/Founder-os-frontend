@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Button,
@@ -153,6 +153,7 @@ function formatScopeBlueprint(raw: any, fallbackName: string, ideaText: string, 
 
 function MvpScopePage() {
   const { venture, update } = useActiveVenture();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
@@ -522,14 +523,27 @@ function MvpScopePage() {
                   later: blueprint.niceToHaveFeatures,
                   target: "Two weeks",
                 },
+                mvpScope: {
+                  ...((v as any).mvpScope || {}),
+                  mustHaveFeatures: blueprint.mustHaveFeatures,
+                  niceToHaveFeatures: blueprint.niceToHaveFeatures,
+                  featuresToAvoid: blueprint.featuresToAvoid,
+                  coreFeatures: blueprint.coreFeatures,
+                  userJourney: blueprint.userJourney,
+                  technicalRequirements: blueprint.technicalRequirements,
+                  isSaved: true,
+                },
               }));
-              toast.success("MVP Scope Blueprint saved to venture memory!");
+              toast.success("MVP Scope saved! Unlocked Stage 3: Roadmap");
+              setTimeout(() => {
+                navigate({ to: "/workspace/build-roadmap" as any });
+              }, 400);
             } else {
               toast.info("Please generate an MVP Scope blueprint first.");
             }
           }}
         >
-          Save MVP Scope
+          Save MVP Scope & Continue
         </Button>
         <LinkButton to="/workspace/build-roadmap" variant="primary">
           Continue to Build Roadmap
