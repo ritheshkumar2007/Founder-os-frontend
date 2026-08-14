@@ -20,7 +20,13 @@ export const ChatPage: React.FC = () => {
   // Initialize conversation with exact initial greeting if empty
   const messages: ChatMessage[] = React.useMemo(() => {
     if (!venture) return [];
-    if (venture.chat && venture.chat.length > 0) {
+    if (
+      venture.chat &&
+      venture.chat.length > 0 &&
+      (venture.validationState?.answers?.question1 ||
+        venture.validationState?.completed ||
+        venture.chat[0]?.content?.includes("What specific problem are you solving"))
+    ) {
       return venture.chat;
     }
     return [
@@ -31,7 +37,7 @@ export const ChatPage: React.FC = () => {
         createdAt: new Date().toISOString(),
       },
     ];
-  }, [venture?.id, venture?.chat]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [venture?.id, venture?.chat, venture?.validationState]);
 
   // Auto-persist initial greeting and default validationState to store if not present
   useEffect(() => {
@@ -189,49 +195,39 @@ export const ChatPage: React.FC = () => {
     setLoading(true);
 
     try {
-      // Call AI backend with explicit validation state
-      const res = await api.aiChat({
-        ventureId: venture.id,
-        message: text,
-        page: "idea-validation",
+      // 1. Process validation turn using authoritative 5-Question validation engine
+      const localTurn = processValidationTurn({
+        userMessage: text,
         validationState: venture.validationState,
-        history: updatedMessages,
+        venture,
       });
 
-      let aiReplyText = "";
-      let nextValidationState: ValidationState = venture.validationState || {
-        currentQuestion: 1,
-        answers: {
-          question1: null,
-          question2: null,
-          question3: null,
-          question4: null,
-          question5: null,
-        },
-        completed: false,
-        score: null,
-      };
+      let aiReplyText = localTurn.reply;
+      let nextValidationState: ValidationState = localTurn.updatedState;
 
-      if (res.success && res.data?.reply) {
-        aiReplyText = res.data.reply;
-        if (res.data?.validationState) {
-          nextValidationState = res.data.validationState;
-        } else {
-          const localTurn = processValidationTurn({
-            userMessage: text,
-            validationState: venture.validationState,
-            venture,
-          });
-          nextValidationState = localTurn.updatedState;
-        }
-      } else {
-        const localTurn = processValidationTurn({
-          userMessage: text,
-          validationState: venture.validationState,
-          venture,
+      // 2. Call backend for persistence and sync
+      try {
+        const res = await api.aiChat({
+          ventureId: venture.id,
+          message: text,
+          page: "idea-validation",
+          validationState: nextValidationState,
+          history: updatedMessages,
         });
-        aiReplyText = localTurn.reply;
-        nextValidationState = localTurn.updatedState;
+
+        // Only adopt backend reply if it adheres to the 5-question validation sequence and is not legacy text
+        if (
+          res.success &&
+          res.data?.reply &&
+          res.data?.validationState &&
+          !res.data.reply.includes("analyzing your parameters") &&
+          !res.data.reply.includes("Which area would you like to explore")
+        ) {
+          aiReplyText = res.data.reply;
+          nextValidationState = res.data.validationState;
+        }
+      } catch (backendErr) {
+        console.warn("Backend validation sync note (authoritative client engine applied):", backendErr);
       }
 
       const aiMsg: ChatMessage = {

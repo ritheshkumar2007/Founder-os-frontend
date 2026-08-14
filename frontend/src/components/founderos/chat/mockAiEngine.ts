@@ -9,7 +9,7 @@ export const VALIDATION_QUESTIONS = [
 ];
 
 export const FIRST_GREETING_MESSAGE =
-  "Before building or scoping software, we need to stress-test your idea across five core validation questions. This saves months of building things nobody wants.\n\nFirst question: What specific problem are you solving, and who has this problem?";
+  "Let's validate your idea before we think about building it. I'll ask you five questions, one at a time, and challenge vague answers so we can find out whether there's a real opportunity.\n\nWhat specific problem are you solving, and who has this problem?";
 
 /**
  * Determine which question the coach currently expects an answer for,
