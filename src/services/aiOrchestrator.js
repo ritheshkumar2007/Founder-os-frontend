@@ -25,28 +25,15 @@ function generateDynamicFallbackReply(userInput, venture, targetAgentId) {
 
   // 1. Check for explicit Validation intent FIRST
   if (targetAgentId === 'validation' || lowerMsg.includes('validate') || lowerMsg.includes('validation')) {
-    return `### 💡 Startup Validation Analysis: "${msg.substring(0, 60)}..."
-
-**1. Target Customer Pain Points:**
-- Students struggle with managing multiple course deadlines, exams, and fluctuating schedules manually.
-- Procrastination and overwhelming workload leading to stress and missed preparation.
-
-**2. Existing Alternatives & Competitors:**
-- Manual Google Calendar/Notion templates, Quizlet, Motion, and Reclaim.ai.
-
-**3. Key Assumptions to Validate:**
-- Students will consistently input subjects and deadlines into an AI planner.
-- Students are willing to pay a recurring monthly subscription ($5–$10/mo) for automated scheduling.
-
-**4. Willingness to Pay Signal:**
-- Moderate to High if integrated directly with university LMS (Canvas/Blackboard).
-
-**5. First 5 Customer Interviews to Conduct:**
-1. Interview 2 undergraduate students with 4+ heavy courses.
-2. Interview 1 graduate student juggling work and studies.
-3. Interview 2 freshman/sophomore students struggling with time management.
-
-**Recommendation:** **CONTINUE (PROCEED TO MVP SCOPING)**. The problem is acute and students actively seek automation tools for study schedules.`;
+    const { processValidationTurn } = require('./validationEngine');
+    const state = venture?.ideaValidation?.validationState || {
+      currentQuestion: 1,
+      answers: { question1: null, question2: null, question3: null, question4: null, question5: null },
+      completed: false,
+      score: null,
+    };
+    const turn = processValidationTurn({ userMessage: msg, validationState: state, venture });
+    return turn.reply;
   }
 
   // 2. Check for explicit MVP Scope intent

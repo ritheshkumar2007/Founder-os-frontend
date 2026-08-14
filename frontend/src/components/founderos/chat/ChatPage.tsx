@@ -37,24 +37,33 @@ export const ChatPage: React.FC = () => {
   useEffect(() => {
     if (venture) {
       const needsChatInit = !venture.chat || venture.chat.length === 0;
+      const isLegacyUnstructuredChat = Boolean(
+        venture.chat &&
+        venture.chat.length > 0 &&
+        !venture.validationState?.completed &&
+        !venture.validationState?.answers?.question1 &&
+        !venture.chat[0]?.content?.includes("What specific problem are you solving")
+      );
       const needsStateInit = !venture.validationState;
 
-      if (needsChatInit || needsStateInit) {
+      if (needsChatInit || needsStateInit || isLegacyUnstructuredChat) {
         update((v) => ({
           ...v,
-          validationState: v.validationState || {
-            currentQuestion: 1,
-            answers: {
-              question1: null,
-              question2: null,
-              question3: null,
-              question4: null,
-              question5: null,
-            },
-            completed: false,
-            score: null,
-          },
-          chat: needsChatInit
+          validationState: (v.validationState && !isLegacyUnstructuredChat)
+            ? v.validationState
+            : {
+                currentQuestion: 1,
+                answers: {
+                  question1: null,
+                  question2: null,
+                  question3: null,
+                  question4: null,
+                  question5: null,
+                },
+                completed: false,
+                score: null,
+              },
+          chat: (needsChatInit || isLegacyUnstructuredChat)
             ? [
                 {
                   id: uid(),
