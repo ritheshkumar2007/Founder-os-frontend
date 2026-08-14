@@ -245,6 +245,8 @@ export function normalizeVenture(v: any): Venture {
     roadmap: v?.roadmap || null,
     marketingPlan: v?.marketingPlan || null,
     founderJourney: v?.founderJourney || null,
+    ideaScore: v?.ideaScore || null,
+    validationSessions: Array.isArray(v?.validationSessions) ? v.validationSessions : [],
     validationState: v?.validationState || v?.ideaValidation?.validationState || {
       currentQuestion: 1,
       answers: {

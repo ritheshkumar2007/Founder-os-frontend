@@ -36,8 +36,18 @@ export function isIdeaValidationComplete(venture: Venture | null | undefined): b
     venture.validationState?.answers?.question4 &&
     venture.validationState?.answers?.question5
   );
+  const hasSavedSessions = Boolean(
+    Array.isArray(venture.validationSessions) &&
+    venture.validationSessions.length > 0 &&
+    venture.validationSessions.some((s) => s.validationState?.completed || (s.ideaScore && s.ideaScore.overallScore > 0))
+  );
 
-  return (hasValidationStateComplete && hasScore) || (hasAnswers && hasScore) || hasScore;
+  return (
+    (hasValidationStateComplete && hasScore) ||
+    (hasAnswers && hasScore) ||
+    hasScore ||
+    hasSavedSessions
+  );
 }
 
 /**

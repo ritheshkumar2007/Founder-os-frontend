@@ -136,6 +136,26 @@ assert("Test 8b: Launch Sprint route access is allowed", checkRouteAccess("/work
 assert("Test 8c: Traction route access is allowed", checkRouteAccess("/workspace/traction", v8).allowed);
 assert("Test 8d: Investor Update route access is allowed", checkRouteAccess("/workspace/investor-update", v8).allowed);
 
+// Test 9: Venture with archived completed session in validationSessions retains unlocked access
+const v9 = createEmptyVenture();
+v9.validationSessions = [
+  {
+    id: "sess-1",
+    title: "DocuFlow AI",
+    createdAt: new Date().toISOString(),
+    validationState: {
+      currentQuestion: 6,
+      answers: { question1: "Brokers", question2: "Excel", question3: "High", question4: "AI", question5: "10 letters" },
+      completed: true,
+      score: { overallScore: 84 },
+    },
+    ideaScore: { overallScore: 84 },
+    chat: [],
+  },
+];
+assert("Test 9: Venture with saved completed validation session retains Idea Validation Complete status", isIdeaValidationComplete(v9));
+assert("Test 9b: Venture with saved session can access MVP Scope even while active chat is fresh", checkRouteAccess("/workspace/mvp-scope", v9).allowed);
+
 console.log("=================================================");
 console.log(`RESULTS: ${passed} / ${total} TESTS PASSED`);
 console.log("=================================================");

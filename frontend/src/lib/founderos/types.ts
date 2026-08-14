@@ -140,6 +140,16 @@ export interface ChatMessage {
   createdAt: string;
 }
 
+export interface ValidationSession {
+  id: string;
+  title: string;
+  createdAt: string;
+  validationState: ValidationState;
+  ideaScore: IdeaScore | null;
+  chat: ChatMessage[];
+  brief?: Brief;
+}
+
 export interface Venture {
   id: string;
   name: string;
@@ -150,6 +160,7 @@ export interface Venture {
   analyzed: boolean;
   ideaScore?: IdeaScore;
   validationState?: ValidationState;
+  validationSessions?: ValidationSession[];
   mvp: MvpScope;
   milestones: Milestone[];
   marketing: MarketingPlan;

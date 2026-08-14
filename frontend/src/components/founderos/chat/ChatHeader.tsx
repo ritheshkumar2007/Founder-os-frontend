@@ -1,15 +1,23 @@
 import React from "react";
-import { Sparkles, Bot, ShieldCheck, Zap, FileText, Kanban, TrendingUp, Award, CheckCircle2 } from "lucide-react";
+import { Sparkles, Bot, ShieldCheck, Zap, Award, CheckCircle2, RotateCcw, History, Plus } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import { deriveIdeaScore } from "@/lib/founderos/derive";
 import { determineCurrentQuestionIndex } from "./mockAiEngine";
 
 interface ChatHeaderProps {
   onOpenScore?: () => void;
+  onClearChat?: () => void;
+  onToggleHistory?: () => void;
+  savedCount?: number;
+  historyOpen?: boolean;
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
   onOpenScore,
+  onClearChat,
+  onToggleHistory,
+  savedCount = 0,
+  historyOpen = false,
 }) => {
   const { venture } = useActiveVenture();
   const isComplete = Boolean(
@@ -31,7 +39,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   return (
     <div className="sticky top-0 z-20 border-b border-[rgba(139,92,246,0.25)] bg-[#0b0f12]/95 backdrop-blur-2xl px-3.5 sm:px-6 py-3 sm:py-4 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
-      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         {/* Left Title & Status */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative flex items-center justify-center size-9 sm:size-11 rounded-xl sm:rounded-2xl bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA] shadow-[0_0_20px_rgba(139,92,246,0.25)] shrink-0">
@@ -58,7 +66,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
             </div>
             <p className="text-[11px] sm:text-xs text-[#cbc3d7] mt-0.5 truncate">
               {isComplete
-                ? "5-Question validation complete. Review your scorecard or proceed to MVP Scoping."
+                ? "5-Question validation completed and saved. Click 'Validate Another Idea' to test a new concept."
                 : "Validate your problem, alternatives, pain frequency, differentiation, and demand before building."}
             </p>
           </div>
@@ -66,6 +74,40 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 
         {/* Right Action Buttons */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto">
+          {/* History Sidebar Toggle Button */}
+          {onToggleHistory && (
+            <button
+              onClick={onToggleHistory}
+              title="View saved validation conversations"
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 sm:px-3 py-1.5 text-xs font-mono transition cursor-pointer ${
+                historyOpen
+                  ? "border-[#A78BFA] bg-[rgba(139,92,246,0.25)] text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]"
+                  : "border-white/10 bg-[#101417] text-[#cbc3d7] hover:border-[#A78BFA]/50 hover:text-white"
+              }`}
+            >
+              <History className="size-3.5 text-[#A78BFA]" />
+              <span className="hidden xs:inline">History</span>
+              {savedCount > 0 && (
+                <span className="ml-0.5 rounded-full bg-[rgba(139,92,246,0.3)] px-1.5 py-0.2 text-[10px] font-bold text-[#A78BFA]">
+                  {savedCount}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Clear Chat / Validate Another Idea Button */}
+          {onClearChat && (
+            <button
+              onClick={onClearChat}
+              title="Clear current interview and start validating another idea"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(139,92,246,0.4)] bg-[rgba(139,92,246,0.12)] hover:bg-[rgba(139,92,246,0.25)] px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-[#A78BFA] hover:text-white transition hover:scale-[1.02] shadow-[0_0_15px_rgba(139,92,246,0.15)] cursor-pointer"
+            >
+              <RotateCcw className="size-3.5 text-[#A78BFA]" />
+              <span>{isComplete ? "Validate Another Idea" : "Clear Chat"}</span>
+            </button>
+          )}
+
+          {/* Score Button */}
           {onOpenScore ? (
             <button
               onClick={onOpenScore}
@@ -77,11 +119,6 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
               <Sparkles className="size-3 text-[#A78BFA]" />
             </button>
           ) : null}
-
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/5 bg-[#101417] text-xs font-mono text-[#958ea0]">
-            <ShieldCheck className="size-4 text-[#A78BFA]" />
-            <span>AI Context Active</span>
-          </div>
         </div>
       </div>
     </div>
