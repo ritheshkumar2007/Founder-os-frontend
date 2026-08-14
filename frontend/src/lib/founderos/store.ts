@@ -509,7 +509,13 @@ export function signIn(user: FounderUser, options?: { lastRoute?: string }) {
   // Fetch real MongoDB ventures asynchronously
   fetchUserVenturesFromBackend();
 
-  return { user: normalizedUser, activeVentureId: activeId, lastRoute: existingRecord?.lastRoute };
+  return {
+    user: normalizedUser,
+    activeVentureId: activeId,
+    lastRoute: existingRecord?.lastRoute,
+    userRecord: nextState.users[email],
+    ventures,
+  };
 }
 
 export function signOut() {

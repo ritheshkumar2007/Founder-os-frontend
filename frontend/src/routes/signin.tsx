@@ -156,7 +156,8 @@ function SignIn() {
       email: trimmedEmail,
     });
 
-    const activeVenture = authResult.userRecord.ventures.find((v) => v.id === authResult.userRecord.activeId) || authResult.userRecord.ventures[0];
+    const ventures = authResult.ventures || authResult.userRecord?.ventures || [];
+    const activeVenture = ventures.find((v: any) => v.id === authResult.activeVentureId) || ventures[0] || null;
     const journey = getFounderJourney(activeVenture);
     const stageTarget = getStageRoute(journey.currentStage);
 
