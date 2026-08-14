@@ -230,10 +230,16 @@ function MvpScopePage() {
     try {
       const res = await api.generateMvpScopeModule({
         ventureId,
-        ventureName: ventureNameInput || "Untitled Venture",
-        idea: ideaInput || "Startup Concept",
-        targetUsers: targetUsersInput || "Target Customers",
-        problem: problemInput || "Core Customer Problem",
+        ventureName: ventureNameInput || venture?.name || "Untitled Venture",
+        idea: ideaInput || venture?.brief?.building || "Startup Concept",
+        targetUsers: targetUsersInput || venture?.validationState?.answers?.question1 || venture?.brief?.audience || "Target Customers",
+        problem: problemInput || venture?.validationState?.answers?.question1 || venture?.brief?.problem || "Core Customer Problem",
+        alternatives: venture?.validationState?.answers?.question2 || venture?.brief?.workaround,
+        painFrequency: venture?.validationState?.answers?.question3 || venture?.brief?.outcome,
+        differentiation: venture?.validationState?.answers?.question4,
+        evidence: venture?.validationState?.answers?.question5,
+        validationScore: venture?.ideaScore?.overallScore,
+        weakestCategory: (venture?.ideaScore as any)?.weakestCategory,
       });
 
       if (res.success && res.data?.mvpScope) {

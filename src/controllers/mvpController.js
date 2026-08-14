@@ -9,11 +9,23 @@ const { generateMvpScopeFromGemini } = require('../services/mvpGeminiService');
 async function generateScope(req, res, next) {
   try {
     const userId = req.user.id;
-    let { ventureId, ventureName, idea, targetUsers, problem } = req.body;
+    let {
+      ventureId,
+      ventureName,
+      idea,
+      targetUsers,
+      problem,
+      alternatives,
+      painFrequency,
+      differentiation,
+      evidence,
+      validationScore,
+      weakestCategory,
+    } = req.body;
 
     // API Validation
     if (!idea || !idea.trim()) {
-      return res.status(400).json({ success: false, message: 'Startup idea is required.' });
+      idea = "Validated Startup Idea";
     }
 
     let venture = null;
@@ -29,8 +41,13 @@ async function generateScope(req, res, next) {
       ventureId = venture._id;
       ventureName = ventureName || venture.ventureName || venture.name || 'Untitled Venture';
       idea = idea || venture.brief?.building || 'New Startup Idea';
-      targetUsers = targetUsers || venture.brief?.audience || 'Target Customers';
-      problem = problem || venture.brief?.problem || 'Core Customer Problem';
+      targetUsers = targetUsers || venture.validationState?.answers?.question1 || venture.brief?.audience || 'Target Customers';
+      problem = problem || venture.validationState?.answers?.question1 || venture.brief?.problem || 'Core Customer Problem';
+      alternatives = alternatives || venture.validationState?.answers?.question2 || venture.brief?.workaround;
+      painFrequency = painFrequency || venture.validationState?.answers?.question3 || venture.brief?.outcome;
+      differentiation = differentiation || venture.validationState?.answers?.question4;
+      evidence = evidence || venture.validationState?.answers?.question5;
+      validationScore = validationScore || venture.ideaScore?.overallScore;
     } else {
       ventureName = ventureName || 'Untitled Venture';
       targetUsers = targetUsers || 'Target Customers';
@@ -43,6 +60,12 @@ async function generateScope(req, res, next) {
       idea,
       targetUsers,
       problem,
+      alternatives,
+      painFrequency,
+      differentiation,
+      evidence,
+      validationScore,
+      weakestCategory,
     });
 
     const targetVentureId = (ventureId && mongoose.Types.ObjectId.isValid(ventureId)) ? ventureId : (venture ? venture._id : undefined);
