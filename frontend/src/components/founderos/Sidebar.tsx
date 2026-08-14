@@ -1,8 +1,8 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ChevronDown, LogOut, Plus, Settings, X, Shield, Rocket, Layers, Lock, CheckCircle2, ArrowRight } from "lucide-react";
+import { ChevronDown, LogOut, Plus, Settings, X, Shield, Rocket, Layers, Lock, CheckCircle2, ArrowRight, PanelLeftClose } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { addVenture, setActiveVenture, signOut, useActiveVenture } from "@/lib/founderos/store";
+import { addVenture, setActiveVenture, signOut, useActiveVenture, uid } from "@/lib/founderos/store";
 import { Button } from "@/components/founderos/ui";
 import { checkRouteAccess, getFounderJourney } from "@/lib/founderos/journey";
 import { toast } from "sonner";
@@ -42,8 +42,8 @@ export const STAGED_NAV: NavSection[] = [
   },
 ];
 
-export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
-  const { app, venture } = useActiveVenture();
+export function Sidebar({ onNavigate, onToggleCollapse }: { onNavigate?: () => void; onToggleCollapse?: () => void }) {
+  const { app, venture, update } = useActiveVenture();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [openSelector, setOpenSelector] = useState(false);
@@ -68,20 +68,33 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex h-full flex-col gap-5 bg-[#0b0f12] p-5 relative select-none border-r border-[rgba(139,92,246,0.2)]">
-      {/* Brand Header */}
-      <Link to="/" className="flex items-center gap-3 group">
-        <span className="grid size-9 place-items-center rounded-xl border border-[#A78BFA]/40 bg-[#A78BFA]/15 font-display text-[#A78BFA] text-base font-bold shadow-[0_0_15px_rgba(167,139,250,0.3)]">
-          <Rocket className="size-4 text-[#A78BFA]" />
-        </span>
-        <div className="flex flex-col">
-          <span className="font-display text-base font-bold text-white tracking-tight">
-            Founder<span className="text-[#A78BFA]">OS</span>
+      {/* Brand Header with Close Sidebar Button */}
+      <div className="flex items-center justify-between gap-2">
+        <Link to="/" className="flex items-center gap-3 group min-w-0">
+          <span className="grid size-9 place-items-center rounded-xl border border-[#A78BFA]/40 bg-[#A78BFA]/15 font-display text-[#A78BFA] text-base font-bold shadow-[0_0_15px_rgba(167,139,250,0.3)] shrink-0">
+            <Rocket className="size-4 text-[#A78BFA]" />
           </span>
-          <span className="text-[10px] font-mono text-[#958ea0] uppercase tracking-widest -mt-0.5">
-            Startup Workspace
-          </span>
-        </div>
-      </Link>
+          <div className="flex flex-col min-w-0">
+            <span className="font-display text-base font-bold text-white tracking-tight truncate">
+              Founder<span className="text-[#A78BFA]">OS</span>
+            </span>
+            <span className="text-[10px] font-mono text-[#958ea0] uppercase tracking-widest -mt-0.5 truncate">
+              Startup Workspace
+            </span>
+          </div>
+        </Link>
+
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            title="Close sidebar"
+            className="hidden lg:flex items-center justify-center size-8 rounded-lg text-[#958ea0] hover:text-white hover:bg-white/5 transition cursor-pointer border border-white/5 shrink-0"
+          >
+            <PanelLeftClose className="size-4" />
+          </button>
+        )}
+      </div>
 
       {/* New Venture CTA */}
       <button
