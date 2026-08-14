@@ -10,6 +10,8 @@ import { GrowthDrawer } from "./GrowthDrawer";
 import { IdeaScoreModal } from "./IdeaScoreModal";
 import { generateMockAiResponse } from "./mockAiEngine";
 import { processValidationTurn, INITIAL_COACH_MESSAGE } from "@/lib/founderos/validationEngine";
+import { deriveIdeaScore } from "@/lib/founderos/derive";
+import api from "@/lib/api";
 import type { ValidationState } from "@/lib/founderos/types";
 
 const INITIAL_GREETING_CONTENT = INITIAL_COACH_MESSAGE;

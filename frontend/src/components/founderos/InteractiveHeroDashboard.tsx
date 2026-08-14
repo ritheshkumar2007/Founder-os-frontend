@@ -26,6 +26,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
   const [typedOutput, setTypedOutput] = useState<string[]>([]);
   const [isSimulating, setIsSimulating] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Dynamic 3D perspective tilt tracking
@@ -55,6 +56,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
   ];
 
   useEffect(() => {
+    setMounted(true);
     setTypedOutput(initialLogs);
   }, []);
 
@@ -118,7 +120,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
       <div
         className="relative rounded-[20px] sm:rounded-[24px] border border-[rgba(139,92,246,0.3)] bg-[#0b0f12]/95 backdrop-blur-2xl shadow-[0_35px_90px_rgba(0,0,0,0.85)] overflow-hidden"
         style={{
-          transform: typeof window !== "undefined" && window.innerWidth >= 1024 ? `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)` : "none",
+          transform: mounted && typeof window !== "undefined" && window.innerWidth >= 1024 ? `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)` : "none",
           transformStyle: "preserve-3d",
         }}
       >
