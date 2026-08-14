@@ -19,81 +19,81 @@ const STAGES: Stage[] = [
     id: "stage-1",
     stepNumber: "01",
     title: "Idea Validation Brief",
-    subtitle: "Idea Positioning & Thesis",
-    description: "Transform an abstract idea into a validated venture brief. AI analyzes market gaps, identifies unfair advantages, and defines target customer personas instantly.",
+    subtitle: "Positioning & Market Thesis",
+    description: "Analyze market gaps, define target buyer personas, and score value proposition viability before writing any code.",
     icon: Sparkles,
     badge: "STAGE 01",
     details: [
-      "AI positioning matrix & competitive space analysis",
-      "Core thesis generator with value proposition scoring",
+      "Target customer ICP definition",
+      "Competitive gap analysis",
       "One-click founder brief export"
     ],
-    telemetryMetric: "98.4%",
-    telemetryLabel: "Idea Clarity Score"
+    telemetryMetric: "100-Pt",
+    telemetryLabel: "Viability Scorecard"
   },
   {
     id: "stage-2",
     stepNumber: "02",
     title: "Problem Radar",
-    subtitle: "Customer Pain Synthesis",
-    description: "Don't build in the dark. FounderOS transcribes customer interviews, scores problem severity, and detects high-willingness-to-pay signals before you write code.",
+    subtitle: "Customer Pain & Demand",
+    description: "Synthesize customer interview notes, score problem severity, and verify real willingness-to-pay before building.",
     icon: Radar,
     badge: "STAGE 02",
     details: [
-      "Automated transcript parsing & pain intensity extraction",
-      "Willingness-to-pay heatmap across customer cohorts",
-      "Go / No-Go decision confidence index"
+      "Customer interview transcript parsing",
+      "Willingness-to-pay validation signals",
+      "Go / No-Go decision confidence scoring"
     ],
-    telemetryMetric: "82.6%",
-    telemetryLabel: "Validation Signal"
+    telemetryMetric: "5-10",
+    telemetryLabel: "Verified User Interviews"
   },
   {
     id: "stage-3",
     stepNumber: "03",
     title: "Precision MVP Scope",
     subtitle: "Zero-Bloat Architecture",
-    description: "Cut out months of feature bloat. Scope the absolute smallest working software version that solves the core problem and delivers immediate customer delight.",
+    description: "Eliminate feature bloat. Scope the smallest functional version that solves the core problem and delivers immediate customer utility.",
     icon: Layers,
     badge: "STAGE 03",
     details: [
-      "Strict feature prioritization matrix (Build Now vs Later)",
-      "Recommended modern tech stack architecture",
-      "API schema & data model auto-generation"
+      "Strict build-now vs build-later feature cuts",
+      "Modern tech stack recommendations",
+      "Database schema & API spec generation"
     ],
-    telemetryMetric: "-65%",
-    telemetryLabel: "Build Time Reduction"
+    telemetryMetric: "3",
+    telemetryLabel: "Core MVP Features Max"
   },
   {
     id: "stage-4",
     stepNumber: "04",
     title: "7-Day Build Sprint",
-    subtitle: "Hyper-Focused Execution",
-    description: "Time-boxed, high-velocity execution engine. Daily sprint logs, milestone tracking, and task prioritization keep your team shippable in 7 days.",
+    subtitle: "Time-Boxed Execution",
+    description: "Daily shippable micro-sprints and scope-creep warnings to take your MVP from clean repo to live production in one week.",
     icon: Zap,
     badge: "STAGE 04",
     details: [
-      "7-day sprint checklist for product & growth",
-      "Automated milestone completion tracking",
-      "Pre-launch countdown & waitlist mechanics"
+      "Day 1-7 actionable engineering checklist",
+      "Scope-creep alert triggers",
+      "Deployment & waitlist onboarding"
     ],
-    telemetryMetric: "6.8 Days",
-    telemetryLabel: "Average Sprint Speed"
+    telemetryMetric: "7 Days",
+    telemetryLabel: "Sprint to Live Production"
   },
   {
     id: "stage-5",
     stepNumber: "05",
     title: "Traction & Investor Growth",
-    subtitle: "Live Data Room & Analytics",
-    description: "Scale with real traction metrics. Track active users, revenue growth, unit economics, and share live investor data rooms with VC partners.",
+    subtitle: "Diligence Data Room",
+    description: "Track active usage, MRR velocity, and share verified investor data rooms with cap table projections.",
     icon: Rocket,
     badge: "STAGE 05",
     details: [
-      "Real-time MRR & retention velocity metrics",
-      "Automated investor update generator",
-      "Cap table & runway projection engine"
+      "Live MRR & retention tracking",
+      "Automated investor monthly updates",
+      "Cap table & runway projection models"
     ],
-    telemetryMetric: "$420M+",
-    telemetryLabel: "Capital Raised by Founders"
+    telemetryMetric: "1-Click",
+    telemetryLabel: "Live Diligence Room Export"
   }
 ];
 
@@ -107,13 +107,13 @@ export const TrajectoryStoryline: React.FC = () => {
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] text-xs font-mono text-[#A78BFA]">
           <Sparkles className="size-3.5 text-[#A78BFA]" />
-          <span>STARTUP WORKFLOW FRAMEWORK</span>
+          <span>THE 5-STAGE SYSTEM</span>
         </div>
         <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight">
-          From Idea Brief to <span className="text-gradient-system">Scaled Venture</span>
+          From Raw Idea to <span className="text-gradient-system">Fundable Venture</span>
         </h2>
         <p className="text-sm sm:text-base text-[#cbc3d7] max-w-2xl mx-auto leading-relaxed">
-          Follow the 5-stage operating system trajectory to build with speed, clarity, and precision.
+          A proven sequential workflow designed to eliminate waste and keep you shipping.
         </p>
       </div>
 
@@ -149,7 +149,7 @@ export const TrajectoryStoryline: React.FC = () => {
       {/* Stage Detail Workspace Panel */}
       <div className="panel p-5 sm:p-8 lg:p-10 border border-[rgba(139,92,246,0.3)] bg-[#0b0f12] rounded-2xl sm:rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.15)] overflow-hidden">
         <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4 sm:space-y-6">
+          <div className="lg:col-span-8 space-y-4 sm:space-y-6">
             <div className="flex items-center gap-3">
               <span className="text-xs font-mono px-3 py-1 rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold">
                 {activeStage.badge}
@@ -176,9 +176,9 @@ export const TrajectoryStoryline: React.FC = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col justify-center p-4 sm:p-6 rounded-2xl border border-white/5 bg-[#101417] space-y-3 sm:space-y-4">
-            <span className="text-xs font-mono uppercase text-[#958ea0]">Stage Metric Benchmark</span>
-            <p className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[#A78BFA]">
+          <div className="lg:col-span-4 flex flex-col justify-center p-4 sm:p-6 rounded-2xl border border-white/5 bg-[#101417] space-y-2 text-center sm:text-left">
+            <span className="text-xs font-mono uppercase text-[#958ea0]">Stage Milestone</span>
+            <p className="text-3xl sm:text-4xl font-bold font-display text-[#A78BFA]">
               {activeStage.telemetryMetric}
             </p>
             <p className="text-xs font-mono text-[#cbc3d7]">{activeStage.telemetryLabel}</p>

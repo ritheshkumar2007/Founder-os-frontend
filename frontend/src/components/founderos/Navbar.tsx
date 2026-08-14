@@ -26,21 +26,33 @@ export const Navbar: React.FC = () => {
         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           <a
             className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
+            href="#trajectory"
+          >
+            5-Stage System
+          </a>
+          <a
+            className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
+            href="#simulator"
+          >
+            Simulator
+          </a>
+          <a
+            className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
             href="#features"
           >
-            Features
+            Capabilities
           </a>
           <a
             className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
-            href="#pricing"
+            href="#reviews"
           >
-            Pricing
+            Reviews
           </a>
           <a
             className="text-[#cbc3d7] hover:text-[#A78BFA] transition-colors font-mono text-xs uppercase tracking-wider"
-            href="#docs"
+            href="#faq"
           >
-            Docs
+            FAQ
           </a>
         </nav>
 
@@ -78,25 +90,39 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden fixed top-16 left-0 w-full z-40 bg-[#0b0f12]/98 backdrop-blur-2xl border-b border-[rgba(139,92,246,0.3)] px-6 py-6 flex flex-col gap-4 shadow-2xl">
           <nav className="flex flex-col gap-3 font-mono text-xs uppercase tracking-wider">
             <a
+              href="#trajectory"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
+            >
+              5-Stage System
+            </a>
+            <a
+              href="#simulator"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
+            >
+              Simulator
+            </a>
+            <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
-              Features
+              Capabilities
             </a>
             <a
-              href="#pricing"
+              href="#reviews"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
-              Pricing
+              Reviews
             </a>
             <a
-              href="#docs"
+              href="#faq"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[#cbc3d7] hover:text-[#A78BFA] py-2"
             >
-              Docs
+              FAQ
             </a>
           </nav>
           <div className="pt-3 border-t border-white/10">

@@ -13,26 +13,26 @@ export const Footer: React.FC = () => {
         </span>
       </div>
       <p className="font-caption text-caption text-on-surface-variant text-center">
-        © {new Date().getFullYear()} FounderOS. High-Velocity Systems.
+        © {new Date().getFullYear()} FounderOS. The Startup Operating System.
       </p>
       <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
         <a
           className="font-caption text-caption text-on-surface-variant hover:text-electric-violet transition-colors"
-          href="#docs"
+          href="#trajectory"
         >
-          Documentation
+          5-Stage System
         </a>
         <a
           className="font-caption text-caption text-on-surface-variant hover:text-electric-violet transition-colors"
-          href="#"
+          href="#simulator"
         >
-          Privacy
+          AI Simulator
         </a>
         <a
           className="font-caption text-caption text-on-surface-variant hover:text-electric-violet transition-colors"
-          href="#"
+          href="#faq"
         >
-          Support
+          FAQ
         </a>
       </div>
     </footer>

@@ -32,7 +32,7 @@ export const LaunchCTA: React.FC = () => {
             <span className="text-gradient-neural">Extraordinary?</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-[#cbc3d7] max-w-xl mx-auto">
-            FounderOS is the operating system for building high-velocity, high-growth startups on an obsidian canvas.
+            Take your startup from raw idea to live product. Validate customer demand, scope your precision MVP, and ship in 7 days.
           </p>
         </div>
 

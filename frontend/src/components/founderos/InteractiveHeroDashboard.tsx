@@ -98,32 +98,20 @@ export const InteractiveHeroDashboard: React.FC = () => {
 
       {/* Floating Anti-Gravity Badge 1 */}
       <div 
-        className="hidden lg:flex absolute -top-8 -left-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12]/95 backdrop-blur-xl text-xs font-sans text-[#A78BFA] shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+        className="hidden lg:flex absolute -top-6 -left-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12]/95 backdrop-blur-xl text-xs font-sans text-[#A78BFA] shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
         style={{ transform: "translateZ(65px)" }}
       >
         <Sparkles className="size-4 text-[#A78BFA]" />
-        <span className="font-semibold">AI ACCELERATION: <span className="font-mono font-bold text-white">98.4%</span></span>
+        <span className="font-semibold">AI VIABILITY SCORE: <span className="font-mono font-bold text-white">94/100</span></span>
       </div>
 
       {/* Floating Anti-Gravity Badge 2 */}
       <div 
-        className="hidden lg:flex absolute -bottom-7 -right-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12]/95 backdrop-blur-xl text-xs font-sans text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+        className="hidden lg:flex absolute -bottom-6 -right-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl border border-[rgba(139,92,246,0.4)] bg-[#0b0f12]/95 backdrop-blur-xl text-xs font-sans text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
         style={{ transform: "translateZ(75px)" }}
       >
         <CheckCircle2 className="size-4 text-[#A78BFA]" />
-        <span className="font-semibold text-white">7-DAY SPRINT ACTIVE</span>
-      </div>
-
-      {/* Floating Live Notification Toast */}
-      <div 
-        className="hidden md:flex absolute top-12 -right-12 z-20 items-center gap-3 px-4 py-2 rounded-xl border border-white/10 bg-[#0b0f12]/95 backdrop-blur-xl text-xs font-sans text-white shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
-        style={{ transform: "translateZ(85px)" }}
-      >
-        <Bell className="size-3.5 text-[#A78BFA]" />
-        <div className="flex flex-col">
-          <span className="text-[10px] font-medium text-[#958ea0]">LIVE EVENT</span>
-          <span className="font-semibold text-[#A78BFA]">Sprint Roadmap Completed</span>
-        </div>
+        <span className="font-semibold text-white">7-DAY SPRINT: ON TRACK</span>
       </div>
 
       {/* Main OS Window Floating Dashboard Chassis */}
@@ -147,15 +135,11 @@ export const InteractiveHeroDashboard: React.FC = () => {
               <Rocket className="size-3.5 text-[#A78BFA] shrink-0" />
               <span className="font-semibold tracking-wide truncate">FOUNDEROS</span>
               <span className="text-white/30 hidden sm:inline">/</span>
-              <span className="text-[#A78BFA] font-medium hidden sm:inline">Idea Validation.app</span>
+              <span className="text-[#A78BFA] font-medium hidden sm:inline">Workspace Preview</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 text-xs font-sans">
-            <div className="hidden sm:flex items-center gap-2 text-[#cbc3d7]">
-              <Activity className="size-3.5 text-[#A78BFA] animate-pulse" />
-              <span>APP: <strong className="text-white font-mono">01/07</strong></span>
-            </div>
             <div className="px-2.5 py-1 rounded-md bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] text-[#A78BFA] font-medium text-[11px] flex items-center gap-1.5">
               <span className="size-1.5 rounded-full bg-[#A78BFA] animate-pulse" />
               <span>COPILOT ACTIVE</span>
@@ -175,35 +159,35 @@ export const InteractiveHeroDashboard: React.FC = () => {
                 <span>NeuralFlow AI</span>
                 <span className="size-2 rounded-full bg-[#A78BFA]" />
               </h3>
-              <p className="text-xs font-sans text-[#cbc3d7] mt-0.5">B2A Autonomous Dev Ops</p>
+              <p className="text-xs font-sans text-[#cbc3d7] mt-0.5">B2B Developer Infrastructure</p>
             </div>
 
             {/* Validation Meter Gauge */}
             <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#101417] space-y-2">
               <div className="flex items-center justify-between text-xs font-sans">
-                <span className="text-[#cbc3d7] font-medium">Market Score</span>
+                <span className="text-[#cbc3d7] font-medium">Viability Score</span>
                 <span className="text-[#A78BFA] font-mono font-bold">94 / 100</span>
               </div>
               <div className="h-2 w-full rounded-full bg-white/[0.08] overflow-hidden">
                 <div className="h-full bg-[#A78BFA] w-[94%]" />
               </div>
-              <p className="text-[11px] font-sans text-[#958ea0]">High investor demand index</p>
+              <p className="text-[11px] font-sans text-[#958ea0]">High market willingness-to-pay</p>
             </div>
 
-            {/* Flight Path Navigation Steps */}
+            {/* Flight Path Navigation Steps without 01-05 repetition */}
             <div className="space-y-1">
               <p className="text-[10px] font-sans font-semibold uppercase tracking-widest text-[#958ea0] px-2 mb-2">
-                Flight Telemetry
+                System Workflow
               </p>
               {[
-                { id: "01", name: "Deep Space Brief", status: "complete" },
-                { id: "02", name: "Problem Radar", status: "complete" },
-                { id: "03", name: "MVP Scoper", status: "complete" },
-                { id: "04", name: "7-Day Sprint Flight", status: "current" },
-                { id: "05", name: "Launch & Traction", status: "upcoming" },
+                { name: "Validation Brief", status: "complete" },
+                { name: "Problem Radar", status: "complete" },
+                { name: "Precision MVP Scope", status: "complete" },
+                { name: "7-Day Build Sprint", status: "current" },
+                { name: "Investor Data Room", status: "upcoming" },
               ].map((step) => (
                 <div
-                  key={step.id}
+                  key={step.name}
                   className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-sans transition-colors ${
                     step.status === "current"
                       ? "bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.4)] text-[#A78BFA] font-semibold"
@@ -213,7 +197,6 @@ export const InteractiveHeroDashboard: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-[10px] font-mono opacity-70">{step.id}</span>
                     <span>{step.name}</span>
                   </div>
                   {step.status === "complete" ? (
@@ -466,17 +449,14 @@ export const InteractiveHeroDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Bottom Status Telemetry Footer */}
+            {/* Bottom Status Footer */}
             <div className="pt-3 border-t border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11px] font-sans text-[#cbc3d7] gap-2">
-              <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1 text-[#A78BFA] font-medium">
-                  <CheckCircle2 className="size-3.5 text-[#A78BFA]" /> SYSTEM STABLE
-                </span>
-                <span>•</span>
-                <span>DATA ROOM READY</span>
+              <div className="flex items-center gap-2 text-[#cbc3d7]">
+                <CheckCircle2 className="size-3.5 text-[#A78BFA]" />
+                <span>Live workspace synchronization ready</span>
               </div>
               <div className="text-[#A78BFA] font-semibold text-[10px] sm:text-[11px]">
-                FOUNDEROS WORKSPACE ACTIVE
+                5-Stage System Connected
               </div>
             </div>
           </div>
