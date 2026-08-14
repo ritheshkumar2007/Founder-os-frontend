@@ -1,7 +1,8 @@
 import React from "react";
-import { Sparkles, Bot, ShieldCheck, Zap, FileText, Kanban, TrendingUp, Award } from "lucide-react";
+import { Sparkles, Bot, ShieldCheck, Zap, FileText, Kanban, TrendingUp, Award, CheckCircle2 } from "lucide-react";
 import { useActiveVenture } from "@/lib/founderos/store";
 import { deriveIdeaScore } from "@/lib/founderos/derive";
+import { determineCurrentQuestionIndex } from "./mockAiEngine";
 
 interface ChatHeaderProps {
   onOpenReports?: () => void;
@@ -21,6 +22,9 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   const ideaScore = venture ? deriveIdeaScore(venture) : null;
   const scoreVal = ideaScore?.overallScore ?? 0;
 
+  const currentQIndex = venture?.chat ? determineCurrentQuestionIndex(venture.chat) : 0;
+  const isComplete = currentQIndex >= 5;
+
   return (
     <div className="sticky top-0 z-20 border-b border-[rgba(139,92,246,0.25)] bg-[#0b0f12]/95 backdrop-blur-2xl px-3.5 sm:px-6 py-3 sm:py-4 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
@@ -34,14 +38,24 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-base sm:text-lg font-bold font-display tracking-tight text-white truncate">
-                AI Founder Coach
+                Idea Validation Coach
               </h1>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.15)] text-[10px] sm:text-[11px] font-mono font-semibold text-[#A78BFA] shrink-0">
-                <Zap className="size-2.5 sm:size-3" /> ONLINE
+                {isComplete ? (
+                  <>
+                    <CheckCircle2 className="size-2.5 sm:size-3" /> VALIDATED
+                  </>
+                ) : (
+                  <>
+                    <Zap className="size-2.5 sm:size-3" /> QUESTION {Math.min(5, currentQIndex + 1)} OF 5
+                  </>
+                )}
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-[#cbc3d7] mt-0.5 truncate">
-              Talk naturally about your startup. I'll build your venture brief while we chat.
+              {isComplete
+                ? "5-Question validation complete. Review your scorecard or proceed to MVP Scoping."
+                : "Validate your problem, alternatives, pain frequency, differentiation, and demand before building."}
             </p>
           </div>
         </div>

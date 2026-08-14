@@ -12,11 +12,9 @@ import { generateMockAiResponse } from "./mockAiEngine";
 import { deriveIdeaScore } from "@/lib/founderos/derive";
 import api from "@/lib/api";
 
-const INITIAL_GREETING_CONTENT = `FounderOS AI Copilot online.
+const INITIAL_GREETING_CONTENT = `Before building or scoping software, we need to stress-test your idea across five core validation questions. This saves months of building things nobody wants.
 
-I hold live context across your startup workflow — validation, MVP scoping, sprint execution, and investor traction.
-
-Tell me what you're building and who experiences the core problem.`;
+First question: What specific problem are you solving, and who has this problem?`;
 
 export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();

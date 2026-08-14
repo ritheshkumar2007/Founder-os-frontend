@@ -268,38 +268,38 @@ export const IdeaScoreModal: React.FC<IdeaScoreModalProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-white/50">
-                5-Pillar Score Breakdown (100 Points Total)
+                5-Pillar Validation Breakdown (100 Points Total)
               </h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {renderPillarBar(
-                "1. Problem Severity & Urgency",
+                "1. Problem Clarity",
                 currentScore.pillars.problemSeverity,
                 <Flame className="h-4 w-4 text-orange-400" />,
                 "bg-orange-500"
               )}
               {renderPillarBar(
-                "2. Willingness to Pay",
+                "2. Alternatives Understanding",
                 currentScore.pillars.willingnessToPay,
                 <CreditCard className="h-4 w-4 text-emerald-400" />,
                 "bg-emerald-500"
               )}
               {renderPillarBar(
-                "3. Distribution & Acquisition",
+                "3. Pain Frequency & Intensity",
                 currentScore.pillars.distribution,
                 <Rocket className="h-4 w-4 text-sky-400" />,
                 "bg-sky-500"
               )}
               {renderPillarBar(
-                "4. Unfair Advantage & Moat",
+                "4. Differentiation & Wedge",
                 currentScore.pillars.unfairAdvantage,
                 <ShieldCheck className="h-4 w-4 text-purple-400" />,
                 "bg-purple-500"
               )}
               <div className="sm:col-span-2">
                 {renderPillarBar(
-                  "5. Execution & 7-Day MVP Speed",
+                  "5. Evidence of Demand",
                   currentScore.pillars.executionSpeed,
                   <Zap className="h-4 w-4 text-amber-400" />,
                   "bg-amber-500"

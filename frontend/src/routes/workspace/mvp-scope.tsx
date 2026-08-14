@@ -255,22 +255,45 @@ function MvpScopePage() {
         }
       />
 
-      {/* Venture Memory Context Banner */}
-      {hasVentureMemory ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
-          <Sparkles className="size-5 shrink-0 text-[#A78BFA]" />
-          <div>
-            <span className="font-bold text-[#A78BFA]">Venture Memory Connected: </span>
-            Auto-inherited your validated idea and target audience from Step 1. You can edit parameters below or generate your 12-part technical MVP blueprint.
+      {/* Venture Memory & Validation Gating Banner */}
+      {venture?.ideaScore && venture.ideaScore.overallScore >= 60 ? (
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[rgba(139,92,246,0.1)] p-4 text-xs text-white shadow-sm">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="size-5 shrink-0 text-[#A78BFA]" />
+            <div>
+              <span className="font-bold text-[#A78BFA]">Idea Validated (Score: {venture.ideaScore.overallScore}/100): </span>
+              {venture.ideaScore.verdict || "Ready to scope your precision MVP and eliminate feature bloat."}
+            </div>
           </div>
+          <LinkButton to="/workspace/idea-validation" variant="secondary" className="text-xs shrink-0">
+            View Validation
+          </LinkButton>
+        </div>
+      ) : hasVentureMemory ? (
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-white shadow-sm">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="size-5 shrink-0 text-amber-400" />
+            <div>
+              <span className="font-bold text-amber-400">Validation Notice: </span>
+              Idea validation is in progress. You can proceed with MVP scoping, but we recommend completing all 5 validation questions to prevent building features without verified demand.
+            </div>
+          </div>
+          <LinkButton to="/workspace/idea-validation" variant="secondary" className="text-xs shrink-0">
+            Complete Validation
+          </LinkButton>
         </div>
       ) : (
-        <div className="flex items-center gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
-          <AlertCircle className="size-5 shrink-0 text-[#A78BFA]" />
-          <div>
-            <span className="font-bold text-[#A78BFA]">No Venture Memory Recorded: </span>
-            Input your startup details in the form below or complete Step 1 (Idea Validation) to auto-populate your parameters.
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-[rgba(139,92,246,0.3)] bg-[#101417] p-4 text-xs text-[#cbc3d7] shadow-sm">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="size-5 shrink-0 text-[#A78BFA]" />
+            <div>
+              <span className="font-bold text-[#A78BFA]">Step 1 (Idea Validation) Not Completed: </span>
+              Answer the 5 validation questions with your AI Coach first to auto-populate your venture specs.
+            </div>
           </div>
+          <LinkButton to="/workspace/idea-validation" variant="primary" className="text-xs shrink-0">
+            Start Validation
+          </LinkButton>
         </div>
       )}
 
