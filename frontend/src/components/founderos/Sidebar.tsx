@@ -312,7 +312,7 @@ export function Sidebar({ onNavigate, onToggleCollapse }: { onNavigate?: () => v
                       >
                         <span className="flex items-center gap-1.5 truncate">
                           <Plus className="size-3 shrink-0" />
-                          <span className="truncate">+ Validate Another Idea</span>
+                          <span className="truncate">Validate Another Idea</span>
                         </span>
                       </button>
 
