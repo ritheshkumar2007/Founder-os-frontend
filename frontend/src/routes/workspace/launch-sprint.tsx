@@ -564,7 +564,7 @@ function SprintFlightDeckPage() {
                                 : "text-[#958ea0] bg-[#181c1f] border border-white/5"
                             }`}
                           >
-                            {isCompleted ? "COMPLETED" : "LOCKED"}
+                            {isCompleted ? "COMPLETED" : "QUEUED"}
                           </span>
                         </div>
                         <p className="text-xs text-[#cbc3d7] leading-relaxed">

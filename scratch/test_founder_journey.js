@@ -55,6 +55,8 @@ assert("Test 1b: Target route is '/workspace/idea-validation'", getStageRoute(j1
 const r2 = checkRouteAccess("/workspace/mvp-scope", v1);
 assert("Test 2: Direct URL access to MVP Scope is blocked", !r2.allowed);
 assert("Test 2b: Redirects to Idea Validation", r2.redirectUrl === "/workspace/idea-validation");
+assert("Test 2c: Title is 'Complete Idea Validation first.'", r2.title === "Complete Idea Validation first.");
+assert("Test 2d: Description explains 5 questions", r2.description.includes("5 validation questions"));
 
 // Test 3: Complete 5 validation questions + score -> Unlocks MVP Scope
 const v3 = createEmptyVenture();
@@ -79,6 +81,7 @@ assert("Test 3b: MVP Scope route access is allowed", checkRouteAccess("/workspac
 const r4 = checkRouteAccess("/workspace/build-roadmap", v3);
 assert("Test 4: Roadmap access is blocked before MVP Scope is completed", !r4.allowed);
 assert("Test 4b: Redirects to MVP Scope", r4.redirectUrl === "/workspace/mvp-scope");
+assert("Test 4c: Title is 'Complete MVP Scope first.'", r4.title === "Complete MVP Scope first.");
 
 // Test 5: Complete MVP Scope -> Unlocks Roadmap
 const v5 = JSON.parse(JSON.stringify(v3));
@@ -99,6 +102,7 @@ assert("Test 5b: Roadmap route access is allowed", checkRouteAccess("/workspace/
 // Test 6: Try opening Marketing Plan before completing Roadmap -> Blocked
 const r6 = checkRouteAccess("/workspace/marketing-plan", v5);
 assert("Test 6: Marketing Plan access is blocked before Roadmap is complete", !r6.allowed);
+assert("Test 6b: Title is 'Complete Roadmap first.'", r6.title === "Complete Roadmap first.");
 
 // Test 7: Complete Roadmap -> Unlocks Marketing Plan
 const v7 = JSON.parse(JSON.stringify(v5));

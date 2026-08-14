@@ -146,68 +146,51 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 pathname === item.to ||
                 (item.to === "/workspace/idea-validation" && (pathname === "/workspace/validate" || pathname === "/workspace/venture-brief" || pathname === "/workspace/validation-summary"));
 
-              // Check progressive unlock state
               let isCompleted = false;
               let isCurrent = false;
-              let isLocked = false;
-              let lockReason = "";
 
               if (item.to === "/workspace/idea-validation") {
                 isCompleted = journey.completedStages.ideaValidation;
                 isCurrent = journey.currentStage === "idea_validation";
-                isLocked = false;
               } else if (item.to === "/workspace/mvp-scope") {
                 isCompleted = journey.completedStages.mvpScope;
                 isCurrent = journey.currentStage === "mvp_scope";
-                isLocked = !journey.completedStages.ideaValidation;
-                lockReason = "Complete Idea Validation first to unlock MVP Scope.";
               } else if (item.to === "/workspace/build-roadmap") {
                 isCompleted = journey.completedStages.roadmap;
                 isCurrent = journey.currentStage === "roadmap";
-                isLocked = !journey.completedStages.mvpScope;
-                lockReason = "Complete MVP Scope first to unlock Roadmap.";
               } else if (item.to === "/workspace/marketing-plan") {
                 isCompleted = journey.completedStages.marketingPlan;
                 isCurrent = journey.currentStage === "marketing_plan";
-                isLocked = !journey.completedStages.roadmap;
-                lockReason = "Complete Roadmap first to unlock Marketing Plan.";
               } else if (
                 item.to === "/workspace/launch-sprint" ||
                 item.to === "/workspace/traction" ||
                 item.to === "/workspace/investor-update"
               ) {
-                isCompleted = false; // sub-modules remain available once Growth is unlocked
+                isCompleted = false;
                 isCurrent = journey.currentStage === "growth";
-                isLocked = !journey.completedStages.marketingPlan;
-                lockReason = "Complete Marketing Plan first to unlock Growth.";
               }
 
-              if (isLocked) {
-                return (
-                  <button
-                    key={item.to}
-                    type="button"
-                    onClick={() => {
-                      toast.error(lockReason);
-                    }}
-                    className="w-full flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-[#958ea0]/50 hover:bg-white/[0.02] cursor-not-allowed transition-all text-left"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Lock className="size-3.5 text-[#958ea0]/50 shrink-0" />
-                      <span className="truncate">{item.label}</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-[#958ea0]/40 uppercase">Locked</span>
-                  </button>
-                );
-              }
+              const handleItemClick = (e: React.MouseEvent) => {
+                const access = checkRouteAccess(item.to, venture);
+                if (!access.allowed) {
+                  e.preventDefault();
+                  toast.error(access.title, {
+                    description: access.description,
+                  });
+                  onNavigate?.();
+                  return;
+                }
+                navigate({ to: item.to as any });
+                onNavigate?.();
+              };
 
               return (
-                <Link
+                <button
                   key={item.to}
-                  to={item.to as any}
-                  onClick={onNavigate}
+                  type="button"
+                  onClick={handleItemClick}
                   className={cn(
-                    "group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative",
+                    "w-full group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 relative text-left cursor-pointer",
                     active
                       ? "bg-[rgba(139,92,246,0.15)] text-[#A78BFA] font-semibold shadow-[0_0_20px_rgba(167,139,250,0.2)] border border-[rgba(139,92,246,0.3)]"
                       : "text-[#cbc3d7] hover:bg-white/5 hover:text-white",
@@ -230,10 +213,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   </div>
                   {isCompleted && !active ? (
                     <span className="text-[10px] font-mono text-[#A78BFA]/80">✓ Done</span>
-                  ) : isCurrent && !active ? (
-                    <span className="text-[10px] font-mono text-[#A78BFA] font-bold">Current</span>
                   ) : null}
-                </Link>
+                </button>
               );
             })}
           </div>

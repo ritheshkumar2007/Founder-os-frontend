@@ -147,13 +147,21 @@ export function getStageRoute(stage: FounderStageKey): string {
   }
 }
 
+export interface RouteAccessResult {
+  allowed: boolean;
+  title: string;
+  description: string;
+  message: string;
+  redirectUrl: string;
+}
+
 /**
  * Evaluate if a requested URL route is unlocked
  */
 export function checkRouteAccess(
   pathname: string,
   venture: Venture | null | undefined
-): { allowed: boolean; message: string; redirectUrl: string } {
+): RouteAccessResult {
   const journey = getFounderJourney(venture);
 
   // Stage 1: Idea Validation (Always Accessible)
@@ -165,7 +173,7 @@ export function checkRouteAccess(
     pathname === "/workspace" ||
     pathname === "/workspace/"
   ) {
-    return { allowed: true, message: "", redirectUrl: "" };
+    return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
   }
 
   // Stage 2: MVP Scope
@@ -173,35 +181,68 @@ export function checkRouteAccess(
     if (!journey.completedStages.ideaValidation) {
       return {
         allowed: false,
-        message: "Complete Idea Validation first to unlock MVP Scope.",
+        title: "Complete Idea Validation first.",
+        description: "You can't access MVP Scope until you finish the 5 validation questions.",
+        message: "Complete Idea Validation first. You can't access MVP Scope until you finish the 5 validation questions.",
         redirectUrl: "/workspace/idea-validation",
       };
     }
-    return { allowed: true, message: "", redirectUrl: "" };
+    return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
   }
 
   // Stage 3: Build Roadmap
   if (pathname.startsWith("/workspace/build-roadmap")) {
+    if (!journey.completedStages.ideaValidation) {
+      return {
+        allowed: false,
+        title: "Complete Idea Validation first.",
+        description: "You can't access Roadmap until you finish the 5 validation questions.",
+        message: "Complete Idea Validation first. You can't access Roadmap until you finish the 5 validation questions.",
+        redirectUrl: "/workspace/idea-validation",
+      };
+    }
     if (!journey.completedStages.mvpScope) {
       return {
         allowed: false,
-        message: "Complete MVP Scope first to unlock Roadmap.",
-        redirectUrl: getStageRoute(journey.currentStage),
+        title: "Complete MVP Scope first.",
+        description: "You can't access Roadmap until your MVP Scope is generated.",
+        message: "Complete MVP Scope first. You can't access Roadmap until your MVP Scope is generated.",
+        redirectUrl: "/workspace/mvp-scope",
       };
     }
-    return { allowed: true, message: "", redirectUrl: "" };
+    return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
   }
 
   // Stage 4: Marketing Plan
   if (pathname.startsWith("/workspace/marketing-plan")) {
+    if (!journey.completedStages.ideaValidation) {
+      return {
+        allowed: false,
+        title: "Complete Idea Validation first.",
+        description: "You can't access Marketing Plan until you finish the 5 validation questions.",
+        message: "Complete Idea Validation first. You can't access Marketing Plan until you finish the 5 validation questions.",
+        redirectUrl: "/workspace/idea-validation",
+      };
+    }
+    if (!journey.completedStages.mvpScope) {
+      return {
+        allowed: false,
+        title: "Complete MVP Scope first.",
+        description: "You can't access Marketing Plan until your MVP Scope is generated.",
+        message: "Complete MVP Scope first. You can't access Marketing Plan until your MVP Scope is generated.",
+        redirectUrl: "/workspace/mvp-scope",
+      };
+    }
     if (!journey.completedStages.roadmap) {
       return {
         allowed: false,
-        message: "Complete Roadmap first to unlock Marketing Plan.",
-        redirectUrl: getStageRoute(journey.currentStage),
+        title: "Complete Roadmap first.",
+        description: "You can't access Marketing Plan until your roadmap is completed.",
+        message: "Complete Roadmap first. You can't access Marketing Plan until your roadmap is completed.",
+        redirectUrl: "/workspace/build-roadmap",
       };
     }
-    return { allowed: true, message: "", redirectUrl: "" };
+    return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
   }
 
   // Stage 5: Growth Section (Launch Sprint, Traction, Investor Update, AI Founder)
@@ -211,15 +252,44 @@ export function checkRouteAccess(
     pathname.startsWith("/workspace/investor-update") ||
     pathname.startsWith("/workspace/ai-founder")
   ) {
+    if (!journey.completedStages.ideaValidation) {
+      return {
+        allowed: false,
+        title: "Complete Idea Validation first.",
+        description: "You can't access Growth until you finish the 5 validation questions.",
+        message: "Complete Idea Validation first. You can't access Growth until you finish the 5 validation questions.",
+        redirectUrl: "/workspace/idea-validation",
+      };
+    }
+    if (!journey.completedStages.mvpScope) {
+      return {
+        allowed: false,
+        title: "Complete MVP Scope first.",
+        description: "You can't access Growth until your MVP Scope is generated.",
+        message: "Complete MVP Scope first. You can't access Growth until your MVP Scope is generated.",
+        redirectUrl: "/workspace/mvp-scope",
+      };
+    }
+    if (!journey.completedStages.roadmap) {
+      return {
+        allowed: false,
+        title: "Complete Roadmap first.",
+        description: "You can't access Growth until your roadmap is completed.",
+        message: "Complete Roadmap first. You can't access Growth until your roadmap is completed.",
+        redirectUrl: "/workspace/build-roadmap",
+      };
+    }
     if (!journey.completedStages.marketingPlan) {
       return {
         allowed: false,
-        message: "Complete Marketing Plan first to unlock Growth.",
-        redirectUrl: getStageRoute(journey.currentStage),
+        title: "Complete Marketing Plan first.",
+        description: "Finish your marketing plan to unlock Growth.",
+        message: "Complete Marketing Plan first. Finish your marketing plan to unlock Growth.",
+        redirectUrl: "/workspace/marketing-plan",
       };
     }
-    return { allowed: true, message: "", redirectUrl: "" };
+    return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
   }
 
-  return { allowed: true, message: "", redirectUrl: "" };
+  return { allowed: true, title: "", description: "", message: "", redirectUrl: "" };
 }

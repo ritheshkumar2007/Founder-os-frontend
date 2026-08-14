@@ -38,7 +38,9 @@ function WorkspaceLayout() {
     if (pathname && pathname.startsWith("/workspace")) {
       const access = checkRouteAccess(pathname, venture);
       if (!access.allowed) {
-        toast.error(access.message);
+        toast.error(access.title, {
+          description: access.description,
+        });
         navigate({
           to: access.redirectUrl as any,
           replace: true,

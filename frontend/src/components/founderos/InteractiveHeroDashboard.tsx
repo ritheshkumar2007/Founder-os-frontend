@@ -206,7 +206,7 @@ export const InteractiveHeroDashboard: React.FC = () => {
                   ) : step.status === "current" ? (
                     <span className="size-2 rounded-full bg-[#A78BFA] animate-ping" />
                   ) : (
-                    <Lock className="size-3 text-white/20" />
+                    <span className="size-1.5 rounded-full bg-white/20" />
                   )}
                 </div>
               ))}
