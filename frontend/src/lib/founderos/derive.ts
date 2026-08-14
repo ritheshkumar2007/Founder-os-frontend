@@ -121,6 +121,36 @@ export function deriveIdeaScore(v: Venture) {
     return v.ideaScore;
   }
 
+  const isComplete = Boolean(
+    v?.validationState?.completed ||
+    (v?.validationState?.answers?.question1 &&
+      v?.validationState?.answers?.question2 &&
+      v?.validationState?.answers?.question3 &&
+      v?.validationState?.answers?.question4 &&
+      v?.validationState?.answers?.question5)
+  );
+
+  if (!isComplete) {
+    return {
+      overallScore: 0,
+      tier: "Not Validated",
+      interviewMultiplier: 1.0,
+      pillars: {
+        problemSeverity: { score: 0, max: 20, weight: 0.25, reasoning: "Awaiting Question 1 response." },
+        willingnessToPay: { score: 0, max: 20, weight: 0.25, reasoning: "Awaiting Question 2 response." },
+        distribution: { score: 0, max: 20, weight: 0.2, reasoning: "Awaiting Question 3 response." },
+        unfairAdvantage: { score: 0, max: 20, weight: 0.15, reasoning: "Awaiting Question 4 response." },
+        executionSpeed: { score: 0, max: 20, weight: 0.15, reasoning: "Awaiting Question 5 response." },
+      },
+      strengths: [],
+      risks: [
+        "Idea validation in progress. Complete all 5 structured questions to generate your validated score.",
+      ],
+      recommendations: ["Answer the 5 validation questions with your AI Coach."],
+      lastCalculatedAt: new Date().toISOString(),
+    };
+  }
+
   const interviews = Array.isArray(v?.interviews) ? v.interviews : [];
   const total = interviews.length;
   const high = interviews.filter((i) => i.pain === "High").length;

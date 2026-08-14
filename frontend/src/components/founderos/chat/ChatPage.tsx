@@ -160,10 +160,9 @@ export const ChatPage: React.FC = () => {
           outcome: nextValidationState.answers.question3 || v.brief.outcome,
         };
         const nextChat = [...updatedMessages, aiMsg];
-        const nextScore =
-          nextValidationState.score ||
-          res.data?.ideaScore ||
-          deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        const nextScore = nextValidationState.completed
+          ? (nextValidationState.score || res.data?.ideaScore || deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat, validationState: nextValidationState }))
+          : null;
 
         return {
           ...v,
@@ -173,6 +172,14 @@ export const ChatPage: React.FC = () => {
           ideaScore: nextScore,
         };
       });
+
+      if (nextValidationState.completed) {
+        setScoreOpen(true);
+        setTimeout(() => {
+          toast.success("Validation completed! Unlocked Stage 2: MVP Scope");
+          navigate({ to: "/workspace/mvp-scope" as any });
+        }, 3000);
+      }
     } catch {
       const localTurn = processValidationTurn({
         userMessage: text,
@@ -197,9 +204,9 @@ export const ChatPage: React.FC = () => {
           outcome: localTurn.updatedState.answers.question3 || v.brief.outcome,
         };
         const nextChat = [...updatedMessages, aiMsg];
-        const nextScore =
-          localTurn.updatedState.score ||
-          deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        const nextScore = localTurn.updatedState.completed
+          ? (localTurn.updatedState.score || deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat, validationState: localTurn.updatedState }))
+          : null;
 
         return {
           ...v,

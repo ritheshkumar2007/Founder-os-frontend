@@ -45,11 +45,14 @@ function assert(description, condition) {
   }
 }
 
+const { deriveIdeaScore } = require("../frontend/src/lib/founderos/derive.ts");
+
 // Test 1: New venture starts at Idea Validation
 const v1 = createEmptyVenture();
 const j1 = getFounderJourney(v1);
 assert("Test 1: New venture current stage is 'idea_validation'", j1.currentStage === "idea_validation");
 assert("Test 1b: Target route is '/workspace/idea-validation'", getStageRoute(j1.currentStage) === "/workspace/idea-validation");
+assert("Test 1c: Unvalidated venture score is strictly 0/100", deriveIdeaScore(v1).overallScore === 0);
 
 // Test 2: Try accessing MVP Scope before completing Idea Validation -> Blocked
 const r2 = checkRouteAccess("/workspace/mvp-scope", v1);
@@ -76,6 +79,7 @@ v3.ideaScore = { overallScore: 88 };
 const j3 = getFounderJourney(v3);
 assert("Test 3: Idea Validation complete moves current stage to 'mvp_scope'", j3.currentStage === "mvp_scope");
 assert("Test 3b: MVP Scope route access is allowed", checkRouteAccess("/workspace/mvp-scope", v3).allowed);
+assert("Test 3c: Validated venture score is > 0 (88/100)", deriveIdeaScore(v3).overallScore === 88);
 
 // Test 4: Try opening Roadmap before completing MVP Scope -> Blocked
 const r4 = checkRouteAccess("/workspace/build-roadmap", v3);
