@@ -89,6 +89,18 @@ export function createVenture(name: string): Venture {
       nextMilestone: "",
       ask: "",
     },
+    validationState: {
+      currentQuestion: 1,
+      answers: {
+        question1: null,
+        question2: null,
+        question3: null,
+        question4: null,
+        question5: null,
+      },
+      completed: false,
+      score: null,
+    },
     chat: [],
   };
 }
@@ -228,6 +240,18 @@ export function normalizeVenture(v: any): Venture {
       learnings: v?.investor?.learnings || v?.investorUpdate?.keyLearnings || "",
       nextMilestone: v?.investor?.nextMilestone || v?.investorUpdate?.nextMilestone || "",
       ask: v?.investor?.ask || v?.investorUpdate?.fundingNeeded || "",
+    },
+    validationState: v?.validationState || v?.ideaValidation?.validationState || {
+      currentQuestion: 1,
+      answers: {
+        question1: null,
+        question2: null,
+        question3: null,
+        question4: null,
+        question5: null,
+      },
+      completed: false,
+      score: null,
     },
     chat: Array.isArray(v?.chat) ? v.chat : [],
   };

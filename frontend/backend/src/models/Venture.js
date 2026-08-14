@@ -158,6 +158,19 @@ const ventureSchema = new mongoose.Schema(
         unlockedStep: { type: String, default: 'Venture Brief' },
         completedSteps: [{ type: String }],
       },
+      validationState: {
+        currentQuestion: { type: Number, default: 1, min: 1, max: 6 },
+        answers: {
+          question1: { type: String, default: null },
+          question2: { type: String, default: null },
+          question3: { type: String, default: null },
+          question4: { type: String, default: null },
+          question5: { type: String, default: null },
+        },
+        completed: { type: Boolean, default: false },
+        score: { type: mongoose.Schema.Types.Mixed, default: null },
+        lastEvaluatedAt: { type: Date, default: Date.now },
+      },
       ideaScore: {
         overallScore: { type: Number, default: 0, min: 0, max: 100 },
         tier: {

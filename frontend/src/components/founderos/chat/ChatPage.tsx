@@ -9,12 +9,10 @@ import { ExecutionDrawer } from "./ExecutionDrawer";
 import { GrowthDrawer } from "./GrowthDrawer";
 import { IdeaScoreModal } from "./IdeaScoreModal";
 import { generateMockAiResponse } from "./mockAiEngine";
-import { deriveIdeaScore } from "@/lib/founderos/derive";
-import api from "@/lib/api";
+import { processValidationTurn, INITIAL_COACH_MESSAGE } from "@/lib/founderos/validationEngine";
+import type { ValidationState } from "@/lib/founderos/types";
 
-const INITIAL_GREETING_CONTENT = `Before building or scoping software, we need to stress-test your idea across five core validation questions. This saves months of building things nobody wants.
-
-First question: What specific problem are you solving, and who has this problem?`;
+const INITIAL_GREETING_CONTENT = INITIAL_COACH_MESSAGE;
 
 export const ChatPage: React.FC = () => {
   const { venture, update } = useActiveVenture();
@@ -41,20 +39,39 @@ export const ChatPage: React.FC = () => {
     ];
   }, [venture?.id, venture?.chat]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-persist initial greeting to store if not present
+  // Auto-persist initial greeting and default validationState to store if not present
   useEffect(() => {
-    if (venture && (!venture.chat || venture.chat.length === 0)) {
-      update((v) => ({
-        ...v,
-        chat: [
-          {
-            id: uid(),
-            role: "assistant",
-            content: INITIAL_GREETING_CONTENT,
-            createdAt: new Date().toISOString(),
+    if (venture) {
+      const needsChatInit = !venture.chat || venture.chat.length === 0;
+      const needsStateInit = !venture.validationState;
+
+      if (needsChatInit || needsStateInit) {
+        update((v) => ({
+          ...v,
+          validationState: v.validationState || {
+            currentQuestion: 1,
+            answers: {
+              question1: null,
+              question2: null,
+              question3: null,
+              question4: null,
+              question5: null,
+            },
+            completed: false,
+            score: null,
           },
-        ],
-      }));
+          chat: needsChatInit
+            ? [
+                {
+                  id: uid(),
+                  role: "assistant",
+                  content: INITIAL_GREETING_CONTENT,
+                  createdAt: new Date().toISOString(),
+                },
+              ]
+            : v.chat,
+        }));
+      }
     }
   }, [venture?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -79,16 +96,50 @@ export const ChatPage: React.FC = () => {
     setLoading(true);
 
     try {
-      // Call real Gemini AI backend
+      // Call AI backend with explicit validation state
       const res = await api.aiChat({
         ventureId: venture.id,
         message: text,
+        page: "idea-validation",
+        validationState: venture.validationState,
         history: updatedMessages,
       });
 
-      const aiReplyText = res.success && res.data?.reply
-        ? res.data.reply
-        : generateMockAiResponse(text, updatedMessages, venture);
+      let aiReplyText = "";
+      let nextValidationState: ValidationState = venture.validationState || {
+        currentQuestion: 1,
+        answers: {
+          question1: null,
+          question2: null,
+          question3: null,
+          question4: null,
+          question5: null,
+        },
+        completed: false,
+        score: null,
+      };
+
+      if (res.success && res.data?.reply) {
+        aiReplyText = res.data.reply;
+        if (res.data?.validationState) {
+          nextValidationState = res.data.validationState;
+        } else {
+          const localTurn = processValidationTurn({
+            userMessage: text,
+            validationState: venture.validationState,
+            venture,
+          });
+          nextValidationState = localTurn.updatedState;
+        }
+      } else {
+        const localTurn = processValidationTurn({
+          userMessage: text,
+          validationState: venture.validationState,
+          venture,
+        });
+        aiReplyText = localTurn.reply;
+        nextValidationState = localTurn.updatedState;
+      }
 
       if (res.success && Array.isArray(res.data?.reports)) {
         setLatestReports(res.data.reports);
@@ -104,36 +155,59 @@ export const ChatPage: React.FC = () => {
       update((v) => {
         const nextBrief = {
           ...v.brief,
-          building: v.brief.building || text,
+          building: v.brief.building || nextValidationState.answers.question1 || text,
+          problem: nextValidationState.answers.question1 || v.brief.problem,
+          audience: nextValidationState.answers.question1 || v.brief.audience,
+          workaround: nextValidationState.answers.question2 || v.brief.workaround,
+          outcome: nextValidationState.answers.question3 || v.brief.outcome,
         };
         const nextChat = [...updatedMessages, aiMsg];
-        const nextScore = res.data?.ideaScore || deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        const nextScore =
+          nextValidationState.score ||
+          res.data?.ideaScore ||
+          deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+
         return {
           ...v,
           chat: nextChat,
           brief: nextBrief,
+          validationState: nextValidationState,
           ideaScore: nextScore,
         };
       });
     } catch {
-      const fallbackReply = generateMockAiResponse(text, updatedMessages, venture);
+      const localTurn = processValidationTurn({
+        userMessage: text,
+        validationState: venture.validationState,
+        venture,
+      });
+
       const aiMsg: ChatMessage = {
         id: uid(),
         role: "assistant",
-        content: fallbackReply,
+        content: localTurn.reply,
         createdAt: new Date().toISOString(),
       };
+
       update((v) => {
         const nextBrief = {
           ...v.brief,
-          building: v.brief.building || text,
+          building: v.brief.building || localTurn.updatedState.answers.question1 || text,
+          problem: localTurn.updatedState.answers.question1 || v.brief.problem,
+          audience: localTurn.updatedState.answers.question1 || v.brief.audience,
+          workaround: localTurn.updatedState.answers.question2 || v.brief.workaround,
+          outcome: localTurn.updatedState.answers.question3 || v.brief.outcome,
         };
         const nextChat = [...updatedMessages, aiMsg];
-        const nextScore = deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+        const nextScore =
+          localTurn.updatedState.score ||
+          deriveIdeaScore({ ...v, brief: nextBrief, chat: nextChat });
+
         return {
           ...v,
           chat: nextChat,
           brief: nextBrief,
+          validationState: localTurn.updatedState,
           ideaScore: nextScore,
         };
       });

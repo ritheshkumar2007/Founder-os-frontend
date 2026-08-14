@@ -72,46 +72,81 @@ const aiChat = async (req, res, next) => {
       }
     }
 
-    // 3.5. Evaluate and save Idea Score BEFORE processAIRequest so prompt has current score
-    if (isDbConnected && venture) {
-      try {
-        const needsRescore =
-          !venture.ideaValidation?.ideaScore?.overallScore ||
-          (venture.ideaValidation.ideaScore.lastCalculatedAt &&
-            venture.updatedAt > venture.ideaValidation.ideaScore.lastCalculatedAt);
+    // 3.5. Validation State Management & 5-Question Coach Processing
+    const { processValidationTurn } = require('../services/validationEngine');
 
-        if (needsRescore) {
-          const { evaluateIdeaScore } = require('../services/aiService');
-          const computedScore = await evaluateIdeaScore({ venture });
-          venture.ideaValidation.ideaScore = computedScore;
+    let currentValidationState = venture?.ideaValidation?.validationState || req.body.validationState || {
+      currentQuestion: 1,
+      answers: {
+        question1: null,
+        question2: null,
+        question3: null,
+        question4: null,
+        question5: null,
+      },
+      completed: false,
+      score: null,
+    };
+
+    const isValidationContext = (!req.body.page || req.body.page === 'idea-validation' || req.body.page === 'workspace/idea-validation');
+    let aiResponse = '';
+    let updatedValidationState = currentValidationState;
+    let agentInfo = {
+      primaryAgent: 'validation',
+      primaryAgentName: 'FounderOS Idea Validation Coach',
+      executionTimeMs: 10,
+    };
+
+    if (isValidationContext && !currentValidationState.completed) {
+      // Execute strict 5-Question validation turn
+      const turnResult = processValidationTurn({
+        userMessage: message.trim(),
+        validationState: currentValidationState,
+        venture,
+      });
+
+      aiResponse = turnResult.reply;
+      updatedValidationState = turnResult.updatedState;
+
+      if (venture) {
+        try {
+          venture.ideaValidation.validationState = updatedValidationState;
+          if (updatedValidationState.answers.question1) {
+            venture.ideaValidation.ventureBrief.building = venture.ideaValidation.ventureBrief.building || updatedValidationState.answers.question1;
+            venture.ideaValidation.ventureBrief.problem = updatedValidationState.answers.question1;
+          }
+          if (updatedValidationState.answers.question2) {
+            venture.ideaValidation.ventureBrief.currentWorkaround = updatedValidationState.answers.question2;
+          }
+          if (updatedValidationState.answers.question3) {
+            venture.ideaValidation.ventureBrief.desiredOutcome = updatedValidationState.answers.question3;
+          }
+          if (updatedValidationState.score) {
+            venture.ideaValidation.ideaScore = updatedValidationState.score;
+          }
           await venture.save();
+        } catch (saveErr) {
+          console.warn('Venture validation state save warning:', saveErr.message);
         }
-      } catch (scoreErr) {
-        console.warn('Idea score evaluation before AI request warning:', scoreErr.message);
+      }
+    } else {
+      // 4. Process Message via Unified 4-Layer AI Pipeline
+      const { processAIRequest } = require('../services/aiOrchestrator');
+      try {
+        const agentResult = await processAIRequest({
+          userId,
+          ventureId: activeVentureId,
+          agentName: 'ai_chat',
+          userInput: message.trim(),
+          history: conversationHistory,
+        });
+        aiResponse = agentResult.response;
+        agentInfo = agentResult.agentInfo;
+      } catch (agentErr) {
+        console.error('[AI Chat Controller Error] AI pipeline error:', agentErr.message || agentErr);
+        aiResponse = "I am analyzing your venture context. What is the main priority you'd like to work on today?";
       }
     }
-
-    // 4. Process Message via Unified 4-Layer AI Pipeline
-    const { processAIRequest } = require('../services/aiOrchestrator');
-    let agentResult;
-    try {
-      agentResult = await processAIRequest({
-        userId,
-        ventureId: activeVentureId,
-        agentName: 'ai_chat',
-        userInput: message.trim(),
-        history: conversationHistory,
-      });
-    } catch (agentErr) {
-      console.error('[AI Chat Controller Error] Unified AI pipeline execution error:', agentErr.message || agentErr);
-      return res.status(500).json({
-        success: false,
-        message: `AI Request Error: ${agentErr.message || 'Unable to process AI chat request'}`,
-      });
-    }
-
-    const aiResponse = agentResult.response;
-    const agentInfo = agentResult.agentInfo;
 
     // 5. Save Assistant Response to Memory
     if (activeVentureId) {
@@ -218,11 +253,12 @@ const aiChat = async (req, res, next) => {
       try { growth = await getLatestGrowthData(activeVentureId); } catch (e) {}
     }
 
-    const ideaScore = venture?.ideaValidation?.ideaScore || null;
+    const ideaScore = venture?.ideaValidation?.ideaScore || updatedValidationState?.score || null;
 
     return res.status(200).json({
       success: true,
       reply: aiResponse,
+      validationState: updatedValidationState,
       ideaScore,
       agentInfo,
       validationReport,

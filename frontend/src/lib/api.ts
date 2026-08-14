@@ -306,7 +306,13 @@ export const api = {
     }),
 
   // Gemini AI Founder Coach
-  aiChat: (payload: { ventureId?: string; message: string; history?: { role: string; content: string; id?: string; createdAt?: string }[] }) =>
+  aiChat: (payload: {
+    ventureId?: string;
+    message: string;
+    page?: string;
+    validationState?: any;
+    history?: { role: string; content: string; id?: string; createdAt?: string }[];
+  }) =>
     request("ai/chat", {
       method: "POST",
       body: JSON.stringify(payload),

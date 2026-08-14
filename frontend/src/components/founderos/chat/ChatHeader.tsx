@@ -22,8 +22,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   const ideaScore = venture ? deriveIdeaScore(venture) : null;
   const scoreVal = ideaScore?.overallScore ?? 0;
 
-  const currentQIndex = venture?.chat ? determineCurrentQuestionIndex(venture.chat) : 0;
-  const isComplete = currentQIndex >= 5;
+  const currentQIndex = venture?.validationState
+    ? (venture.validationState.completed ? 5 : Math.max(0, venture.validationState.currentQuestion - 1))
+    : (venture?.chat ? determineCurrentQuestionIndex(venture.chat) : 0);
+  const isComplete = Boolean(venture?.validationState?.completed || currentQIndex >= 5);
 
   return (
     <div className="sticky top-0 z-20 border-b border-[rgba(139,92,246,0.25)] bg-[#0b0f12]/95 backdrop-blur-2xl px-3.5 sm:px-6 py-3 sm:py-4 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.6)]">

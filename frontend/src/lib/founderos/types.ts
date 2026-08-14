@@ -117,6 +117,22 @@ export interface IdeaScore {
   lastCalculatedAt: string;
 }
 
+export interface ValidationAnswers {
+  question1: string | null;
+  question2: string | null;
+  question3: string | null;
+  question4: string | null;
+  question5: string | null;
+}
+
+export interface ValidationState {
+  currentQuestion: number; // 1 to 5, or 6 when complete
+  answers: ValidationAnswers;
+  completed: boolean;
+  score: IdeaScore | null;
+  lastEvaluatedAt?: string;
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -133,6 +149,7 @@ export interface Venture {
   summaryNotes: string;
   analyzed: boolean;
   ideaScore?: IdeaScore;
+  validationState?: ValidationState;
   mvp: MvpScope;
   milestones: Milestone[];
   marketing: MarketingPlan;
